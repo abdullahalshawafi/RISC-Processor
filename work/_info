@@ -8,3 +8,44 @@ z2
 !i10f 100
 cModel Technology
 dC:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Assignments/Assignment 4
+Einstruction_memory
+Z0 w1639328012
+Z1 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+Z4 dD:/RISC-Processor
+Z5 8D:/RISC-Processor/DataMemory.vhd
+Z6 FD:/RISC-Processor/DataMemory.vhd
+l0
+L5
+VN@A?9c<:QPVAYE8NWbFTI3
+!s100 ccLED7<aOk1`MeAba8IdU1
+Z7 OV;C;10.5b;63
+32
+Z8 !s110 1639328030
+!i10b 1
+Z9 !s108 1639328030.000000
+Z10 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/RISC-Processor/DataMemory.vhd|
+Z11 !s107 D:/RISC-Processor/DataMemory.vhd|
+!i113 1
+Z12 o-work work -2002 -explicit
+Z13 tExplicit 1 CvgOpt 0
+Ainstruction_memory1
+R1
+R2
+R3
+DEx4 work 18 instruction_memory 0 22 N@A?9c<:QPVAYE8NWbFTI3
+l21
+L16
+V`hV`jN3TA=@oH1_WlY7hU1
+!s100 LiOe3mI;6:fCB217PzHLP3
+R7
+32
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 1
+R12
+R13
