@@ -8,3 +8,83 @@ z2
 !i10f 100
 cModel Technology
 dC:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Assignments/Assignment 4
+Eregister_component
+Z0 w1639162316
+Z1 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z2 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+Z3 dF:/RISC-Processor
+Z4 8F:/RISC-Processor/Register.vhd
+Z5 FF:/RISC-Processor/Register.vhd
+l0
+L3
+VVCE[^ig^6?5aJZXA2MC9V2
+!s100 zjR2>kYG[bm2RQ6o8BA8d1
+Z6 OV;C;10.4d;61
+32
+Z7 !s110 1639219835
+!i10b 1
+Z8 !s108 1639219835.000000
+Z9 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|F:/RISC-Processor/Register.vhd|
+Z10 !s107 F:/RISC-Processor/Register.vhd|
+!i113 1
+Z11 o-work work -2002 -explicit
+Z12 tExplicit 1
+Aregister_component_arch
+R1
+R2
+Z13 DEx4 work 18 register_component 0 22 VCE[^ig^6?5aJZXA2MC9V2
+l13
+L12
+Z14 VOb5D[XEoM5O6i=W0cg2az3
+Z15 !s100 ?FJkCf5:Ph4S>I?Z3R`7S0
+R6
+32
+R7
+!i10b 1
+R8
+R9
+R10
+!i113 1
+R11
+R12
+Eregister_file
+Z16 w1639219829
+Z17 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+R1
+R2
+R3
+Z18 8F:/RISC-Processor/RegisterFile.vhd
+Z19 FF:/RISC-Processor/RegisterFile.vhd
+l0
+L5
+VM3oO@QBil@mfIg]f7nmEO1
+!s100 N5`12]zEUbK@BjZ;Pf9[40
+R6
+32
+R7
+!i10b 1
+R8
+Z20 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|F:/RISC-Processor/RegisterFile.vhd|
+Z21 !s107 F:/RISC-Processor/RegisterFile.vhd|
+!i113 1
+R11
+R12
+Aregister_file_arch
+R17
+R1
+R2
+DEx4 work 13 register_file 0 22 M3oO@QBil@mfIg]f7nmEO1
+l33
+L18
+VHO28dG:<zTjU4dhB9SUek0
+!s100 XhN=W]5L:WOi`E`1@`3OJ1
+R6
+32
+R7
+!i10b 1
+R8
+R20
+R21
+!i113 1
+R11
+R12
