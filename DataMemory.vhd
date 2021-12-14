@@ -16,18 +16,19 @@ END ENTITY;
 ARCHITECTURE DATA_MEMORY1 OF DATA_MEMORY IS
     
     TYPE memory IS array(integer range <>) of std_logic_vector(n-1 DOWNTO 0);
-    SIGNAL addressing_instruction : memory(0 TO 1048575);
+    SIGNAL address_memory : memory(0 TO 1048575);
 
 BEGIN
     PROCESS(clk) IS 
         BEGIN
         IF rising_edge(clk) THEN 
             IF write_instruction = '1' THEN  
-               addressing_instruction(to_integer(unsigned((address)))) <= write_data ; 
+               address_memory(to_integer(unsigned((address)))) <= write_data ; 
             END IF;
         END IF;
     END PROCESS;
-    	
+    read_data <= write_data;
+            
     
 END DATA_MEMORY1;
 
