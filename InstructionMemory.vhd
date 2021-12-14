@@ -13,9 +13,9 @@ ENTITY INSTRUCTION_MEMORY IS
 END ENTITY;
 
 ARCHITECTURE INSTRUCTION_MEMORY1 OF INSTRUCTION_MEMORY IS
-
-    TYPE memory IS ARRAY(INTEGER RANGE <>) OF STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
-    SIGNAL addressing_instruction : memory(0 TO 1048575);
+    
+    TYPE memory IS array(integer range <>) of std_logic_vector(n-1 DOWNTO 0);
+    SIGNAL addressing_instruction : memory(0 TO 2**20);
 
 BEGIN
     PROCESS (clk) IS
