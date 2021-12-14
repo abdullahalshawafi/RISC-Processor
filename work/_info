@@ -9,218 +9,167 @@ z2
 !i10f 100
 cModel Technology
 Z0 dC:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Assignments/Assignment 4
-<<<<<<< HEAD
 R0
->>>>>>> 6f54a34cb21279715a92aca6061901cfcc619b32
-R0
-Econtrol_unit
-Z1 w1639512562
-Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
-Z3 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
-!i122 8
-Z4 dC:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor
-Z5 8C:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/ControlUnit.vhd
-Z6 FC:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/ControlUnit.vhd
+Edata_memory
+Z1 w1639506414
+Z2 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+Z3 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z4 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+Z5 dD:/RISC-Processor
+Z6 8D:/RISC-Processor/DataMemory.vhd
+Z7 FD:/RISC-Processor/DataMemory.vhd
 l0
-L4 1
-V;PEIk8oEa5eU_L185][Sj2
-!s100 o;IO]_z;B7jJ@N^_Rci;V3
-Z7 OV;C;2020.1;71
+L5
+V?eaXmFHm2Gn]OdNFK[n__2
+!s100 P@7FVD2GH:DNN;R[^Tofh1
+Z8 OV;C;10.5b;63
 32
-Z8 !s110 1639512666
+Z9 !s110 1639506423
 !i10b 1
-Z9 !s108 1639512666.000000
-Z10 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/ControlUnit.vhd|
-Z11 !s107 C:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/ControlUnit.vhd|
+Z10 !s108 1639506423.000000
+Z11 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/RISC-Processor/DataMemory.vhd|
+Z12 !s107 D:/RISC-Processor/DataMemory.vhd|
 !i113 1
-Z12 o-work work -2002 -explicit
-Z13 tExplicit 1 CvgOpt 0
-Acontrol_unit
+Z13 o-work work -2002 -explicit
+Z14 tExplicit 1 CvgOpt 0
+Adata_memory1
 R2
 R3
-DEx4 work 12 control_unit 0 22 ;PEIk8oEa5eU_L185][Sj2
-!i122 8
-l18
-L17 419
-VH`V0M::TZNQjM6MY6K=P]0
-!s100 4cOcA6WY5[LI;JjMd]JRW1
-R7
-32
+R4
+Z15 DEx4 work 11 data_memory 0 22 ?eaXmFHm2Gn]OdNFK[n__2
+l21
+L16
+VAP7=fnMC9RI@9`JdNUNLP3
+!s100 fSPQ0<nJf[fTmG]8B>Fmg2
 R8
-!i10b 1
+32
 R9
+!i10b 1
 R10
 R11
 !i113 1
 R12
-R13
-Edata_memory
-Z14 w1639487968
-Z15 DPx4 ieee 11 numeric_std 0 22 aU^R8eGcicLcUFIaBQSL>3
-R2
-R3
-!i122 4
-R4
-Z16 8C:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/DataMemory.vhd
-Z17 FC:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/DataMemory.vhd
-l0
-L5 1
-V1WAaW;9dNom87`Q8m^ME<0
-!s100 G4F?U2RlndC;G>0WO8V3;0
-R7
-32
-Z18 !s110 1639512353
-!i10b 1
-Z19 !s108 1639512353.000000
-Z20 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/DataMemory.vhd|
-Z21 !s107 C:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/DataMemory.vhd|
 !i113 1
-R12
 R13
-Adata_memory1
-R15
+R14
+Einstruction_memory
+Z16 w1639337539
 R2
 R3
-DEx4 work 11 data_memory 0 22 1WAaW;9dNom87`Q8m^ME<0
-!i122 4
-l21
-L16 15
-V8miUce=Cje9PDHfH]FYOT1
-!s100 O489NeD@kl7^3b4^4>`Cn0
-R7
+R4
+R5
+Z17 8D:/RISC-Processor/InstructionMemory.vhd
+Z18 FD:/RISC-Processor/InstructionMemory.vhd
+l0
+L5
+V<JA1I:n74N4Q^KFMY;fPK2
+!s100 `=_=TPGYnmMGP1[cJ@eiJ0
+R8
 32
-R18
+Z19 !s110 1639506327
 !i10b 1
+Z20 !s108 1639506327.000000
+Z21 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/RISC-Processor/InstructionMemory.vhd|
+Z22 !s107 D:/RISC-Processor/InstructionMemory.vhd|
+!i113 1
+R13
+R14
+Ainstruction_memory1
+R2
+R3
+R4
+DEx4 work 18 instruction_memory 0 22 <JA1I:n74N4Q^KFMY;fPK2
+l20
+L15
+V4:;23icm2I<e[[hVbaX9S0
+!s100 >3i]oQo>ZDV518SPIX6GP0
+R8
+32
 R19
+!i10b 1
 R20
 R21
+R22
 !i113 1
-R12
 R13
-Einstruction_memory
-Z22 w1639487985
-R15
-R2
-R3
-!i122 5
-R4
-Z23 8C:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/InstructionMemory.vhd
-Z24 FC:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/InstructionMemory.vhd
-l0
-L5 1
-VF_6^o^GYEG@4b9OBYS1`m0
-!s100 H[z8AM:jj9:O@7XkdJFD50
-R7
-32
-R18
-!i10b 1
-R19
-Z25 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/InstructionMemory.vhd|
-Z26 !s107 C:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/InstructionMemory.vhd|
-!i113 1
-R12
-R13
-Ainstruction_memory1
-R15
-R2
-R3
-DEx4 work 18 instruction_memory 0 22 F_6^o^GYEG@4b9OBYS1`m0
-!i122 5
-l20
-L15 15
-VPLC@h<0mXTcdC6IiX[[n73
-!s100 G8IXFmzjRoNSjR:AZ@1iZ1
-R7
-32
-R18
-!i10b 1
-R19
-R25
-R26
-!i113 1
-R12
-R13
+R14
 Eregister_component
-Z27 w1639489224
-R2
+Z23 w1639505534
 R3
-!i122 6
 R4
-Z28 8C:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/Register.vhd
-Z29 FC:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/Register.vhd
+R5
+Z24 8D:/RISC-Processor/Register.vhd
+Z25 FD:/RISC-Processor/Register.vhd
 l0
-L3 1
+L3
 V7E>^HeND2X9GPa`F0CLFf1
 !s100 zjR2>kYG[bm2RQ6o8BA8d1
-R7
+R8
 32
-Z30 !s110 1639512354
+Z26 !s110 1639506328
 !i10b 1
-Z31 !s108 1639512354.000000
-Z32 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/Register.vhd|
-Z33 !s107 C:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/Register.vhd|
+Z27 !s108 1639506328.000000
+Z28 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/RISC-Processor/Register.vhd|
+Z29 !s107 D:/RISC-Processor/Register.vhd|
 !i113 1
-R12
 R13
+R14
 Aregister_component_arch
-R2
 R3
+R4
 DEx4 work 18 register_component 0 22 7E>^HeND2X9GPa`F0CLFf1
-!i122 6
 l13
-L12 13
+L12
 V;J_G>8YTeD=Lj34TWVKV`2
 !s100 ?FJkCf5:Ph4S>I?Z3R`7S0
-R7
+R8
 32
-R30
+R26
 !i10b 1
-R31
+R27
+R28
+R29
+!i113 1
+R13
+R14
+Eregister_file
+R23
+R2
+R3
+R4
+R5
+Z30 8D:/RISC-Processor/RegisterFile.vhd
+Z31 FD:/RISC-Processor/RegisterFile.vhd
+l0
+L5
+VdLMF7YJ3HX0kV49UjOKHX1
+!s100 N5`12]zEUbK@BjZ;Pf9[40
+R8
+32
+R19
+!i10b 1
+R20
+Z32 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/RISC-Processor/RegisterFile.vhd|
+Z33 !s107 D:/RISC-Processor/RegisterFile.vhd|
+!i113 1
+R13
+R14
+Aregister_file_arch
+R2
+R3
+R4
+DEx4 work 13 register_file 0 22 dLMF7YJ3HX0kV49UjOKHX1
+l33
+L18
+VATg]c_2nHI57@K0T729Ph0
+!s100 zM`RSOR5UzBiCRKWc<Mj]0
+R8
+32
+R19
+!i10b 1
+R20
 R32
 R33
 !i113 1
-R12
 R13
-Eregister_file
-Z34 w1639489231
-R15
-R2
-R3
-!i122 7
-R4
-Z35 8C:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/RegisterFile.vhd
-Z36 FC:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/RegisterFile.vhd
-l0
-L5 1
-VdLMF7YJ3HX0kV49UjOKHX1
-!s100 N5`12]zEUbK@BjZ;Pf9[40
-R7
-32
-R30
-!i10b 1
-R31
-Z37 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/RegisterFile.vhd|
-Z38 !s107 C:/Users/Abdulla/OneDrive/Documents/CMP/Computer Architecture/Project/RISC-Processor/RegisterFile.vhd|
-!i113 1
-R12
-R13
-Aregister_file_arch
-R15
-R2
-R3
-DEx4 work 13 register_file 0 22 dLMF7YJ3HX0kV49UjOKHX1
-!i122 7
-l33
-L18 86
-VU:NPfNozdQ5HmMnAhoUAY2
-!s100 4o^84A1KGiK3S[gE95m6=2
-R7
-32
-R30
-!i10b 1
-R31
-R37
-R38
-!i113 1
-R12
-R13
+R14
