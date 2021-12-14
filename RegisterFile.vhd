@@ -69,8 +69,6 @@ ELSE
     reg_out(7) <= reg_out_withoutWB(7) WHEN (reg_write = '0')
 ELSE
     reg_out_withWB WHEN (Rd_address = "111");
-
-    
     Rs_data <= reg_out(0) WHEN (Rs_address = "000")
         ELSE
         reg_out(1) WHEN (Rs_address = "001")

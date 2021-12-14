@@ -1,0 +1,51 @@
+# ** Note: Multiple occurrences of ini variable Project_Minor_Version are found, only first occurence will be considered.
+# Compile of ControlUnit.vhd was successful.
+# Compile of DataMemory.vhd was successful.
+# Compile of InstructionMemory.vhd was successful.
+# 3 compiles, 2 failed with no errors.
+# Compile of ControlUnit.vhd was successful.
+# Compile of DataMemory.vhd was successful.
+# Compile of InstructionMemory.vhd was successful.
+# Compile of Register.vhd was successful.
+# Compile of RegisterFile.vhd was successful.
+# 5 compiles, 0 failed with no errors.
+vsim -gui work.control_unit
+# vsim -gui work.control_unit 
+# Start time: 22:08:30 on Dec 14,2021
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading work.control_unit(control_unit)
+add wave -position end  sim:/control_unit/n
+add wave -position end  sim:/control_unit/set_flush
+add wave -position end  sim:/control_unit/op_code
+add wave -position end  sim:/control_unit/pc_write
+add wave -position end  sim:/control_unit/inst_type
+add wave -position end  sim:/control_unit/flush
+add wave -position end  sim:/control_unit/set_carry
+add wave -position end  sim:/control_unit/branch
+add wave -position end  sim:/control_unit/alu_src
+add wave -position end  sim:/control_unit/Rs_en
+add wave -position end  sim:/control_unit/Rt_en
+add wave -position end  sim:/control_unit/mem_read
+add wave -position end  sim:/control_unit/mem_write
+add wave -position end  sim:/control_unit/interrupt_en
+add wave -position end  sim:/control_unit/stack
+add wave -position end  sim:/control_unit/load
+add wave -position end  sim:/control_unit/reg_write
+add wave -position end  sim:/control_unit/in_en
+add wave -position end  sim:/control_unit/out_en
+add wave -position end  sim:/control_unit/alu_op
+add wave -position end  sim:/control_unit/flag_en
+add wave -position end  sim:/control_unit/stack_op
+force -freeze sim:/control_unit/op_code 01000 0
+force -freeze sim:/control_unit/set_flush 0 0
+run
+force -freeze sim:/control_unit/op_code 01001 0
+run
+force -freeze sim:/control_unit/op_code 11001 0
+run
+quit -sim
+# End time: 22:10:58 on Dec 14,2021, Elapsed time: 0:02:28
+# Errors: 0, Warnings: 7
+# Compile of ControlUnit.vhd was successful.
