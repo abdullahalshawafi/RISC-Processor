@@ -49,3 +49,4 @@ quit -sim
 # End time: 22:10:58 on Dec 14,2021, Elapsed time: 0:02:28
 # Errors: 0, Warnings: 7
 # Compile of ControlUnit.vhd was successful.
+# Compile of DataMemory.vhd was successful.
