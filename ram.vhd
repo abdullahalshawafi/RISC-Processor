@@ -1,28 +1,28 @@
-Library ieee;
-Use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;
 
-Entity RAM is
-    GENERIC (n:integer :=16);
-    port( 
-        clk,write_address : in std_logic;
-        data_in : in std_logic_vector(n-1 downto 0);
-        address : in std_logic_vector(31 downto 0);
-        data_out : out std_logic_vector(n-1 downto 0)
-    );
-end RAM;
+ENTITY RAM IS
+	GENERIC (n : INTEGER := 16);
+	PORT (
+		clk, write_address : IN STD_LOGIC;
+		data_in : IN STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
+		address : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+		data_out : OUT STD_LOGIC_VECTOR(n - 1 DOWNTO 0)
+	);
+END RAM;
 
-Architecture RAM1 of RAM is
-type ram_type is array (0 to 2**20) of std_logic_vector(n-1 downto 0);
-signal ram : ram_type;
-begin
-	process(clk) is
-	begin
-		if rising_edge(clk) then
-			if write_address = '1' then
+ARCHITECTURE RAM1 OF RAM IS
+	TYPE ram_type IS ARRAY (0 TO 2 ** 20) OF STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
+	SIGNAL ram : ram_type;
+BEGIN
+	PROCESS (clk) IS
+	BEGIN
+		IF rising_edge(clk) THEN
+			IF write_address = '1' THEN
 				ram(to_integer(unsigned(address))) <= datain;
-			end if;
-		end if;
-	end process;
+			END IF;
+		END IF;
+	END PROCESS;
 	dataout <= ram(to_integer(unsigned(address)));
-end RAM1;
+END RAM1;
