@@ -1,0 +1,7 @@
+nop
+hlt
+setc
+NOT r0
+INC r1
+OUT r3
+IN R4

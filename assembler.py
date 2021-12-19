@@ -114,8 +114,13 @@ if __name__ == '__main__':
         lines = preprocess(lines)
         lines = assemble(lines)
 
-        output_file = sys.argv[2] if len(sys.argv) == 3 else "out.mem"
+        output_file = sys.argv[2] if len(sys.argv) == 3 else "instruction.mem"
         output_file += ".mem" if output_file.find(".mem") == -1 else ""
         output_file = open(output_file, 'w')
-        output_file.writelines(lines)
+        output_file.write(
+            '// instance=/fetch_stage/y/addressing_instruction\n')
+        output_file.write(
+            '// format=mti addressradix=h dataradix=b version=1.0 wordsperline=1\n')
+        for i in range(len(lines)):
+            output_file.write(f'{hex(i)[2:]}: {lines[i]}')
         output_file.close()

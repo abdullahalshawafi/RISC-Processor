@@ -19,6 +19,7 @@ BEGIN
             temp_pc <= (OTHERS => '0');
         ELSIF (en = '1' AND rising_edge(clk)) THEN
             current_pc <= STD_LOGIC_VECTOR(to_unsigned(to_integer(unsigned(temp_pc)) + 1, 32));
+            temp_pc <= STD_LOGIC_VECTOR(to_unsigned(to_integer(unsigned(temp_pc)) + 1, 32));
         END IF;
     END PROCESS;
 END ARCHITECTURE;
