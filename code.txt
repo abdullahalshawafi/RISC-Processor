@@ -1,0 +1,26 @@
+nop
+hlt
+setc
+
+ret
+rti
+
+not r0
+inc r1
+out r2
+in r3
+
+push r4
+pop r5
+
+jz r6
+jn r7
+jc r0
+jmp r1
+call r2
+int 2
+int 1
+
+mov r2, r3
+
+ldm r1, 0110110001001100
