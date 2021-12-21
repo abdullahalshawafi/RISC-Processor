@@ -9,6 +9,7 @@ USE ieee.std_logic_1164.ALL;
 -- ID_IE_BUFFER[32:47] Rs data
 -- ID_IE_BUFFER[48:63] Rt data
 -- ID_IE_BUFFER[64:95] instruction 32 bit => 80:95 imm. value
+-- 79:64 inst=>> 79:75 op code, 74:72 Rs, 71:69 Rt, 68:66 Rd
 -- ID_IE_BUFFER[96 SETC ,  97,98,99 FlagEn , 100 AluSrc , 101:103 AluOP i will assume for now it is 3 bits]
 ENTITY EX_STAGE IS
     GENERIC (n : INTEGER := 16);

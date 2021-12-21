@@ -35,5 +35,5 @@ ARCHITECTURE fetch_stage_arch OF fetch_stage IS
 BEGIN
     x : PC PORT MAP(rst, clk, '1', pc_out);
     y : INSTRUCTION_MEMORY PORT MAP(clk, pc_out, '1', instr);
-    IF_ID_BUFFER <= pc_out & instr & (X"0000") & '0';
+    IF_ID_BUFFER <= '0' & instr & (X"0000") & pc_out;
 END fetch_stage_arch;
