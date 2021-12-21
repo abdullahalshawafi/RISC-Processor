@@ -50,7 +50,7 @@ ARCHITECTURE struct OF EX_STAGE IS
 
     -- #### SIGNALS
     SIGNAL Z, Ne, C, Z0, N0, C0, Cfinal : STD_LOGIC;
-    SIGNAL alu_src2, alu_result_temp : STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
+    SIGNAL alu_src2, alu_result_temp,Rs_data ,Rt_data  : STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
     SIGNAL alu_op : STD_LOGIC_VECTOR (2 DOWNTO 0);
     SIGNAL alusrc, setc : STD_LOGIC;
 
@@ -58,9 +58,9 @@ BEGIN
 
     -- alu_op <= ID_IE_BUFFER(103 DOWNTO 101);
     -- alusrc <= ID_IE_BUFFER(100);
-    fx1 : MUX2 PORT MAP(alusrc, ID_IE_BUFFER(63 DOWNTO 48), ID_IE_BUFFER(95 DOWNTO 80), alu_src2);
+    fx1 : MUX2 PORT MAP(alusrc,  Rt_data , ID_IE_BUFFER(95 DOWNTO 80), alu_src2);
 
-    fx2 : ALU PORT MAP(ID_IE_BUFFER(47 DOWNTO 32), alu_src2, alu_op, alu_result_temp, C0, N0, Z0);
+    fx2 : ALU PORT MAP( Rs_data, alu_src2, alu_op, alu_result_temp, C0, N0, Z0);
 
     fx3 : FLAG_REG PORT MAP(clk, rst, ID_IE_BUFFER(97), ID_IE_BUFFER(98), ID_IE_BUFFER(99), Z0, N0, Cfinal, Z, Ne, C);
 
@@ -82,6 +82,8 @@ BEGIN
             alu_op <= ID_IE_BUFFER(103 DOWNTO 101);
             alusrc <= ID_IE_BUFFER(100);
             Cfinal <= ID_IE_BUFFER(96) OR C0;
+ 	        Rt_data <= ID_IE_BUFFER(63 DOWNTO 48);
+ 	        Rs_data <=ID_IE_BUFFER(47 DOWNTO 32);
             -- PC+1
             IE_IM_BUFFER(31 DOWNTO 0) <= ID_IE_BUFFER(31 DOWNTO 0);
             IE_IM_BUFFER(47 DOWNTO 32) <= alu_result_temp;
