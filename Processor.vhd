@@ -53,7 +53,7 @@ ARCHITECTURE processor_arch OF processor IS
         GENERIC (n : INTEGER := 16);
         PORT (
             ID_IE_BUFFER : IN STD_LOGIC_VECTOR (104 DOWNTO 0);
-            IE_IM_BUFFER : OUT STD_LOGIC_VECTOR (74 DOWNTO 0)
+            IE_IM_BUFFER : OUT STD_LOGIC_VECTOR (75 DOWNTO 0)
 
         );
     END COMPONENT;
