@@ -15,6 +15,8 @@ USE IEEE.numeric_std.ALL;
 -- alu result 16 :31
 -- Rd data 32:47
 -- Rd address 48:50 
+-- wb signal 51
+-- load signal 52
  
 
 ENTITY MEMORY_STAGE IS
@@ -23,7 +25,7 @@ ENTITY MEMORY_STAGE IS
 	IE_IM_BUFFER:in std_logic_vector (74 downto 0 );
         clk : IN std_logic;
         read_data : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-	IM_IW_BUFFER:out std_logic_vector (36 downto 0 )
+	IM_IW_BUFFER:out std_logic_vector (53 downto 0 )
     );
 END ENTITY;
 
