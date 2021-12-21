@@ -4,7 +4,7 @@ USE IEEE.numeric_std.ALL;
 
 ENTITY fetch_stage IS
     PORT (
-        rst, clk, instType : IN STD_LOGIC;
+        rst, clk, pc_write, instType : IN STD_LOGIC;
         IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(64 DOWNTO 0)
     );
 
@@ -34,5 +34,11 @@ ARCHITECTURE fetch_stage_arch OF fetch_stage IS
 BEGIN
     x : PC PORT MAP(rst, clk, '1', pc_out);
     y : INSTRUCTION_MEMORY PORT MAP(clk, pc_out, '1', instr);
-    IF_ID_BUFFER <= '0' & instr & (X"0000") & pc_out;
+
+    PROCESS (clk) IS
+    BEGIN
+        IF (rising_edge(clk)) THEN
+            IF_ID_BUFFER <= '0' & instr & (X"0000") & pc_out;
+        END IF;
+    END PROCESS;
 END fetch_stage_arch;

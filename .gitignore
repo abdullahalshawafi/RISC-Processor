@@ -3,3 +3,4 @@ RISC-Processor.cr.mti
 RISC-Processor.mpf
 transcript
 vsim.wlf
+vsim_stackstrace.vstf

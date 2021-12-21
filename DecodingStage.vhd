@@ -9,6 +9,7 @@ ENTITY decode_stage IS
         IN_PORT : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
         WB : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
         IF_ID_BUFFER : IN STD_LOGIC_VECTOR(64 DOWNTO 0);
+        pc_en : OUT STD_LOGIC;
         ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(105 DOWNTO 0)
     );
 
@@ -63,11 +64,11 @@ ARCHITECTURE decode_stage_arch OF decode_stage IS
     --------------------------------------------------------------------------
 BEGIN
 
-    inst_type <= IF_ID_BUFFER(64);
-    op_code <= IF_ID_BUFFER(63 DOWNTO 59);
-    Rs_address <= IF_ID_BUFFER(58 DOWNTO 56);
-    Rt_address <= IF_ID_BUFFER(55 DOWNTO 53);
-    Rd_address <= IF_ID_BUFFER(52 DOWNTO 50);
+    -- inst_type <= IF_ID_BUFFER(64);
+    -- op_code <= IF_ID_BUFFER(63 DOWNTO 59);
+    -- Rs_address <= IF_ID_BUFFER(58 DOWNTO 56);
+    -- Rt_address <= IF_ID_BUFFER(55 DOWNTO 53);
+    -- Rd_address <= IF_ID_BUFFER(52 DOWNTO 50);
     ------- 49:34 immediate value 
     ------- 2 extra bits
     -- PC+1 <=IF_ID_BUFFER(31 DOWNTO 0)
@@ -83,13 +84,31 @@ BEGIN
     Rx : register_file PORT MAP(clk, rst, reg_write, Rs_address, Rt_address, Rd_address, Wd, Rs_data, Rt_data);
 
     ------------------- ----------------------------------------------
-    ID_IE_BUFFER(105 DOWNTO 96) <= load & reg_write & alu_op & alu_src & flag_en & set_carry;
-    -- ID_IE_BUFFER(103 DOWNTO 96) <= "01100000";
-    ID_IE_BUFFER(95 DOWNTO 64) <= (OTHERS => '0');
-    ID_IE_BUFFER(63 DOWNTO 48) <= Rt_data;
-    ID_IE_BUFFER(47 DOWNTO 32) <= Rs_data;
-    ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0);
+    -- pc_en <= pc_write;
+    -- ID_IE_BUFFER(105 DOWNTO 96) <= load & reg_write & alu_op & alu_src & flag_en & set_carry;
+    -- -- ID_IE_BUFFER(103 DOWNTO 96) <= "01100000";
+    -- ID_IE_BUFFER(95 DOWNTO 64) <= (OTHERS => '0');
+    -- ID_IE_BUFFER(63 DOWNTO 48) <= Rt_data;
+    -- ID_IE_BUFFER(47 DOWNTO 32) <= Rs_data;
+    -- ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0);
     -- ID_IE_BUFFER[96 SETC ,  97,98,99 FlagEn znc , 100 AluSrc , 101:103 AluOP i will assume for now it is 3 bits] 
     -- ID_IE_BUFFER(64:95) instruction 32 bit => 80:95 imm. value
 
+    PROCESS (clk) IS
+    BEGIN
+        IF (rising_edge(clk)) THEN
+            inst_type <= IF_ID_BUFFER(64);
+            op_code <= IF_ID_BUFFER(63 DOWNTO 59);
+            Rs_address <= IF_ID_BUFFER(58 DOWNTO 56);
+            Rt_address <= IF_ID_BUFFER(55 DOWNTO 53);
+            Rd_address <= IF_ID_BUFFER(52 DOWNTO 50);
+
+            pc_en <= pc_write;
+            ID_IE_BUFFER(105 DOWNTO 96) <= load & reg_write & alu_op & alu_src & flag_en & set_carry;
+            ID_IE_BUFFER(95 DOWNTO 64) <= (OTHERS => '0');
+            ID_IE_BUFFER(63 DOWNTO 48) <= Rt_data;
+            ID_IE_BUFFER(47 DOWNTO 32) <= Rs_data;
+            ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0);
+        END IF;
+    END PROCESS;
 END decode_stage_arch;

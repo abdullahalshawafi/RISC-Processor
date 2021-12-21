@@ -14,6 +14,7 @@ USE IEEE.numeric_std.ALL;
 ENTITY WB_STAGE IS
     GENERIC (n : INTEGER := 16);
     PORT (
+        clk : IN STD_LOGIC;
         IM_IW_BUFFER : IN STD_LOGIC_VECTOR (52 DOWNTO 0);
         wb_data, Rd_data : OUT STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
         Rd_address : OUT STD_LOGIC_VECTOR (2 DOWNTO 0);
@@ -35,14 +36,19 @@ ARCHITECTURE WB_STAGE_ARCH OF WB_STAGE IS
     SIGNAL alu_result, read_data, wb_data_temp : STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
 BEGIN
 
-    load_signal <= IM_IW_BUFFER(52);
-    alu_result <= IM_IW_BUFFER(31 DOWNTO 16);
-    read_data <= IM_IW_BUFFER(15 DOWNTO 0);
     WB_MUX : MUX2 PORT MAP(load_signal, alu_result, read_data, wb_data_temp);
-    wb_data <= wb_data_temp;
 
-    Rd_data <= IM_IW_BUFFER (47 DOWNTO 32);
-    Rd_address <= IM_IW_BUFFER(50 DOWNTO 48);
-    WB <= IM_IW_BUFFER(51);
+    PROCESS (clk) IS
+    BEGIN
+        IF (rising_edge(clk)) THEN
+            load_signal <= IM_IW_BUFFER(52);
+            alu_result <= IM_IW_BUFFER(31 DOWNTO 16);
+            read_data <= IM_IW_BUFFER(15 DOWNTO 0);
+            wb_data <= wb_data_temp;
 
+            Rd_data <= IM_IW_BUFFER (47 DOWNTO 32);
+            Rd_address <= IM_IW_BUFFER(50 DOWNTO 48);
+            WB <= IM_IW_BUFFER(51);
+        END IF;
+    END PROCESS;
 END WB_STAGE_ARCH;
