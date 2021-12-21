@@ -24,7 +24,7 @@ ENTITY MEMORY_STAGE IS
     PORT (
 	IE_IM_BUFFER:in std_logic_vector (74 downto 0 );
         clk : IN std_logic;
-        IM_IW_BUFFER:out std_logic_vector (53 downto 0 )
+        UFFER:out std_logic_vector (53 downto 0 )
     );
 END ENTITY;
 
