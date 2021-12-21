@@ -25,7 +25,16 @@ ARCHITECTURE processor_arch OF processor IS
 
     --------------------------- Fetching component ---------------------------
 
-    --------------------------- Decoding component ---------------------------
+    COMPONENT fetch_stage IS
+        GENERIC (n : INTEGER := 32);
+        PORT (
+            rst, clk, instType : IN STD_LOGIC;
+            IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(64 DOWNTO 0)
+        );
+
+    END COMPONENT;
+
+    --------    END COMPONENT ---------------------------
 
     COMPONENT decode_stage IS
         GENERIC (n : INTEGER := 32);
@@ -50,24 +59,32 @@ ARCHITECTURE processor_arch OF processor IS
     END COMPONENT;
 
     --------------------------- Memory component ---------------------------
-
-    --------------------------- Writing component ---------------------------
-    
-    COMPONENT WB_STAGE IS
-        GENERIC (n : INTEGER := 16);
-        PORT (
-            IM_IW_BUFFER:in std_logic_vector (52 downto 0 );
-                wb_data, Rd_data: OUT STD_LOGIC_VECTOR(n-1 DOWNTO 0);
-                Rd_address: OUT STD_LOGIC_VECTOR (2 DOWNTO 0);
-                WB : OUT STD_LOGIC
-            );
+    COMPONENT MEMORY_STAGE IS
+    GENERIC (n : INTEGER := 16);
+    PORT (
+	    IE_IM_BUFFER:in std_logic_vector (74 downto 0 );
+        clk : IN std_logic;
+        IM_IW_BUFFER:out std_logic_vector (52 downto 0 )
+    );
     END COMPONENT;
 
+    --------------------------- Writing component ---------------------------
+    COMPONENT WB_STAGE IS
+    GENERIC (n : INTEGER := 16);
+    PORT (
+        IM_IW_BUFFER:in std_logic_vector (52 downto 0 );
+            wb_data, Rd_data: OUT STD_LOGIC_VECTOR(n-1 DOWNTO 0);
+            Rd_address: OUT STD_LOGIC_VECTOR (2 DOWNTO 0);
+            WB : OUT STD_LOGIC
+        );
+    END COMPONENT;
+
+    
     --------------------------- SIGNALS -----------------------------------
-    SIGNAL IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING : STD_LOGIC_VECTOR(62 DOWNTO 0);
+    SIGNAL IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING : STD_LOGIC_VECTOR(65 DOWNTO 0);
     SIGNAL ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION : STD_LOGIC_VECTOR(104 DOWNTO 0);
     SIGNAL IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY : STD_LOGIC_VECTOR(74 DOWNTO 0);
-    SIGNAL IM_IW_FROM_MEMORY, IM_IW_TO_WB : STD_LOGIC_VECTOR(50 DOWNTO 0);
+    SIGNAL IM_IW_FROM_MEMORY, IM_IW_TO_WB : STD_LOGIC_VECTOR(52 DOWNTO 0);
 
     SIGNAL  wb_data, Rd_data: STD_LOGIC_VECTOR(15 DOWNTO 0);
     SIGNAL Rd_address: STD_LOGIC_VECTOR (2 DOWNTO 0);
@@ -75,11 +92,11 @@ ARCHITECTURE processor_arch OF processor IS
     ------------------------------------------------------------------------
 BEGIN
     --------------------------- Fetching stage ---------------------------
-     
-    --------------------------- Decoding stage ---------------------------
+    FETCHING : fetch_stage GENERIC MAP(n => 16) PORT MAP(rst, clk, '0', IF_ID_BUFFER_FROM_FETCHING);
 
-    IF_ID_BUFFER : buffer_component GENERIC MAP(n => 63) PORT MAP(clk, rst, IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING);
-    DECODING : decode_stage GENERIC MAP(n => 16) PORT MAP(rst, clk, wb_data, IF_ID_BUFFER_TO_DECODING, ID_IE_FROM_DECODING);
+    --------------------------- Decoding stage ---------------------------
+    IF_ID_BUFFER : buffer_component GENERIC MAP(n => 66) PORT MAP(clk, rst, IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING);
+    DECODING : decode_stage GENERIC MAP(n => 16) PORT MAP(rst, clk, IN_PORT, IF_ID_BUFFER_TO_DECODING, ID_IE_FROM_DECODING);
 
     --------------------------- Execution stage ---------------------------
     ID_IE_BUFFER : buffer_component GENERIC MAP(n => 105) PORT MAP(clk, rst, ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION);
@@ -87,9 +104,11 @@ BEGIN
 
     --------------------------- Memory stage ---------------------------
     IE_IM_BUFFER : buffer_component GENERIC MAP(n => 75) PORT MAP(clk, rst, IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY);
+    MEMORY : MEMORY_STAGE GENERIC MAP(n => 16) PORT MAP(IE_IM_FROM_EXECUTION,clk, IM_IW_FROM_MEMORY);
 
     --------------------------- Writing stage ---------------------------
-    IM_IW_BUFFER : buffer_component GENERIC MAP(n => 51) PORT MAP(clk, rst, IM_IW_FROM_MEMORY, IM_IW_TO_WB);
+    IM_IW_BUFFER : buffer_component GENERIC MAP(n => 53) PORT MAP(clk, rst, IM_IW_FROM_MEMORY, IM_IW_TO_WB);
     WRITE_BACK: WB_STAGE GENERIC MAP(n => 16) PORT MAP(IM_IW_TO_WB, wb_data, Rd_data,Rd_address, WB );
+
 
 END processor_arch;

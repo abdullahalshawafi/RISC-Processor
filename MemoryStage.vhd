@@ -22,9 +22,9 @@ USE IEEE.numeric_std.ALL;
 ENTITY MEMORY_STAGE IS
     GENERIC (n : INTEGER := 16);
     PORT (
-	IE_IM_BUFFER:in std_logic_vector (74 downto 0 );
+	    IE_IM_BUFFER:in std_logic_vector (74 downto 0 );
         clk : IN std_logic;
-        IM_IW_BUFFER:out std_logic_vector (53 downto 0 )
+        IM_IW_BUFFER:out std_logic_vector (52 downto 0 )
     );
 END ENTITY;
 
@@ -50,11 +50,11 @@ ARCHITECTURE MEMORY_STAGE1 OF MEMORY_STAGE IS
 BEGIN
 	PC <= IE_IM_BUFFER(31 downto 0);
 	Alu_result <= IE_IM_BUFFER(47 downto 32);
-	IM_IW_BUFFER(31 downto 16) <= Alu_result;
+    IM_IW_BUFFER(31 downto 16) <= Alu_result;
 	RS_data <= IE_IM_BUFFER(63 downto 48);
 	Rd_address <= IE_IM_BUFFER(66 downto 64);
 	dataMem: DATA_MEMORY generic map(16) port map(clk,alu_result,RS_data,mem_Write,memRead);
-    	IM_IW_BUFFER(15 downto 0) <= memRead;
+    IM_IW_BUFFER(15 downto 0) <= memRead;
 	            
     
 END MEMORY_STAGE1;
