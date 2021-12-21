@@ -14,10 +14,10 @@ USE ieee.std_logic_1164.ALL;
 ENTITY EX_STAGE IS
     GENERIC (n : INTEGER := 16);
     PORT (
-        
+
         ID_IE_BUFFER : IN STD_LOGIC_VECTOR (105 DOWNTO 0);
         IE_IM_BUFFER : OUT STD_LOGIC_VECTOR (75 DOWNTO 0);
-        clk,rst :IN STD_LOGIC
+        clk, rst : IN STD_LOGIC
     );
 
 END EX_STAGE;
@@ -41,14 +41,12 @@ ARCHITECTURE struct OF EX_STAGE IS
             my_out : OUT STD_LOGIC_VECTOR(n - 1 DOWNTO 0));
     END COMPONENT;
 
-  COMPONENT FLAG_REG IS
- PORT (
-        clk, rst : IN STD_LOGIC;
-        en_z, en_n, en_c, Z, N, C : IN STD_LOGIC;
-        Z_out, N_out, C_out : OUT STD_LOGIC);
+    COMPONENT FLAG_REG IS
+        PORT (
+            clk, rst : IN STD_LOGIC;
+            en_z, en_n, en_c, Z, N, C : IN STD_LOGIC;
+            Z_out, N_out, C_out : OUT STD_LOGIC);
     END COMPONENT;
-
- 
 
     -- #### SIGNALS
     SIGNAL Z, Ne, C, Z0, N0, C0, Cfinal : STD_LOGIC;
@@ -58,23 +56,42 @@ ARCHITECTURE struct OF EX_STAGE IS
 
 BEGIN
 
-    alu_op <= ID_IE_BUFFER(103 DOWNTO 101);
-    alusrc <= ID_IE_BUFFER(100);
+    -- alu_op <= ID_IE_BUFFER(103 DOWNTO 101);
+    -- alusrc <= ID_IE_BUFFER(100);
     fx1 : MUX2 PORT MAP(alusrc, ID_IE_BUFFER(63 DOWNTO 48), ID_IE_BUFFER(95 DOWNTO 80), alu_src2);
 
     fx2 : ALU PORT MAP(ID_IE_BUFFER(47 DOWNTO 32), alu_src2, alu_op, alu_result_temp, C0, N0, Z0);
 
-    fx3 : FLAG_REG PORT MAP(clk,rst,ID_IE_BUFFER(97), ID_IE_BUFFER(98), ID_IE_BUFFER(99), Z0, N0, Cfinal, Z, Ne, C);
+    fx3 : FLAG_REG PORT MAP(clk, rst, ID_IE_BUFFER(97), ID_IE_BUFFER(98), ID_IE_BUFFER(99), Z0, N0, Cfinal, Z, Ne, C);
 
-    Cfinal <= ID_IE_BUFFER(96) OR C0;
-    -- PC+1
-    IE_IM_BUFFER(31 DOWNTO 0) <= ID_IE_BUFFER(31 DOWNTO 0);
-    IE_IM_BUFFER(47 DOWNTO 32) <= alu_result_temp;
-    --Rs data
-    IE_IM_BUFFER(63 DOWNTO 48) <= ID_IE_BUFFER(47 DOWNTO 32);
-    -- Rd address
-    IE_IM_BUFFER(66 DOWNTO 64) <= ID_IE_BUFFER(77 DOWNTO 75);
-    -- control units 
-    -- load , wb
-    IE_IM_BUFFER(75 DOWNTO 67) <= ID_IE_BUFFER(105) & ID_IE_BUFFER(104) & "0000000";
+    -- Cfinal <= ID_IE_BUFFER(96) OR C0;
+    -- -- PC+1
+    -- IE_IM_BUFFER(31 DOWNTO 0) <= ID_IE_BUFFER(31 DOWNTO 0);
+    -- IE_IM_BUFFER(47 DOWNTO 32) <= alu_result_temp;
+    -- --Rs data
+    -- IE_IM_BUFFER(63 DOWNTO 48) <= ID_IE_BUFFER(47 DOWNTO 32);
+    -- -- Rd address
+    -- IE_IM_BUFFER(66 DOWNTO 64) <= ID_IE_BUFFER(77 DOWNTO 75);
+    -- -- control units 
+    -- -- load , wb
+    -- IE_IM_BUFFER(75 DOWNTO 67) <= ID_IE_BUFFER(105) & ID_IE_BUFFER(104) & "0000000";
+
+    PROCESS (clk) IS
+    BEGIN
+        IF (rising_edge(clk)) THEN
+            alu_op <= ID_IE_BUFFER(103 DOWNTO 101);
+            alusrc <= ID_IE_BUFFER(100);
+            Cfinal <= ID_IE_BUFFER(96) OR C0;
+            -- PC+1
+            IE_IM_BUFFER(31 DOWNTO 0) <= ID_IE_BUFFER(31 DOWNTO 0);
+            IE_IM_BUFFER(47 DOWNTO 32) <= alu_result_temp;
+            --Rs data
+            IE_IM_BUFFER(63 DOWNTO 48) <= ID_IE_BUFFER(47 DOWNTO 32);
+            -- Rd address
+            IE_IM_BUFFER(66 DOWNTO 64) <= ID_IE_BUFFER(77 DOWNTO 75);
+            -- control units 
+            -- load , wb
+            IE_IM_BUFFER(75 DOWNTO 67) <= ID_IE_BUFFER(105) & ID_IE_BUFFER(104) & "0000000";
+        END IF;
+    END PROCESS;
 END struct;
