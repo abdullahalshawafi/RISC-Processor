@@ -50,6 +50,14 @@ ARCHITECTURE processor_arch OF processor IS
     END COMPONENT;
 
     --------------------------- Memory component ---------------------------
+    ENTITY MEMORY_STAGE IS
+    GENERIC (n : INTEGER := 16);
+    PORT (
+	    IE_IM_BUFFER:in std_logic_vector (74 downto 0 );
+        clk : IN std_logic;
+        IM_IW_BUFFER:out std_logic_vector (53 downto 0 )
+    );
+    END ENTITY;
 
     --------------------------- Writing component ---------------------------
     --------------------------- SIGNALS -----------------------------------
@@ -71,6 +79,7 @@ BEGIN
 
     --------------------------- Memory stage ---------------------------
     IE_IM_BUFFER : buffer_component GENERIC MAP(n => 75) PORT MAP(clk, rst, IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY);
+    MEMORY : MEMORY_STAGE GENERIC MAP(n => 16) PORT MAP(IE_IM_FROM_EXECUTION,clk, IE_IM_TO_MEMORY);
 
     --------------------------- Writing stage ---------------------------
     IM_IW_BUFFER : buffer_component GENERIC MAP(n => 51) PORT MAP(clk, rst, IM_IW_FROM_MEMORY, IM_IW_TO_WB);
