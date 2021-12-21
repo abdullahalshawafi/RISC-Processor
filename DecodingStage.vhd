@@ -7,8 +7,9 @@ ENTITY decode_stage IS
     PORT (
         rst, clk : IN STD_LOGIC;
         IN_PORT : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
-        IF_ID_BUFFER : IN STD_LOGIC_VECTOR(62 DOWNTO 0);
-        ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(104 DOWNTO 0)
+        WB : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
+        IF_ID_BUFFER : IN STD_LOGIC_VECTOR(64 DOWNTO 0);
+        ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(105 DOWNTO 0)
     );
 
 END decode_stage;
@@ -27,32 +28,63 @@ ARCHITECTURE decode_stage_arch OF decode_stage IS
 
     END COMPONENT;
 
-    -- in_en & reg_write will be taken from control unit 
-    SIGNAL in_en, reg_write, inst_type : STD_LOGIC;
+    COMPONENT CONTROL_UNIT IS
+        PORT (
+            set_flush : IN STD_LOGIC;
+            op_code : IN STD_LOGIC_VECTOR(4 DOWNTO 0);
+            pc_write, inst_type, flush : OUT STD_LOGIC;
+            set_carry, branch, alu_src : OUT STD_LOGIC;
+            Rs_en, Rt_en, mem_read : OUT STD_LOGIC;
+            mem_write, interrupt_en : OUT STD_LOGIC;
+            stack, load, reg_write, in_en, out_en : OUT STD_LOGIC;
+            alu_op, flag_en, stack_op : OUT STD_LOGIC_VECTOR(2 DOWNTO 0)
+        );
+    END COMPONENT;
+
+    COMPONENT MUX2 IS
+        GENERIC (n : INTEGER := 16);
+        PORT (
+            sel : IN STD_LOGIC;
+            in1, in2 : IN STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
+            my_out : OUT STD_LOGIC_VECTOR(n - 1 DOWNTO 0));
+    END COMPONENT;
+
+    -----------------------------------------------------------------------
+
+    -- SIGNAL in_en, reg_write, inst_type : STD_LOGIC;
     SIGNAL Rs_address, Rt_address, Rd_address : STD_LOGIC_VECTOR(2 DOWNTO 0);
     SIGNAL Wd, Rs_data, Rt_data : STD_LOGIC_VECTOR(15 DOWNTO 0);
 
+    ---------------------- CONTROL UNIT SIGNALS ----------------------------
+    SIGNAL set_flush, pc_write, flush, set_carry, branch, alu_src, Rs_en, Rt_en, mem_read, mem_write, interrupt_en, stack, load, reg_write, in_en, out_en : STD_LOGIC;
+    SIGNAL inst_type : STD_LOGIC;
+    SIGNAL alu_op, flag_en, stack_op : STD_LOGIC_VECTOR(2 DOWNTO 0);
+    SIGNAL op_code : STD_LOGIC_VECTOR(4 DOWNTO 0);
+    --------------------------------------------------------------------------
 BEGIN
 
+    inst_type <= IF_ID_BUFFER(64);
+    op_code <= IF_ID_BUFFER(63 DOWNTO 59);
+    Rs_address <= IF_ID_BUFFER(58 DOWNTO 56);
+    Rt_address <= IF_ID_BUFFER(55 DOWNTO 53);
+    Rd_address <= IF_ID_BUFFER(52 DOWNTO 50);
+    ------- 49:34 immediate value 
+    ------- 2 extra bits
     -- PC+1 <=IF_ID_BUFFER(31 DOWNTO 0)
-    -- opcode <= IF_ID_BUFFER(32 downto 36)
-    Rs_address <= IF_ID_BUFFER(39 DOWNTO 37);
-    Rt_address <= IF_ID_BUFFER(42 DOWNTO 40);
-    Rd_address <= IF_ID_BUFFER(45 DOWNTO 43);
-    ------- 46:61 immediate value 
-    inst_type <= IF_ID_BUFFER(62);
-    -- in_en <= IF_ID_BUFFER(1);
-    -- reg_write <= IF_ID_BUFFER(0);
 
-    -----------------------------------------------------------------
-    Wd <= IN_PORT WHEN (in_en = '1'); --replace it with a mux 
+    --------------------------------------------------------------
+    CU : CONTROL_UNIT PORT MAP('0', op_code, pc_write, inst_type, flush, set_carry, branch, alu_src, Rs_en, Rt_en, mem_read, mem_write, interrupt_en, stack, load, reg_write, in_en, out_en, alu_op, flag_en, stack_op);
+
+    -----------------------------------------------------------------    
+    WD_mux : MUX2 GENERIC MAP(n => 16) PORT MAP(in_en, WB, IN_PORT, Wd);
 
     -----------------------------------------------------------------
 
     Rx : register_file PORT MAP(clk, rst, reg_write, Rs_address, Rt_address, Rd_address, Wd, Rs_data, Rt_data);
 
     ------------------- ----------------------------------------------
-    ID_IE_BUFFER(103 DOWNTO 96) <= "01100000";
+    ID_IE_BUFFER(105 DOWNTO 96) <= load & reg_write & alu_op & alu_src & flag_en & set_carry;
+    -- ID_IE_BUFFER(103 DOWNTO 96) <= "01100000";
     ID_IE_BUFFER(95 DOWNTO 64) <= (OTHERS => '0');
     ID_IE_BUFFER(63 DOWNTO 48) <= Rt_data;
     ID_IE_BUFFER(47 DOWNTO 32) <= Rs_data;

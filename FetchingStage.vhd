@@ -3,7 +3,6 @@ USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 
 ENTITY fetch_stage IS
-    GENERIC (n : INTEGER := 32);
     PORT (
         rst, clk, instType : IN STD_LOGIC;
         IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(64 DOWNTO 0)

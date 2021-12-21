@@ -15,7 +15,7 @@ BEGIN
     BEGIN
         IF (rst = '1') THEN
             reg_out <= (OTHERS => '0');
-        ELSIF (rising_edge(clk) AND en = '1') THEN
+        ELSIF (falling_edge(clk) AND en = '1') THEN
             reg_out <= reg_in;
         END IF;
 
