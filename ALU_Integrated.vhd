@@ -39,13 +39,13 @@ BEGIN
 
       oneVector <= (0 => '1', OTHERS => '0');
       zeroVector <= (OTHERS => '0');
-      one_comp_Rt <= NOT Rt;
+      one_comp_Rt <= NOT Rs;
 
-      OP2 : ALU_ADDER PORT MAP(oneVector, Rt, '0', C2, Z2, N2, F2);
+      OP2 : ALU_ADDER PORT MAP(oneVector, Rs, '0', C2, Z2, N2, F2);
       OP4 : ALU_ADDER PORT MAP(Rs, Rt, '0', C4, Z4, N4, F4);
       OP5 : ALU_ADDER PORT MAP(Rs, one_comp_Rt, '1', C5, Z5, N5, F5);
       -- #1 NOT OPERATION
-      F1 <= NOT Rt;
+      F1 <= NOT Rs;
       Z1 <= '1' WHEN F1 = zeroVector
             ELSE
             '0';
@@ -54,7 +54,7 @@ BEGIN
             '0';
 
       -- #3 MOV OPERATION
-      F3 <= Rt;
+      F3 <= Rs;
 
       -- #6 AND OPERATION
       F6 <= Rs AND Rt;
