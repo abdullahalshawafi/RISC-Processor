@@ -25,6 +25,15 @@ ARCHITECTURE processor_arch OF processor IS
 
     --------------------------- Fetching component ---------------------------
 
+    COMPONENT fetch_stage IS
+        GENERIC (n : INTEGER := 32);
+        PORT (
+            rst, clk, instType : IN STD_LOGIC;
+            IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(64 DOWNTO 0)
+        );
+
+    END fetch_stage;
+
     --------------------------- Decoding component ---------------------------
 
     COMPONENT decode_stage IS
@@ -53,15 +62,16 @@ ARCHITECTURE processor_arch OF processor IS
 
     --------------------------- Writing component ---------------------------
     --------------------------- SIGNALS -----------------------------------
-    SIGNAL IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING : STD_LOGIC_VECTOR(62 DOWNTO 0);
+    SIGNAL IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING : STD_LOGIC_VECTOR(64 DOWNTO 0);
     SIGNAL ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION : STD_LOGIC_VECTOR(104 DOWNTO 0);
     SIGNAL IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY : STD_LOGIC_VECTOR(74 DOWNTO 0);
     SIGNAL IM_IW_FROM_MEMORY, IM_IW_TO_WB : STD_LOGIC_VECTOR(50 DOWNTO 0);
     ------------------------------------------------------------------------
 BEGIN
     --------------------------- Fetching stage ---------------------------
-    --------------------------- Decoding stage ---------------------------
+    FETCHING : fetch_stage GENERIC MAP(n => 16) PORT MAP(rst, clk, '0', IF_ID_BUFFER_FROM_FETCHING);
 
+    --------------------------- Decoding stage ---------------------------
     IF_ID_BUFFER : buffer_component GENERIC MAP(n => 63) PORT MAP(clk, rst, IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING);
     DECODING : decode_stage GENERIC MAP(n => 16) PORT MAP(rst, clk, IN_PORT, IF_ID_BUFFER_TO_DECODING, ID_IE_FROM_DECODING);
 
