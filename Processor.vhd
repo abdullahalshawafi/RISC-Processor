@@ -41,7 +41,8 @@ ARCHITECTURE processor_arch OF processor IS
         PORT (
             rst, clk : IN STD_LOGIC;
             IN_PORT : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
-            IF_ID_BUFFER : IN STD_LOGIC_VECTOR(62 DOWNTO 0);
+            WB : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
+            IF_ID_BUFFER : IN STD_LOGIC_VECTOR(64 DOWNTO 0);
             ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(104 DOWNTO 0)
         );
 
@@ -95,7 +96,7 @@ BEGIN
 
     --------------------------- Decoding stage ---------------------------
     IF_ID_BUFFER : buffer_component GENERIC MAP(n => 66) PORT MAP(clk, rst, IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING);
-    DECODING : decode_stage GENERIC MAP(n => 16) PORT MAP(rst, clk, IN_PORT, IF_ID_BUFFER_TO_DECODING, ID_IE_FROM_DECODING);
+    DECODING : decode_stage GENERIC MAP(n => 16) PORT MAP(rst, clk, IN_PORT, wb_data,IF_ID_BUFFER_TO_DECODING, ID_IE_FROM_DECODING);
 
     --------------------------- Execution stage ---------------------------
     ID_IE_BUFFER : buffer_component GENERIC MAP(n => 105) PORT MAP(clk, rst, ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION);
