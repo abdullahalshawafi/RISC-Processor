@@ -73,7 +73,7 @@ def assemble(lines):
 
         # operands[0] --> OP Code
         if len(operands) == 1:
-            # Append the OP Code + 11 Bits to the assembled lines
+            # Append to the assembled lines the OP Code + 11 Bits
             assembled_lines.append(op_codes[operands[0]] + "00000000000\n")
 
         # operands[1] may be either Rdst or Interrupt Index
@@ -82,13 +82,13 @@ def assemble(lines):
                 # Convert the interrupt's index from decimal to binary
                 index = '{0:02b}'.format(int(operands[1]))
 
-                # Append the OP Code + Index + 9 Bits to the assembled lines
+                # Append to the assembled lines the OP Code + Index + 9 Bits
                 assembled_lines.append(
                     op_codes[operands[0]] + index + "000000000\n")
             else:
-                # Append the OP Code + Rdst Address + 8 Bits to the assembled lines
+                # Append to the assembled lines the OP Code + Rsrc Address + 2 Bits + Rdst Address + 2 Bits
                 assembled_lines.append(
-                    op_codes[operands[0]] + registers[operands[1]] + "00000000\n")
+                    op_codes[operands[0]] + registers[operands[1]] + "000" + registers[operands[1]] + "00\n")
 
         elif len(operands) == 3:
             if (operands[0] == "MOV"):
