@@ -9,7 +9,7 @@ ENTITY decode_stage IS
         IN_PORT : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
         WB : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
         IF_ID_BUFFER : IN STD_LOGIC_VECTOR(64 DOWNTO 0);
-        ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(104 DOWNTO 0)
+        ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(105 DOWNTO 0)
     );
 
 END decode_stage;
@@ -57,7 +57,6 @@ ARCHITECTURE decode_stage_arch OF decode_stage IS
 
     ---------------------- CONTROL UNIT SIGNALS ----------------------------
     SIGNAL set_flush, pc_write, flush, set_carry, branch, alu_src, Rs_en, Rt_en, mem_read, mem_write, interrupt_en, stack, load, reg_write, in_en, out_en : STD_LOGIC;
-    -- MISSING INST_TYPE
     SIGNAL inst_type : STD_LOGIC;
     SIGNAL alu_op, flag_en, stack_op : STD_LOGIC_VECTOR(2 DOWNTO 0);
     SIGNAL op_code : STD_LOGIC_VECTOR(4 DOWNTO 0);
@@ -84,13 +83,13 @@ BEGIN
     Rx : register_file PORT MAP(clk, rst, reg_write, Rs_address, Rt_address, Rd_address, Wd, Rs_data, Rt_data);
 
     ------------------- ----------------------------------------------
-    ID_IE_BUFFER(103 DOWNTO 96) <= "01100000";
+    ID_IE_BUFFER(105 DOWNTO 96) <= load & reg_write & alu_op & alu_src & flag_en & set_carry;
+    -- ID_IE_BUFFER(103 DOWNTO 96) <= "01100000";
     ID_IE_BUFFER(95 DOWNTO 64) <= (OTHERS => '0');
     ID_IE_BUFFER(63 DOWNTO 48) <= Rt_data;
     ID_IE_BUFFER(47 DOWNTO 32) <= Rs_data;
     ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0);
     -- ID_IE_BUFFER[96 SETC ,  97,98,99 FlagEn znc , 100 AluSrc , 101:103 AluOP i will assume for now it is 3 bits] 
-    ID_IE_BUFFER(103 downto 96) <= alu_op & alu_src & flag_en & set_carry;
     -- ID_IE_BUFFER(64:95) instruction 32 bit => 80:95 imm. value
 
 END decode_stage_arch;

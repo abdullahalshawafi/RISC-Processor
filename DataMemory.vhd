@@ -27,8 +27,8 @@ ARCHITECTURE DATA_MEMORY1 OF DATA_MEMORY IS
     SIGNAL memRead : STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
     SIGNAL address : STD_LOGIC_VECTOR(31 DOWNTO 0);
 BEGIN
-    address(31 downto 16) <= (others => my_address(15));
-    address(15 downto 0) <= my_address ;
+    address(31 DOWNTO 16) <= (OTHERS => my_address(15));
+    address(15 DOWNTO 0) <= my_address;
     dataMem : RAM GENERIC MAP(16) PORT MAP(clk, write_mem, data, address, memRead);
     PROCESS (clk) IS
     BEGIN
