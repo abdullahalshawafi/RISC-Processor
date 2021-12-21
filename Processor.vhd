@@ -54,7 +54,8 @@ ARCHITECTURE processor_arch OF processor IS
         GENERIC (n : INTEGER := 16);
         PORT (
             ID_IE_BUFFER : IN STD_LOGIC_VECTOR (105 DOWNTO 0);
-            IE_IM_BUFFER : OUT STD_LOGIC_VECTOR (75 DOWNTO 0)
+            IE_IM_BUFFER : OUT STD_LOGIC_VECTOR (75 DOWNTO 0);
+            clk,rst: IN STD_LOGIC
 
         );
     END COMPONENT;
@@ -99,7 +100,7 @@ BEGIN
 
     --------------------------- Execution stage ---------------------------
     ID_IE_BUFFER : buffer_component GENERIC MAP(n => 106) PORT MAP(clk, rst, ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION);
-    EXECUTION : EX_STAGE GENERIC MAP(n => 16) PORT MAP(ID_IE_TO_EXECUTION, IE_IM_FROM_EXECUTION);
+    EXECUTION : EX_STAGE GENERIC MAP(n => 16) PORT MAP(ID_IE_TO_EXECUTION, IE_IM_FROM_EXECUTION,clk,rst);
 
     --------------------------- Memory stage ---------------------------
     IE_IM_BUFFER : buffer_component GENERIC MAP(n => 76) PORT MAP(clk, rst, IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY);
