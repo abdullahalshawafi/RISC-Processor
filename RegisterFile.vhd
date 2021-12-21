@@ -35,14 +35,22 @@ BEGIN
     -- m7taga a-check 3l clock bs 
     -----------------------------------------------------------------
 
-    en(0) <= reg_write WHEN (Rd_address = "000") ELSE '0';
-    en(1) <= reg_write WHEN (Rd_address = "001") ELSE '0';
-    en(2) <= reg_write WHEN (Rd_address = "010") ELSE '0';
-    en(3) <= reg_write WHEN (Rd_address = "011") ELSE '0';
-    en(4) <= reg_write WHEN (Rd_address = "100") ELSE '0';
-    en(5) <= reg_write WHEN (Rd_address = "101") ELSE '0';
-    en(6) <= reg_write WHEN (Rd_address = "110") ELSE '0';
-    en(7) <= reg_write WHEN (Rd_address = "111") ELSE '0';
+    en(0) <= reg_write WHEN (Rd_address = "000") ELSE
+    '0';
+    en(1) <= reg_write WHEN (Rd_address = "001") ELSE
+    '0';
+    en(2) <= reg_write WHEN (Rd_address = "010") ELSE
+    '0';
+    en(3) <= reg_write WHEN (Rd_address = "011") ELSE
+    '0';
+    en(4) <= reg_write WHEN (Rd_address = "100") ELSE
+    '0';
+    en(5) <= reg_write WHEN (Rd_address = "101") ELSE
+    '0';
+    en(6) <= reg_write WHEN (Rd_address = "110") ELSE
+    '0';
+    en(7) <= reg_write WHEN (Rd_address = "111") ELSE
+    '0';
 
     -----------------------------------------------------------------
 
