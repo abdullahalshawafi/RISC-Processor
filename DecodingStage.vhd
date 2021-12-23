@@ -10,7 +10,7 @@ ENTITY decode_stage IS
         WB : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
         IF_ID_BUFFER : IN STD_LOGIC_VECTOR(80 DOWNTO 0);
         pc_en : OUT STD_LOGIC;
-        ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(122 DOWNTO 0)
+        ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(123 DOWNTO 0)
     );
 
 END decode_stage;
@@ -81,6 +81,7 @@ BEGIN
     Rx : register_file PORT MAP(clk, rst, reg_write, Rs_address, Rt_address, WB_address, WB, Rs_data, Rt_data);
 
     -----------------------------------------------------------------
+    ID_IE_BUFFER(123) <= out_en;
     ID_IE_BUFFER(122 DOWNTO 107) <= IF_ID_BUFFER(80 DOWNTO 65); -- INPUT PORT 
     ID_IE_BUFFER(106 DOWNTO 96) <= in_en & load & reg_write & alu_op & alu_src & flag_en & set_carry;
     ID_IE_BUFFER(95 DOWNTO 64) <= IF_ID_BUFFER(49 DOWNTO 34) & op_code & Rs_address & Rt_address & Rd_address & "00";

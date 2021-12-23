@@ -6,6 +6,8 @@ add wave -position end  sim:/fetch_stage/rst
 add wave -position end  sim:/fetch_stage/clk
 add wave -position end  sim:/fetch_stage/instType
 add wave -position end  sim:/fetch_stage/IF_ID_BUFFER
+add wave -position end  sim:/fetch_stage/pc_out
+add wave -position end  sim:/fetch_stage/instr
 
 force -freeze sim:/fetch_stage/clk 1 0, 0 {50 ps} -r 100
 

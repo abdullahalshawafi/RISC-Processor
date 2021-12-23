@@ -30,6 +30,7 @@ BEGIN
             mem_write <= '0';
             interrupt_en <= '0';
             reg_write <= '0';
+            alu_op <= "000";
             flag_en <= "000";
         ELSIF op_code = "00010" THEN
             pc_write <= '0';
@@ -41,6 +42,7 @@ BEGIN
             mem_write <= '0';
             interrupt_en <= '0';
             reg_write <= '0';
+            alu_op <= "000";
             flag_en <= "000";
         ELSIF op_code = "00011" THEN
             inst_type <= '0';
@@ -107,6 +109,7 @@ BEGIN
             reg_write <= '0';
             in_en <= '0';
             out_en <= '1';
+            alu_op <= "011";
             flag_en <= "000";
         ELSIF op_code = "00111" THEN
             inst_type <= '0';

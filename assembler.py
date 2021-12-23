@@ -93,11 +93,20 @@ def assemble(lines):
         elif len(operands) == 3:
             if (operands[0] == "MOV"):
                 assembled_lines.append(
-                    op_codes[operands[0]] + registers[operands[1]] + registers[operands[2]] + "00000\n")
+                    op_codes[operands[0]] + registers[operands[1]] + "000" + registers[operands[2]] + "00\n")
             else:
                 assembled_lines.append(
                     op_codes[operands[0]] + registers[operands[1]] + "00000000\n")
                 assembled_lines.append(operands[2] + '\n')
+
+        elif len(operands) == 4:
+            if (operands[0] == "ADD" or operands[0] == "SUB" or operands[0] == "AND"):
+                assembled_lines.append(
+                    op_codes[operands[0]] + registers[operands[2]] + registers[operands[3]] + registers[operands[1]] + "00\n")
+            else:
+                assembled_lines.append(
+                    op_codes[operands[0]] + registers[operands[1]] + "000" + registers[operands[2]] + "00\n")
+                assembled_lines.append(operands[3] + '\n')
     return assembled_lines
 
 

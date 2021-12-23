@@ -15,10 +15,10 @@ ENTITY WB_STAGE IS
     GENERIC (n : INTEGER := 16);
     PORT (
         clk : IN STD_LOGIC;
-        IM_IW_BUFFER : IN STD_LOGIC_VECTOR (52 DOWNTO 0);
+        IM_IW_BUFFER : IN STD_LOGIC_VECTOR (53 DOWNTO 0);
         wb_data, Rd_data : OUT STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
         Rd_address : OUT STD_LOGIC_VECTOR (2 DOWNTO 0);
-        WB : OUT STD_LOGIC
+        WB, out_en : OUT STD_LOGIC
     );
 END ENTITY;
 
@@ -39,6 +39,7 @@ BEGIN
 
     WB_MUX : MUX2 PORT MAP(load_signal, alu_result, read_data, wb_data_temp);
 
+    out_en <= IM_IW_BUFFER(53);
     load_signal <= IM_IW_BUFFER(52);
     alu_result <= IM_IW_BUFFER(31 DOWNTO 16);
     read_data <= IM_IW_BUFFER(15 DOWNTO 0);

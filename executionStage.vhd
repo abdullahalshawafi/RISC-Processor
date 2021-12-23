@@ -15,8 +15,8 @@ ENTITY EX_STAGE IS
     GENERIC (n : INTEGER := 16);
     PORT (
 
-        ID_IE_BUFFER : IN STD_LOGIC_VECTOR (122 DOWNTO 0);
-        IE_IM_BUFFER : OUT STD_LOGIC_VECTOR (75 DOWNTO 0);
+        ID_IE_BUFFER : IN STD_LOGIC_VECTOR (123 DOWNTO 0);
+        IE_IM_BUFFER : OUT STD_LOGIC_VECTOR (76 DOWNTO 0);
         Rd_M_address, Rd_W_address : IN STD_LOGIC_VECTOR (2 DOWNTO 0);
         Rd_M_data, Rd_W_data : IN STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
         clk, rst, WB_M, WB_W : IN STD_LOGIC
@@ -111,5 +111,8 @@ BEGIN
     -- control units 
     -- load , wb
     IE_IM_BUFFER(75 DOWNTO 67) <= ID_IE_BUFFER(105) & ID_IE_BUFFER(104) & "0000000";
+
+    -- Out Enable
+    IE_IM_BUFFER(76) <= ID_IE_BUFFER(123);
 
 END struct;

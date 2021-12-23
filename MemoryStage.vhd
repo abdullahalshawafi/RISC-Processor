@@ -19,9 +19,9 @@ USE IEEE.numeric_std.ALL;
 ENTITY MEMORY_STAGE IS
     GENERIC (n : INTEGER := 16);
     PORT (
-        IE_IM_BUFFER : IN STD_LOGIC_VECTOR (75 DOWNTO 0);
+        IE_IM_BUFFER : IN STD_LOGIC_VECTOR (76 DOWNTO 0);
         clk : IN STD_LOGIC;
-        IM_IW_BUFFER : OUT STD_LOGIC_VECTOR (52 DOWNTO 0)
+        IM_IW_BUFFER : OUT STD_LOGIC_VECTOR (53 DOWNTO 0)
     );
 END ENTITY;
 
@@ -33,11 +33,11 @@ ARCHITECTURE MEMORY_STAGE1 OF MEMORY_STAGE IS
             clk : IN STD_LOGIC;
             my_address : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
             data : IN STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
-            write_mem,mem_Read : IN STD_LOGIC;
+            write_mem, mem_Read : IN STD_LOGIC;
             write_back : OUT STD_LOGIC_VECTOR(n - 1 DOWNTO 0)
         );
     END COMPONENT;
-    
+
     SIGNAL memRead : STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
     SIGNAL PC : STD_LOGIC_VECTOR(31 DOWNTO 0);
     SIGNAL Alu_result : STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
@@ -47,7 +47,7 @@ ARCHITECTURE MEMORY_STAGE1 OF MEMORY_STAGE IS
     SIGNAL stack_OP : STD_LOGIC_VECTOR(2 DOWNTO 0);
 
 BEGIN
-    dataMem : DATA_MEMORY GENERIC MAP(16) PORT MAP(clk, alu_result, RS_data, mem_Write,mem_Read, memRead);
+    dataMem : DATA_MEMORY GENERIC MAP(16) PORT MAP(clk, alu_result, RS_data, mem_Write, mem_Read, memRead);
     PC <= IE_IM_BUFFER(31 DOWNTO 0);
     Alu_result <= IE_IM_BUFFER(47 DOWNTO 32);
     RS_data <= IE_IM_BUFFER(63 DOWNTO 48);
@@ -59,6 +59,7 @@ BEGIN
     flush <= '0'; ---IE_IM_BUFFER(73)
     WB <= IE_IM_BUFFER(74);
     load <= IE_IM_BUFFER(75);
+    IM_IW_BUFFER(53) <= IE_IM_BUFFER(76);
     IM_IW_BUFFER(52) <= load;
     IM_IW_BUFFER(51) <= WB;
     IM_IW_BUFFER(50 DOWNTO 48) <= Rd_address;
