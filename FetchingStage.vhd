@@ -5,7 +5,8 @@ USE IEEE.numeric_std.ALL;
 ENTITY fetch_stage IS
     PORT (
         rst, clk, pc_write, instType : IN STD_LOGIC;
-        IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(64 DOWNTO 0)
+        in_port : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
+        IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(80 DOWNTO 0)
     );
 
 END fetch_stage;
@@ -35,10 +36,6 @@ BEGIN
     x : PC PORT MAP(rst, clk, '1', pc_out);
     y : INSTRUCTION_MEMORY PORT MAP(clk, pc_out, '1', instr);
 
-    PROCESS (clk) IS
-    BEGIN
-        IF (rising_edge(clk)) THEN
-            IF_ID_BUFFER <= '0' & instr & (X"0000") & pc_out;
-        END IF;
-    END PROCESS;
+    IF_ID_BUFFER <= in_port & '0' & instr & (X"0000") & pc_out;
+
 END fetch_stage_arch;

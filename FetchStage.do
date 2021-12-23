@@ -1,6 +1,6 @@
 vsim -gui work.fetch_stage
 
-mem load -i out.mem /fetch_stage/y/addressing_instruction
+mem load -i instruction.mem /fetch_stage/y/addressing_instruction
 
 add wave -position end  sim:/fetch_stage/rst
 add wave -position end  sim:/fetch_stage/clk

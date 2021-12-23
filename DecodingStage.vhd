@@ -76,8 +76,13 @@ BEGIN
     CU : CONTROL_UNIT PORT MAP('0', op_code, pc_write, inst_type, flush, set_carry, branch, alu_src, Rs_en, Rt_en, mem_read, mem_write, interrupt_en, stack, load, reg_write, in_en, out_en, alu_op, flag_en, stack_op);
 
     -----------------------------------------------------------------
+    -- Wd <= (OTHERS => '0');
 
+<<<<<<< HEAD
     Rx : register_file PORT MAP(clk, rst, reg_write, Rs_address, Rt_address, WB_address, WB, Rs_data, Rt_data);
+=======
+    Rx : register_file PORT MAP(clk, rst, reg_write, Rs_address, Rt_address, Rd_address, WB, Rs_data, Rt_data);
+>>>>>>> 0473e716ebcf1f0750a285d53dcf2cc97d84b28d
 
     -----------------------------------------------------------------
     ID_IE_BUFFER(122 DOWNTO 107) <= IF_ID_BUFFER(80 DOWNTO 65); -- INPUT PORT 
