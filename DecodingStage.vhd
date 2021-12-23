@@ -79,8 +79,9 @@ BEGIN
     -- WD_mux : MUX2 GENERIC MAP(n => 16) PORT MAP(in_en, WB, IN_PORT, Wd);
 
     -----------------------------------------------------------------
+    -- Wd <= (OTHERS => '0');
 
-    Rx : register_file PORT MAP(clk, rst, reg_write, Rs_address, Rt_address, Rd_address, Wd, Rs_data, Rt_data);
+    Rx : register_file PORT MAP(clk, rst, reg_write, Rs_address, Rt_address, Rd_address, WB, Rs_data, Rt_data);
 
     -----------------------------------------------------------------
     ID_IE_BUFFER(122 DOWNTO 107) <= IF_ID_BUFFER(80 DOWNTO 65); -- INPUT PORT 
