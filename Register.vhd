@@ -10,14 +10,17 @@ ENTITY register_component IS
 END register_component;
 
 ARCHITECTURE register_component_arch OF register_component IS
+    SIGNAL reg_out_signal : STD_LOGIC_VECTOR (15 DOWNTO 0);
 BEGIN
     PROCESS (clk, rst)
     BEGIN
         IF (rst = '1') THEN
-            reg_out <= (OTHERS => '0');
+            reg_out_signal <= (OTHERS => '0');
         ELSIF (falling_edge(clk) AND en = '1') THEN
-            reg_out <= reg_in;
+            reg_out_signal <= reg_in;
         END IF;
 
     END PROCESS;
-END register_component_arch;
+
+    reg_out <= reg_out_signal;
+    END register_component_arch;
