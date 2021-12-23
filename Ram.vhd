@@ -5,9 +5,9 @@ USE ieee.numeric_std.ALL;
 ENTITY RAM IS
 	GENERIC (n : INTEGER := 16);
 	PORT (
-		clk, write_mem : IN STD_LOGIC;
+		clk, write_mem,mem_Read : IN STD_LOGIC;
 		data_in : IN STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
-		address : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+		address : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
 		data_out : OUT STD_LOGIC_VECTOR(n - 1 DOWNTO 0)
 	);
 END RAM;
@@ -21,8 +21,9 @@ BEGIN
 		IF rising_edge(clk) THEN
 			IF write_mem = '1' THEN
 				ram(to_integer(unsigned(address))) <= data_in;
-			END IF;
+			elsif mem_Read = '1' then
+				data_out <= ram(to_integer(unsigned(address)));		
+			END IF;		
 		END IF;
 	END PROCESS;
-	data_out <= ram(to_integer(unsigned(address)));
 END RAM1;
