@@ -19,36 +19,33 @@ ENTITY WB_STAGE IS
         wb_data, Rd_data : OUT STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
         Rd_address : OUT STD_LOGIC_VECTOR (2 DOWNTO 0);
         WB : OUT STD_LOGIC
-
     );
 END ENTITY;
 
 ARCHITECTURE WB_STAGE_ARCH OF WB_STAGE IS
 
     COMPONENT MUX2 IS
-
         PORT (
             sel : IN STD_LOGIC;
             in1, in2 : IN STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
-            my_out : OUT STD_LOGIC_VECTOR(n - 1 DOWNTO 0));
+            my_out : OUT STD_LOGIC_VECTOR(n - 1 DOWNTO 0)
+        );
+
     END COMPONENT;
+
     SIGNAL load_signal : STD_LOGIC;
     SIGNAL alu_result, read_data, wb_data_temp : STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
 BEGIN
 
     WB_MUX : MUX2 PORT MAP(load_signal, alu_result, read_data, wb_data_temp);
 
-    PROCESS (clk) IS
-    BEGIN
-        IF (rising_edge(clk)) THEN
-            load_signal <= IM_IW_BUFFER(52);
-            alu_result <= IM_IW_BUFFER(31 DOWNTO 16);
-            read_data <= IM_IW_BUFFER(15 DOWNTO 0);
-            wb_data <= wb_data_temp;
+    load_signal <= IM_IW_BUFFER(52);
+    alu_result <= IM_IW_BUFFER(31 DOWNTO 16);
+    read_data <= IM_IW_BUFFER(15 DOWNTO 0);
+    wb_data <= wb_data_temp;
 
-            Rd_data <= IM_IW_BUFFER (47 DOWNTO 32);
-            Rd_address <= IM_IW_BUFFER(50 DOWNTO 48);
-            WB <= IM_IW_BUFFER(51);
-        END IF;
-    END PROCESS;
+    Rd_data <= IM_IW_BUFFER (47 DOWNTO 32);
+    Rd_address <= IM_IW_BUFFER(50 DOWNTO 48);
+    WB <= IM_IW_BUFFER(51);
+
 END WB_STAGE_ARCH;
