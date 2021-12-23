@@ -1,8 +1,3 @@
 // instance=/fetch_stage/y/addressing_instruction
 // format=mti addressradix=h dataradix=b version=1.0 wordsperline=1
-0: 0011100100000100
-1: 0000100000000000
-2: 0000100000000000
-3: 0000100000000000
-4: 0000100000000000
-5: 0011000100000100
+0: 0010100100000100
