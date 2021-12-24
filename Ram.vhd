@@ -9,7 +9,7 @@ ENTITY RAM IS
             stack_OP : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
             data_in : IN STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
             address : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
-            data_out : OUT STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
+            data_out : OUT STD_LOGIC_VECTOR(n - 1 DOWNTO 0):= STD_LOGIC_VECTOR'(x"0000");
 			PC : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
             PC_Read : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
         );
@@ -21,7 +21,7 @@ ARCHITECTURE RAM1 OF RAM IS
 BEGIN
 	PROCESS (clk) IS
 	BEGIN
-		IF rising_edge(clk) THEN
+		IF falling_edge(clk) THEN
 			IF write_mem = '1' and (stack_OP /= "011" and stack_OP /= "101") THEN
 				ram(to_integer(unsigned(address))) <= data_in;
 			elsif mem_Read = '1' and (stack_OP /= "010" and stack_OP /= "100") then

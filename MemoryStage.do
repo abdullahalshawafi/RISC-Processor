@@ -8,9 +8,7 @@ add wave -position end  sim:/memory_stage/Alu_result
 add wave -position end  sim:/memory_stage/PC
 add wave -position end  sim:/memory_stage/dataMem/address
 add wave -position end  sim:/memory_stage/dataMem/data
-add wave -position end  sim:/memory_stage/dataMem/memRead
 add wave -position end  sim:/memory_stage/dataMem/my_address
-add wave -position end  sim:/memory_stage/dataMem/write_back
 add wave -position end  sim:/memory_stage/dataMem/write_mem
 add wave -position end  sim:/memory_stage/dataMem/dataMem/address
 add wave -position end  sim:/memory_stage/dataMem/dataMem/stack_OP
@@ -44,5 +42,8 @@ force -freeze sim:/memory_stage/IE_IM_BUFFER 010F0FF0000000000016 0
 run
 run
 force -freeze sim:/memory_stage/IE_IM_BUFFER 01300000000000000016 0
+run
+run
+force -freeze sim:/memory_stage/IE_IM_BUFFER 00000000000000000016 0
 run
 run

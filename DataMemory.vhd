@@ -39,6 +39,6 @@ BEGIN
         else   modified_SP(19 downto 0)     when (stack_OP = "010" or stack_OP = "100" or stack_OP = "001");
 
     dataMem : RAM GENERIC MAP(16) PORT MAP(clk, write_mem,mem_Read, stack_OP,data, address, memRead,PC,PC_Read);
-    write_back <= data;
+    write_back <= memRead;
     PC_OUT <= PC_Read;
 END DATA_MEMORY1;
