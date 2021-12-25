@@ -77,6 +77,8 @@ BEGIN
             F4 WHEN AluOP = "100"
             ELSE
             F5 WHEN AluOP = "101"
+	    ELSE
+            F6 WHEN AluOP = "110"
             ELSE
             zeroVector;
       -- set carry bit 
@@ -90,6 +92,8 @@ BEGIN
             C4 WHEN AluOP = "100"
             ELSE
             C5 WHEN AluOP = "101"
+ 	   ELSE
+            C6 WHEN AluOP = "110"
             ELSE
             '0';
 
@@ -104,6 +108,8 @@ BEGIN
             Z4 WHEN AluOP = "100"
             ELSE
             Z5 WHEN AluOP = "101"
+ 	   ELSE
+            Z6 WHEN AluOP = "110"
             ELSE
             '0';
       -- set  negative flag bit 
@@ -117,6 +123,8 @@ BEGIN
             N4 WHEN AluOP = "100"
             ELSE
             N5 WHEN AluOP = "101"
+ 	   ELSE
+            N6 WHEN AluOP = "110"
             ELSE
             '0';
 END struct;
