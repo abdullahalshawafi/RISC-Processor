@@ -2,21 +2,23 @@ LIBRARY IEEE;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 
-ENTITY decode_stage IS
+ENTITY DECODING_STAGE IS
     GENERIC (n : INTEGER := 32);
     PORT (
         rst, clk : IN STD_LOGIC;
         WB_address : STD_LOGIC_VECTOR(2 DOWNTO 0);
-        WB : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
+        WB_data : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
+        WB_signal : IN STD_LOGIC;
         IF_ID_BUFFER : IN STD_LOGIC_VECTOR(80 DOWNTO 0);
         pc_en : OUT STD_LOGIC;
         ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(123 DOWNTO 0)
     );
 
-END decode_stage;
+END DECODING_STAGE;
 
-ARCHITECTURE decode_stage_arch OF decode_stage IS
+ARCHITECTURE DECODING_STAGE_arch OF DECODING_STAGE IS
 
+    ---------------------------- Register file -----------------------------
     COMPONENT register_file IS
         PORT (
             clk, rst : IN STD_LOGIC;
@@ -29,6 +31,7 @@ ARCHITECTURE decode_stage_arch OF decode_stage IS
 
     END COMPONENT;
 
+    ------------------------- Control unit ----------------------------------
     COMPONENT CONTROL_UNIT IS
         PORT (
             set_flush : IN STD_LOGIC;
@@ -42,17 +45,8 @@ ARCHITECTURE decode_stage_arch OF decode_stage IS
         );
     END COMPONENT;
 
-    COMPONENT MUX2 IS
-        GENERIC (n : INTEGER := 16);
-        PORT (
-            sel : IN STD_LOGIC;
-            in1, in2 : IN STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
-            my_out : OUT STD_LOGIC_VECTOR(n - 1 DOWNTO 0));
-    END COMPONENT;
-
     -----------------------------------------------------------------------
 
-    -- SIGNAL in_en, reg_write, inst_type : STD_LOGIC;
     SIGNAL Rs_address, Rt_address, Rd_address : STD_LOGIC_VECTOR(2 DOWNTO 0);
     SIGNAL Wd, Rs_data, Rt_data : STD_LOGIC_VECTOR(15 DOWNTO 0);
 
@@ -71,15 +65,10 @@ BEGIN
     op_code <= IF_ID_BUFFER(63 DOWNTO 59);
     ------- 49:34 immediate value 
     ------- 2 extra bits
-    -- PC+1 <=IF_ID_BUFFER(31 DOWNTO 0)
     --------------------------------------------------------------
     CU : CONTROL_UNIT PORT MAP('0', op_code, pc_write, inst_type, flush, set_carry, branch, alu_src, Rs_en, Rt_en, mem_read, mem_write, interrupt_en, stack, load, reg_write, in_en, out_en, alu_op, flag_en, stack_op);
-
     -----------------------------------------------------------------
-    -- Wd <= (OTHERS => '0');
-
-    Rx : register_file PORT MAP(clk, rst, reg_write, Rs_address, Rt_address, WB_address, WB, Rs_data, Rt_data);
-
+    Rx : register_file PORT MAP(clk, rst, WB_signal, Rs_address, Rt_address, WB_address, WB_data, Rs_data, Rt_data);
     -----------------------------------------------------------------
     ID_IE_BUFFER(123) <= out_en;
     ID_IE_BUFFER(122 DOWNTO 107) <= IF_ID_BUFFER(80 DOWNTO 65); -- INPUT PORT 
@@ -87,8 +76,8 @@ BEGIN
     ID_IE_BUFFER(95 DOWNTO 64) <= IF_ID_BUFFER(49 DOWNTO 34) & op_code & Rs_address & Rt_address & Rd_address & "00";
     ID_IE_BUFFER(63 DOWNTO 48) <= Rt_data;
     ID_IE_BUFFER(47 DOWNTO 32) <= Rs_data;
-    ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0);
+    ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0); --pc+1
     -----------------------------------------------------------------
-
     pc_en <= pc_write;
-END decode_stage_arch;
+    -------------------------------------------------------------------
+END DECODING_STAGE_arch;
