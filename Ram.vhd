@@ -30,8 +30,8 @@ BEGIN
 				ram(to_integer(unsigned(address))) <= PC(15 DOWNTO 0);
 				ram(to_integer(unsigned(address) + 1)) <= PC(31 DOWNTO 16);
 			elsif mem_Read = '1' and (stack_OP = "010" or stack_OP = "100") then
-				PC_Read(15 DOWNTO 0) <= ram(to_integer(unsigned(address) - 2));
-				PC_Read(31 DOWNTO 16) <= ram(to_integer(unsigned(address) - 1));		
+				PC_Read(15 DOWNTO 0) <= ram(to_integer(unsigned(address)));
+				PC_Read(31 DOWNTO 16) <= ram(to_integer(unsigned(address)+1));		
 			END IF;		
 		END IF;
 	END PROCESS;

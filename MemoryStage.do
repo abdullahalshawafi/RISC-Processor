@@ -23,27 +23,22 @@ add wave -position end  sim:/memory_stage/current_SP
 force -freeze sim:/memory_stage/IE_IM_BUFFER 0FFF0000000000000016 0
 force -freeze sim:/memory_stage/clk 1 0, 0 {50 ps} -r 100
 run
-run
 
 force -freeze sim:/memory_stage/IE_IM_BUFFER 0F6F0000000000000016 0
-run
 run
 
 force -freeze sim:/memory_stage/IE_IM_BUFFER 0F970000000000000016 0
 run
-run
 
 force -freeze sim:/memory_stage/IE_IM_BUFFER 00000000000000000016 0
-run
 run
 
 
 force -freeze sim:/memory_stage/IE_IM_BUFFER 010F0FF0000000000016 0
 run
-run
+
 force -freeze sim:/memory_stage/IE_IM_BUFFER 01300000000000000016 0
 run
-run
+
 force -freeze sim:/memory_stage/IE_IM_BUFFER 00000000000000000016 0
-run
 run
