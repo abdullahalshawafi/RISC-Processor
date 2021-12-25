@@ -32,7 +32,6 @@ ARCHITECTURE register_file_arch OF register_file IS
 
 BEGIN
 
-    -- m7taga a-check 3l clock bs 
     -----------------------------------------------------------------
 
     en(0) <= reg_write WHEN (Rd_address = "000") ELSE
