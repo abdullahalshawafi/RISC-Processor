@@ -30,11 +30,14 @@ ARCHITECTURE fetch_stage_arch OF fetch_stage IS
         );
     END COMPONENT;
 
+    SIGNAL instr_en : STD_LOGIC;
     SIGNAL instr : STD_LOGIC_VECTOR(15 DOWNTO 0);
     SIGNAL pc_out : STD_LOGIC_VECTOR(31 DOWNTO 0);
 BEGIN
-    x : PC PORT MAP(rst, clk, '1', pc_out);
-    y : INSTRUCTION_MEMORY PORT MAP(clk, pc_out, '1', instr);
+    instr_en <= NOT rst;
+
+    x : PC PORT MAP(rst, clk, instr_en, pc_out);
+    y : INSTRUCTION_MEMORY PORT MAP(clk, pc_out, instr_en, instr);
 
     IF_ID_BUFFER <= in_port & '0' & instr & (X"0000") & pc_out;
 

@@ -1,14 +1,4 @@
 inc r4
-nop
-nop
 inc r3
-nop
-nop
-not r0
-nop
-nop
-
-add r2, r3, r4
-nop
-nop
-and r1, r2, r0
+not r4
+hlt

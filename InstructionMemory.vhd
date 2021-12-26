@@ -18,9 +18,9 @@ ARCHITECTURE INSTRUCTION_MEMORY1 OF INSTRUCTION_MEMORY IS
     SIGNAL addressing_instruction : memory(0 TO 2 ** 20);
 
 BEGIN
-    PROCESS (clk) IS
+    PROCESS (clk, pc, read_instruction) IS
     BEGIN
-        IF read_instruction = '1' AND rising_edge(clk) THEN
+        IF read_instruction = '1' THEN
             instruction <= addressing_instruction(to_integer(unsigned((pc))));
         END IF;
     END PROCESS;
