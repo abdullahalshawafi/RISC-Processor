@@ -1,4 +1,10 @@
-inc r4
-inc r3
-not r4
-hlt
+in r0
+in r1
+inc r1
+not r3
+setc
+add r0, r0, r1
+mov r0, r4
+sub r5, r1, r4
+and r6, r5, r0
+out r6
