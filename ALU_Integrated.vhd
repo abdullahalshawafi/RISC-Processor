@@ -39,7 +39,7 @@ BEGIN
 
       oneVector <= (0 => '1', OTHERS => '0');
       zeroVector <= (OTHERS => '0');
-      one_comp_Rt <= NOT Rs;
+      one_comp_Rt <= NOT Rt;
 
       OP2 : ALU_ADDER PORT MAP(oneVector, Rs, '0', C2, Z2, N2, F2);
       OP4 : ALU_ADDER PORT MAP(Rs, Rt, '0', C4, Z4, N4, F4);
@@ -77,7 +77,7 @@ BEGIN
             F4 WHEN AluOP = "100"
             ELSE
             F5 WHEN AluOP = "101"
-	    ELSE
+            ELSE
             F6 WHEN AluOP = "110"
             ELSE
             zeroVector;
@@ -92,7 +92,7 @@ BEGIN
             C4 WHEN AluOP = "100"
             ELSE
             C5 WHEN AluOP = "101"
- 	   ELSE
+            ELSE
             C6 WHEN AluOP = "110"
             ELSE
             '0';
@@ -108,7 +108,7 @@ BEGIN
             Z4 WHEN AluOP = "100"
             ELSE
             Z5 WHEN AluOP = "101"
- 	   ELSE
+            ELSE
             Z6 WHEN AluOP = "110"
             ELSE
             '0';
@@ -123,7 +123,7 @@ BEGIN
             N4 WHEN AluOP = "100"
             ELSE
             N5 WHEN AluOP = "101"
- 	   ELSE
+            ELSE
             N6 WHEN AluOP = "110"
             ELSE
             '0';
