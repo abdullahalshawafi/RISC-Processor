@@ -71,7 +71,7 @@ BEGIN
     Rx : register_file PORT MAP(clk, rst, WB_signal, Rs_address, Rt_address, WB_address, WB_data, Rs_data, Rt_data);
     -----------------------------------------------------------------
 
-    ID_IE_BUFFER(130 DOWNTO 124) <= flush & stack & stack_op & mem_write & mem_read
+    ID_IE_BUFFER(130 DOWNTO 124) <= flush & stack & stack_op & mem_write & mem_read;
     ID_IE_BUFFER(123) <= out_en;
     ID_IE_BUFFER(122 DOWNTO 107) <= IF_ID_BUFFER(80 DOWNTO 65); -- INPUT PORT 
     ID_IE_BUFFER(106 DOWNTO 96) <= in_en & load & reg_write & alu_op & alu_src & flag_en & set_carry;

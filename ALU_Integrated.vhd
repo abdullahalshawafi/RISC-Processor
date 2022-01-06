@@ -4,6 +4,7 @@
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;
 
 ENTITY ALU IS
       GENERIC (n : INTEGER := 16);
@@ -37,14 +38,14 @@ ARCHITECTURE struct OF ALU IS
 
 BEGIN
 
-      oneVector <= (0 => '1', OTHERS => '0');
+      --oneVector <= (0 => '1', OTHERS => '0');
       zeroVector <= (OTHERS => '0');
       one_comp_Rt <= NOT Rt;
 
       OP2 : ALU_ADDER PORT MAP(oneVector, Rs, '0', C2, Z2, N2, F2);
       OP4 : ALU_ADDER PORT MAP(Rs, Rt, '0', C4, Z4, N4, F4);
       --OP5 : ALU_ADDER PORT MAP(Rs, one_comp_Rt, '1', C5, Z5, N5, F5);
-      F5 <= signed(Rs)- signed(Rt)
+      F5 <= STD_LOGIC_VECTOR(unsigned(Rs) - unsigned(Rt));
       -- #1 NOT OPERATION
       F1 <= NOT Rs;
       Z1 <= '1' WHEN F1 = zeroVector
