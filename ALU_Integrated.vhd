@@ -46,7 +46,7 @@ BEGIN
       OP4 : ALU_ADDER PORT MAP(Rs, Rt, '0', C4, Z4, N4, F4);
       --OP5 : ALU_ADDER PORT MAP(Rs, one_comp_Rt, '1', C5, Z5, N5, F5);
       F5 <= signed(Rs)- signed(Rt);
-      C5 <= 1 WHEN ((unsigned(Rs)-unsigned(Rt)) > unsigned(Rs)) and
+      C5 <= '1' WHEN ((unsigned(Rs)-unsigned(Rt)) > unsigned(Rs)) and
       ((unsigned(Rs)-unsigned(Rt)) > unsigned(Rt))
       else '0';
       Z5 <= '1' WHEN F5 = zeroVector
