@@ -17,10 +17,12 @@ ENTITY EX_STAGE IS
     GENERIC (n : INTEGER := 16);
     PORT (
 
-        ID_IE_BUFFER : IN STD_LOGIC_VECTOR (130 DOWNTO 0);
+        ID_IE_BUFFER : IN STD_LOGIC_VECTOR (131 DOWNTO 0);
         IE_IM_BUFFER : OUT STD_LOGIC_VECTOR (76 DOWNTO 0);
         Rd_M_address, Rd_W_address : IN STD_LOGIC_VECTOR (2 DOWNTO 0);
         Rd_M_data, Rd_W_data : IN STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
+        will_branch : OUT STD_LOGIC;
+        target:OUT STD_LOGIC_VECTOR (31 DOWNTO 0);
         clk, rst, WB_M, WB_W : IN STD_LOGIC
     );
 
@@ -72,12 +74,21 @@ ARCHITECTURE struct OF EX_STAGE IS
 
     END COMPONENT;
 
+    COMPONENT BRANCH_MUX  IS
+    PORT( sel : IN std_logic_vector (2 DOWNTO 0);
+	z,n,c: IN std_logic;
+	my_out : OUT std_logic
+	);
+
+    END COMPONENT;
+
     -- #### SIGNALS
     SIGNAL Z, Ne, C, Z0, N0, C0, Cfinal : STD_LOGIC;
-    SIGNAL alu_src2, alu_result_temp,alu_result_temp2, alu_result_final, Rs_data, Rt_data, Rs_final, Rt_final, zeroVector, in_port,imm_value : STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
+    SIGNAL alu_src2, alu_result_temp,alu_result_temp2, alu_result_final, Rs_data, Rt_data, Rs_final, Rt_final, zeroVector, in_port,imm_value,sign_extend : STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
     SIGNAL alu_op, Rd_address, Rs_address, Rt_address : STD_LOGIC_VECTOR (2 DOWNTO 0);
-    SIGNAL alusrc, setc, inEn ,reg_write: STD_LOGIC;
+    SIGNAL alusrc, setc, inEn ,reg_write, branch_signal, jump_signal: STD_LOGIC;
     SIGNAL Rs_en, Rt_en : STD_LOGIC_VECTOR (1 DOWNTO 0);
+    
 
 BEGIN
    
@@ -94,6 +105,7 @@ BEGIN
     Rs_address <= ID_IE_BUFFER(74 DOWNTO 72);
     Rt_address <= ID_IE_BUFFER(71 DOWNTO 69);
     imm_value <= ID_IE_BUFFER(95 DOWNTO 80);
+    branch_signal <= ID_IE_BUFFER(131);
      --------------------------------- logic :
      FU_Call : FU PORT MAP(Rs_address, Rt_address, Rd_M_address, Rd_W_address, WB_M, WB_W, Rs_en, Rt_en);
 
@@ -111,6 +123,12 @@ BEGIN
     alu_result_final <= imm_value WHEN alu_op = "111"
     ELSE
          alu_result_temp2;
+    -- branch 
+    branch: BRANCH_MUX PORT MAP(ID_IE_BUFFER(77 DOWNTO 75), Z, Ne, C, jump_signal);
+    will_branch <= branch_signal and jump_signal;
+    sign_extend <= (OTHERS => Rs_data(15));
+    target <= sign_extend & Rs_data;
+    
 
     
     --------------------------------- output buffer <= signals

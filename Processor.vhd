@@ -58,10 +58,12 @@ ARCHITECTURE processor_arch OF processor IS
     COMPONENT EX_STAGE IS
         GENERIC (n : INTEGER := 16);
         PORT (
-            ID_IE_BUFFER : IN STD_LOGIC_VECTOR (130 DOWNTO 0);
+            ID_IE_BUFFER : IN STD_LOGIC_VECTOR (131 DOWNTO 0);
             IE_IM_BUFFER : OUT STD_LOGIC_VECTOR (76 DOWNTO 0);
             Rd_M_address, Rd_W_address : IN STD_LOGIC_VECTOR (2 DOWNTO 0);
             Rd_M_data, Rd_W_data : IN STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
+            will_branch : OUT STD_LOGIC;
+            target:OUT STD_LOGIC_VECTOR (31 DOWNTO 0);
             clk, rst, WB_M, WB_W : IN STD_LOGIC
         );
 
@@ -95,7 +97,7 @@ ARCHITECTURE processor_arch OF processor IS
     --------------------------- SIGNALS -----------------------------------
     SIGNAL pc_write : STD_LOGIC;
     SIGNAL IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING : STD_LOGIC_VECTOR(80 DOWNTO 0);
-    SIGNAL ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION : STD_LOGIC_VECTOR(130 DOWNTO 0);
+    SIGNAL ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION : STD_LOGIC_VECTOR(131 DOWNTO 0);
     SIGNAL IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY : STD_LOGIC_VECTOR(76 DOWNTO 0);
     SIGNAL IM_IW_FROM_MEMORY, IM_IW_TO_WB : STD_LOGIC_VECTOR(53 DOWNTO 0);
     SIGNAL      PC_MODIFIED     : STD_LOGIC_VECTOR(31 DOWNTO 0);
@@ -114,7 +116,7 @@ BEGIN
     DECODING : DECODING_STAGE GENERIC MAP(n => 16) PORT MAP(rst, clk, Rd_address, wb_data, WB, IF_ID_BUFFER_TO_DECODING, IF_ID_BUFFER_TO_DECODING(58 DOWNTO 56), IF_ID_BUFFER_TO_DECODING(55 DOWNTO 53), ID_IE_TO_EXECUTION(68 DOWNTO 66), ID_IE_TO_EXECUTION(124), pc_write, ID_IE_FROM_DECODING);
 
     --------------------------- Execution Stage ---------------------------
-    ID_IE_BUFFER : buffer_component GENERIC MAP(n => 131) PORT MAP(clk, rst, '1', ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION);
+    ID_IE_BUFFER : buffer_component GENERIC MAP(n => 132) PORT MAP(clk, rst, '1', ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION);
     EXECUTION : EX_STAGE GENERIC MAP(n => 16) PORT MAP(ID_IE_TO_EXECUTION, IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY(66 DOWNTO 64), IM_IW_TO_WB(50 DOWNTO 48), IE_IM_TO_MEMORY(47 DOWNTO 32), wb_data, clk, rst, IE_IM_TO_MEMORY(74), WB);
 
     --------------------------- Memory Stage ---------------------------
