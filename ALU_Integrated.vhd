@@ -4,6 +4,7 @@
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
+USE IEEE.numeric_std.ALL;
 
 ENTITY ALU IS
       GENERIC (n : INTEGER := 16);
