@@ -72,8 +72,10 @@ ARCHITECTURE processor_arch OF processor IS
         GENERIC (n : INTEGER := 16);
         PORT (
             IE_IM_BUFFER : IN STD_LOGIC_VECTOR (76 DOWNTO 0);
-            clk, rst : IN STD_LOGIC;
-            IM_IW_BUFFER : OUT STD_LOGIC_VECTOR (53 DOWNTO 0)
+            clk,rst : IN STD_LOGIC;
+            IM_IW_BUFFER : OUT STD_LOGIC_VECTOR (53 DOWNTO 0);
+            PC_MODIFIED : OUT STD_LOGIC_VECTOR (31 DOWNTO 0);
+            CHANGE_PC,EmptyStackException,InvalidAddressException : OUT STD_LOGIC
         );
 
     END COMPONENT;
@@ -96,10 +98,10 @@ ARCHITECTURE processor_arch OF processor IS
     SIGNAL ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION : STD_LOGIC_VECTOR(130 DOWNTO 0);
     SIGNAL IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY : STD_LOGIC_VECTOR(76 DOWNTO 0);
     SIGNAL IM_IW_FROM_MEMORY, IM_IW_TO_WB : STD_LOGIC_VECTOR(53 DOWNTO 0);
-
+    SIGNAL      PC_MODIFIED     : STD_LOGIC_VECTOR(31 DOWNTO 0);
     SIGNAL wb_data, Rd_data : STD_LOGIC_VECTOR(15 DOWNTO 0);
     SIGNAL Rd_address : STD_LOGIC_VECTOR (2 DOWNTO 0);
-    SIGNAL WB, out_en : STD_LOGIC;
+    SIGNAL WB, out_en,CHANGE_PC,EmptyStackException,InvalidAddressException : STD_LOGIC;
     ------------------------------------------------------------------------
 BEGIN
     --------------------------- Fetching Stage ---------------------------
@@ -117,7 +119,7 @@ BEGIN
 
     --------------------------- Memory Stage ---------------------------
     IE_IM_BUFFER : buffer_component GENERIC MAP(n => 77) PORT MAP(clk, rst, '1', IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY);
-    MEMORY : MEMORY_STAGE GENERIC MAP(n => 16) PORT MAP(IE_IM_TO_MEMORY, clk, rst, IM_IW_FROM_MEMORY);
+    MEMORY : MEMORY_STAGE GENERIC MAP(n => 16) PORT MAP(IE_IM_TO_MEMORY, clk, rst, IM_IW_FROM_MEMORY,PC_MODIFIED,CHANGE_PC,EmptyStackException,InvalidAddressException);
 
     --------------------------- Writing Stage ---------------------------
     IM_IW_BUFFER : buffer_component GENERIC MAP(n => 54) PORT MAP(clk, rst, '1', IM_IW_FROM_MEMORY, IM_IW_TO_WB);

@@ -18,6 +18,7 @@ add wave -position end  sim:/memory_stage/dataMem/dataMem/PC
 add wave -position end  sim:/memory_stage/dataMem/dataMem/mem_Read
 add wave -position end  sim:/memory_stage/memRead
 add wave -position end  sim:/memory_stage/current_SP
+add wave -position end  sim:/memory_stage/EmptyStackException
 
 
 force -freeze sim:/memory_stage/IE_IM_BUFFER 0FFF0000000000000016 0
@@ -39,6 +40,5 @@ run
 
 force -freeze sim:/memory_stage/IE_IM_BUFFER 01300000000000000016 0
 run
-
-force -freeze sim:/memory_stage/IE_IM_BUFFER 00000000000000000016 0
+run
 run

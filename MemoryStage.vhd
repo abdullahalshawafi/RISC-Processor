@@ -21,7 +21,9 @@ ENTITY MEMORY_STAGE IS
     PORT (
         IE_IM_BUFFER : IN STD_LOGIC_VECTOR (76 DOWNTO 0);
         clk,rst : IN STD_LOGIC;
-        IM_IW_BUFFER : OUT STD_LOGIC_VECTOR (53 DOWNTO 0)
+        IM_IW_BUFFER : OUT STD_LOGIC_VECTOR (53 DOWNTO 0);
+        PC_MODIFIED : OUT STD_LOGIC_VECTOR (31 DOWNTO 0);
+        CHANGE_PC,EmptyStackException,InvalidAddressException : OUT STD_LOGIC:=('0')
     );
 END ENTITY;
 
@@ -33,6 +35,7 @@ ARCHITECTURE MEMORY_STAGE1 OF MEMORY_STAGE IS
             clk : IN STD_LOGIC;
             my_address : IN STD_LOGIC_VECTOR(n-1 DOWNTO 0);
             PC,current_SP,modified_SP : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+            Exception : IN STD_LOGIC;
             data : IN STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
             write_mem, mem_Read,stack_signal : IN STD_LOGIC;
             stack_OP : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
@@ -48,17 +51,17 @@ ARCHITECTURE MEMORY_STAGE1 OF MEMORY_STAGE IS
     );
     END COMPONENT;
 
-    SIGNAL memRead : STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
-    SIGNAL PC,PC_OUT,PC_New : STD_LOGIC_VECTOR(31 DOWNTO 0);
-    SIGNAL Alu_result : STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
-    SIGNAL Rs_data : STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
-    SIGNAL Rd_address : STD_LOGIC_VECTOR(2 DOWNTO 0);
-    SIGNAL WB, flush, stack_signal, mem_Read, mem_Write, load,en,EmptyStackException : STD_LOGIC;
-    SIGNAL stack_OP : STD_LOGIC_VECTOR(2 DOWNTO 0);
+    SIGNAL memRead : STD_LOGIC_VECTOR(n - 1 DOWNTO 0):=(others=>'0') ;
+    SIGNAL PC,PC_OUT : STD_LOGIC_VECTOR(31 DOWNTO 0):=(others=>'0');
+    SIGNAL Alu_result : STD_LOGIC_VECTOR(n - 1 DOWNTO 0):=(others=>'0');
+    SIGNAL Rs_data : STD_LOGIC_VECTOR(n - 1 DOWNTO 0):=(others=>'0');
+    SIGNAL Rd_address : STD_LOGIC_VECTOR(2 DOWNTO 0):=(others=>'0');
+    SIGNAL WB, flush, stack_signal, mem_Read, mem_Write, load,en,Exception : STD_LOGIC:=('0');
+    SIGNAL stack_OP : STD_LOGIC_VECTOR(2 DOWNTO 0):=(others=>'0');
     SIGNAL current_SP,modified_SP : STD_LOGIC_VECTOR(31 DOWNTO 0) := STD_LOGIC_VECTOR'(x"000FFFFF") ;
     
 BEGIN
-    dataMem : DATA_MEMORY GENERIC MAP(16) PORT MAP(clk, alu_result,PC,current_SP,modified_SP, RS_data, mem_Write, mem_Read,stack_signal,stack_OP,PC_OUT, memRead);
+    dataMem : DATA_MEMORY GENERIC MAP(16) PORT MAP(clk, alu_result,PC,current_SP,modified_SP,Exception, RS_data, mem_Write, mem_Read,stack_signal,stack_OP,PC_OUT, memRead);
     
     Stack : SP PORT MAP(rst,clk,en, modified_SP,current_SP);
     
@@ -81,15 +84,30 @@ BEGIN
 
     en <= '1' when stack_signal = '1' else '0';
     
-    
-    modified_SP <= current_SP + 1 when stack_signal = '1' and stack_OP = "001"   --POP
-            else  current_SP + 2 when stack_signal = '1' and (stack_OP = "010" or stack_OP = "100")   --RET or RTI
+
+
+    modified_SP <= current_SP + 1 when stack_signal = '1' and stack_OP = "001" and (current_SP + 1 < 2 ** 20)   --POP
+            else  current_SP + 2 when stack_signal = '1'and (current_SP + 2 < 2**20) and (stack_OP = "010" or stack_OP = "100")   --RET or RTI
             else  current_SP - 1 when stack_signal = '1' and stack_OP = "000"   --PUSH
             else  current_SP - 2 when stack_signal = '1' and (stack_OP = "011"or stack_OP = "101");   --CALL or int
 
-    PC_New <= PC_OUT when stack_signal = '1' and (stack_OP = "010" or stack_OP = "100")
-            else PC;   --RET or RTI
+    PC_MODIFIED <= PC_OUT when stack_signal = '1' and (stack_OP = "010" or stack_OP = "100") and (current_SP + 2 < 2**20) --RET or RTI
+            else PC;
+            
+    CHANGE_PC <= '1' when stack_signal = '1' and (stack_OP = "010" or stack_OP = "100") and (current_SP + 2 < 2**20) --RET or RTI
+            else '0';
+---------------------------------- Exception process ----------------------------------------------------------
+EmptyStackException <= '1' when ((current_SP + 1 >= 2 ** 20) and (stack_signal = '1' and stack_OP = "001")) or 
+                                ((current_SP + 2 >= 2**20) and stack_signal = '1' and (stack_OP = "010" or stack_OP = "100")) 
+                                else '0';
 
+InvalidAddressException <= '1' when ((Alu_result >= ((2 ** 16) - (2 ** 8))) and (stack_signal= '0') and (mem_Write = '1' or mem_Read = '1'))
+			            else '0' ;
+
+Exception <= '1' when ((current_SP + 1 >= 2 ** 20) and (stack_signal = '1' and stack_OP = "001")) or 
+                      ((current_SP + 2 >= 2**20) and stack_signal = '1' and (stack_OP = "010" or stack_OP = "100")) or 
+                      ((Alu_result >= ((2 ** 16) - (2 ** 8))) and (stack_signal= '0') and (mem_Write = '1' or mem_Read = '1'))
+                      else '0' ;
 
 ---------------------------------- pass the output to the buffer ----------------------------------------------------------
     IM_IW_BUFFER(53) <= IE_IM_BUFFER(76);
