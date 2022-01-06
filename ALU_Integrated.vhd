@@ -45,9 +45,10 @@ BEGIN
       OP2 : ALU_ADDER PORT MAP(oneVector, Rs, '0', C2, Z2, N2, F2);
       OP4 : ALU_ADDER PORT MAP(Rs, Rt, '0', C4, Z4, N4, F4);
       --OP5 : ALU_ADDER PORT MAP(Rs, one_comp_Rt, '1', C5, Z5, N5, F5);
-      F5 <= signed(Rs)- signed(Rt);
-      C5 <= '1' WHEN ((unsigned(Rs)-unsigned(Rt)) > unsigned(Rs)) and
-      ((unsigned(Rs)-unsigned(Rt)) > unsigned(Rt))
+F5 <= std_logic_vector(signed(Rs) - signed( Rt));
+     
+      C5 <= '1' WHEN ((signed(Rs)-signed(Rt)) > signed(Rs)) and
+      ((signed(Rs)-signed(Rt)) > signed(Rt))
       else '0';
       Z5 <= '1' WHEN F5 = zeroVector
       ELSE
