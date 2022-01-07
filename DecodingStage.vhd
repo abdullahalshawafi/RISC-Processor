@@ -70,14 +70,16 @@ ARCHITECTURE DECODING_STAGE_arch OF DECODING_STAGE IS
     ---------------------------------------------------------------------------------------------------------------------------------------
 
     SIGNAL Rs_address, Rt_address, Rd_address : STD_LOGIC_VECTOR(2 DOWNTO 0);
-    SIGNAL Wd, Rs_data, Rt_data,immediate_value : STD_LOGIC_VECTOR(15 DOWNTO 0);
-    
+    SIGNAL Wd, Rs_data, Rt_data, immediate_value : STD_LOGIC_VECTOR(15 DOWNTO 0);
+
     ---------------------- CONTROL UNIT SIGNALS ---------------------------------------------------------------------------------------------
+
     SIGNAL set_flush, pc_write, flush, set_carry, branch, alu_src, Rs_en, Rt_en, mem_read, mem_write, interrupt_en, stack, load, reg_write, in_en, out_en : STD_LOGIC;
     SIGNAL instType : STD_LOGIC;
     SIGNAL alu_op, flag_en, stack_op : STD_LOGIC_VECTOR(2 DOWNTO 0);
 
     ------------------------The final signals--> Flushed or not ----------------------------------------
+
     SIGNAL pc_write_final, flush_final, set_carry_final, branch_final, alu_src_final, Rs_en_final, Rt_en_final, mem_read_final, mem_write_final, interrupt_en_final, stack_final, load_final, reg_write_final, in_en_final, out_en_final : STD_LOGIC;
     SIGNAL inst_type_final : STD_LOGIC;
     SIGNAL alu_op_final, flag_en_final, stack_op_final : STD_LOGIC_VECTOR(2 DOWNTO 0);
@@ -86,7 +88,8 @@ ARCHITECTURE DECODING_STAGE_arch OF DECODING_STAGE IS
     SIGNAL op_code : STD_LOGIC_VECTOR(4 DOWNTO 0);
     SIGNAL CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS : STD_LOGIC_VECTOR(24 DOWNTO 0);
 
-    ----------------------------- HDU SIGNALS --------------------------------------------------------------------------------------------------------------
+    ----------------------------- HDU SIGNALS ------------------------------------------------------------------------------------------------
+
     SIGNAL stall_pipe : STD_LOGIC;
     ------------------------------------------------------------------------------------------------------------------------------------------
 BEGIN
@@ -97,13 +100,15 @@ BEGIN
     op_code <= IF_ID_BUFFER(63 DOWNTO 59);
     ------- 49:34 immediate value 
     ------- 2 extra bits
-    -------------------------------------------------------------------------------------------------------------------------------
+    ----------------------------------------- CU -----------------------------------------------------------------------------------------
 
     CU : CONTROL_UNIT PORT MAP('0', op_code, pc_write, instType, flush, set_carry, branch, alu_src, Rs_en, Rt_en, mem_read, mem_write, interrupt_en, stack, load, reg_write, in_en, out_en, alu_op, flag_en, stack_op);
-    ----------------------------------------------------------------------------------------------------------------------------------
+
+    ---------------------------------------- REGISTER FILE ------------------------------------------------------------------------------------------
 
     Rx : register_file PORT MAP(clk, rst, WB_signal, Rs_address, Rt_address, WB_address, WB_data, Rs_data, Rt_data);
-    ----------------------------------------------------------------------------------------------------------------------------------
+
+    --------------------------------------- HDU --------------------------------------------------------------------------------------------
 
     HDU_result : HDU PORT MAP(Rs_address_FOR_HDU, Rt_address_FOR_HDU, Rd_address_FOR_HDU, Rs_en, Rt_en, Mem_read_HDU, flush, stall_pipe);
 
@@ -114,10 +119,10 @@ BEGIN
         mem_read & mem_write & interrupt_en &
         stack & load & reg_write & in_en & out_en
         & alu_op & flag_en & stack_op;
-
     FLUSH_MUX : MUX2 GENERIC MAP(n => 25) PORT MAP(stall_pipe, CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS);
 
     --------------------------- Final control signals -----------------------------------------------------------
+
     pc_write_final <= FINAL_SIGNALS(24);
     inst_type_final <= FINAL_SIGNALS(23);
     flush_final <= FINAL_SIGNALS(22);
@@ -138,8 +143,9 @@ BEGIN
     flag_en_final <= FINAL_SIGNALS(5 DOWNTO 3);
     stack_op_final <= FINAL_SIGNALS(2 DOWNTO 0);
 
-    -------------------------------------------------------------------------------------------------------------------------------------
-    immediate_value<= IF_ID_BUFFER(47 DOWNTO 32); --- 
+    -------------------------------------  BUFFER DATA------------------------------------------------------------------------------------------------
+
+    immediate_value <= IF_ID_BUFFER(47 DOWNTO 32);
     ID_IE_BUFFER(130 DOWNTO 124) <= flush_final & stack_final & stack_op_final & mem_read_final & mem_write_final;
     ID_IE_BUFFER(123) <= out_en_final;
     ID_IE_BUFFER(122 DOWNTO 107) <= IF_ID_BUFFER(80 DOWNTO 65); -- INPUT PORT 
@@ -148,8 +154,9 @@ BEGIN
     ID_IE_BUFFER(63 DOWNTO 48) <= Rt_data;
     ID_IE_BUFFER(47 DOWNTO 32) <= Rs_data;
     ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0); --pc+1
+
     -----------------------------------------------------------------
-    pc_en <= pc_write;
-    inst_type <= instType;
-    -------------------------------------------------------------------
+    pc_en <= pc_write_final;
+    inst_type <= inst_type_final;
+
 END DECODING_STAGE_arch;

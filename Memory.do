@@ -18,6 +18,8 @@ add wave -position end  sim:/processor/EXECUTION/setting_flag/N_out
 add wave -position end  sim:/processor/EXECUTION/setting_flag/C_out
 add wave -position end  sim:/processor/IN_PORT
 add wave -position end  sim:/processor/OUT_PORT
+add wave -position end  sim:/processor/MEMORY/current_SP
+add wave -position end  sim:/processor/MEMORY/EPC_val
 
 force -freeze sim:/processor/clk 1 0, 0 {50 ps} -r 100
 
@@ -27,24 +29,16 @@ force -freeze sim:/processor/IN_PORT X"0000" 0
 run
 
 force -freeze sim:/processor/rst 0 0
-force -freeze sim:/processor/IN_PORT X"0005" 0
-run
 force -freeze sim:/processor/IN_PORT X"0019" 0
 run
-force -freeze sim:/processor/IN_PORT X"FFFF" 0
+force -freeze sim:/processor/IN_PORT X"ffff" 0
+run
+force -freeze sim:/processor/IN_PORT X"f320" 0
 run
 run
 run
 run
 run
 run
-force -freeze sim:/processor/IN_PORT X"FFFF" 0
-run
-run
-run
-run
-run
-run
-run
-run
+force -freeze sim:/processor/IN_PORT X"0010" 0
 run

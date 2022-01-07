@@ -128,7 +128,7 @@ def assemble(lines):
                     op_codes[operands[0]] + registers[operands[1]] + "000" + registers[operands[2]] + "00")
             else:
                 temp_lines.append(
-                    op_codes[operands[0]] + registers[operands[1]] + "00000000")
+                    op_codes[operands[0]] + registers[operands[1]] + "000"+registers[operands[1]]+"00")
                 temp_lines.append(hexToBinary(operands[2]))
 
         elif len(operands) == 4:
@@ -141,7 +141,7 @@ def assemble(lines):
                 temp_lines.append(hexToBinary(operands[3]))
             else:
                 temp_lines.append(
-                    op_codes[operands[0]] + registers[operands[1]] + "000" + registers[operands[3]] + "00")
+                    op_codes[operands[0]] + registers[operands[3]] + "000" + registers[operands[1]] + "00")
                 temp_lines.append(hexToBinary(operands[2]))
 
         for line in temp_lines:

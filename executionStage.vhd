@@ -105,6 +105,7 @@ BEGIN
     Rt_address <= ID_IE_BUFFER(71 DOWNTO 69);
     imm_value <= ID_IE_BUFFER(95 DOWNTO 80);
     branch_signal <= ID_IE_BUFFER(131);
+
     --------------------------------- logic :
     FU_Call : FU PORT MAP(Rs_address, Rt_address, Rd_M_address, Rd_W_address, WB_M, WB_W, Rs_en, Rt_en);
 
@@ -128,12 +129,18 @@ BEGIN
     sign_extend <= (OTHERS => Rs_data(15));
     target <= sign_extend & Rs_data;
 
+    -- STORE HANDLING
+
     --------------------------------- output buffer <= signals
     -- PC+1
     IE_IM_BUFFER(31 DOWNTO 0) <= ID_IE_BUFFER(31 DOWNTO 0);
     IE_IM_BUFFER(47 DOWNTO 32) <= alu_result_final;
+
     --Rs data
-    IE_IM_BUFFER(63 DOWNTO 48) <= Rs_data;
+    IE_IM_BUFFER(63 DOWNTO 48) <= Rt_data WHEN (ID_IE_BUFFER(124) = '1' AND ID_IE_BUFFER(129) = '0')
+ELSE
+    Rs_final;
+
     -- Rd address
     IE_IM_BUFFER(66 DOWNTO 64) <= Rd_address;
     -- control units 
