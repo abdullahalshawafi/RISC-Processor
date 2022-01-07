@@ -91,7 +91,7 @@ ARCHITECTURE DECODING_STAGE_arch OF DECODING_STAGE IS
 
     ----------------------------- STALLING SIGNALS ------------------------------------------------------------------------------------------------
 
-    SIGNAL stall_pipe, exception_mem, final_flush : STD_LOGIC;
+    SIGNAL stall_pipe, final_flush : STD_LOGIC;
     ------------------------------------------------------------------------------------------------------------------------------------------
 BEGIN
 
@@ -121,7 +121,7 @@ BEGIN
         stack & load & reg_write & in_en & out_en
         & alu_op & flag_en & stack_op;
 
-    final_flush <= stall_pipe OR exception_mem; --exception or hazard detected
+    final_flush <= stall_pipe OR exception; --exception or hazard detected
 
     FLUSH_MUX : MUX2 GENERIC MAP(n => 25) PORT MAP(final_flush, CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS);
 

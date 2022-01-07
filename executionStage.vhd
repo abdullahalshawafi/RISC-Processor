@@ -88,7 +88,7 @@ ARCHITECTURE struct OF EX_STAGE IS
     SIGNAL Z, Ne, C, Z0, N0, C0, Cfinal : STD_LOGIC := '0';
     SIGNAL alu_src2, alu_result_temp, alu_result_temp2, alu_result_final, Rs_data, Rt_data, Rs_final, Rt_final, zeroVector, in_port, imm_value, sign_extend : STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
     SIGNAL alu_op, Rd_address, Rs_address, Rt_address : STD_LOGIC_VECTOR (2 DOWNTO 0);
-    SIGNAL alusrc, setc, inEn, reg_write, branch_signal, jump_signal,Z_en,N_en,C_en : STD_LOGIC;
+    SIGNAL alusrc, setc, inEn, reg_write, branch_signal, jump_signal, Z_en, N_en, C_en : STD_LOGIC;
     SIGNAL Rs_en, Rt_en : STD_LOGIC_VECTOR (1 DOWNTO 0);
 BEGIN
 
@@ -106,13 +106,18 @@ BEGIN
     branch_signal <= ID_IE_BUFFER(131);
     -- exception handling
     alu_op <= ID_IE_BUFFER(103 DOWNTO 101) WHEN exception = '0'
-    else "000";
-    Z_en <= ID_IE_BUFFER(99)  WHEN exception = '0'
-    else '0';
+        ELSE
+        "000";
+    alusrc <= ID_IE_BUFFER(100);
+    Z_en <= ID_IE_BUFFER(99) WHEN exception = '0'
+        ELSE
+        '0';
     N_en <= ID_IE_BUFFER(98) WHEN exception = '0'
-    else '0';
+        ELSE
+        '0';
     C_en <= ID_IE_BUFFER(97) WHEN exception = '0'
-    else '0';
+        ELSE
+        '0';
 
     --------------------------------- logic :
     FU_Call : FU PORT MAP(Rs_address, Rt_address, Rd_M_address, Rd_W_address, WB_M, WB_W, Rs_en, Rt_en);
@@ -125,7 +130,7 @@ BEGIN
 
     Alu_unit : ALU PORT MAP(Rs_final, Rt_final, alu_op, alu_result_temp, C0, N0, Z0);
 
-    setting_flag : FLAG_REG PORT MAP(clk, rst,Z_en,N_en ,C_en , Z0, N0, Cfinal, Z, Ne, C);
+    setting_flag : FLAG_REG PORT MAP(clk, rst, Z_en, N_en, C_en, Z0, N0, Cfinal, Z, Ne, C);
 
     -- ldm 
     alu_result_final <= imm_value WHEN alu_op = "111"
@@ -145,7 +150,7 @@ BEGIN
     IE_IM_BUFFER(47 DOWNTO 32) <= alu_result_final;
 
     --Rs data
-    IE_IM_BUFFER(63 DOWNTO 48) <= Rt_data WHEN (ID_IE_BUFFER(124) = '1' AND ID_IE_BUFFER(129) = '0')
+    IE_IM_BUFFER(63 DOWNTO 48) <= alu_src2 WHEN (ID_IE_BUFFER(124) = '1' AND ID_IE_BUFFER(129) = '0')
 ELSE
     Rs_final;
 
