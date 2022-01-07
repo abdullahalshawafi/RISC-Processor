@@ -62,9 +62,9 @@ ARCHITECTURE processor_arch OF processor IS
             IE_IM_BUFFER : OUT STD_LOGIC_VECTOR (76 DOWNTO 0);
             Rd_M_address, Rd_W_address : IN STD_LOGIC_VECTOR (2 DOWNTO 0);
             Rd_M_data, Rd_W_data : IN STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
+            clk, rst, WB_M, WB_W : IN STD_LOGIC;
             will_branch : OUT STD_LOGIC;
-            target:OUT STD_LOGIC_VECTOR (31 DOWNTO 0);
-            clk, rst, WB_M, WB_W : IN STD_LOGIC
+            target:OUT STD_LOGIC_VECTOR (31 DOWNTO 0)
         );
 
     END COMPONENT;
@@ -100,10 +100,10 @@ ARCHITECTURE processor_arch OF processor IS
     SIGNAL ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION : STD_LOGIC_VECTOR(131 DOWNTO 0);
     SIGNAL IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY : STD_LOGIC_VECTOR(76 DOWNTO 0);
     SIGNAL IM_IW_FROM_MEMORY, IM_IW_TO_WB : STD_LOGIC_VECTOR(53 DOWNTO 0);
-    SIGNAL      PC_MODIFIED     : STD_LOGIC_VECTOR(31 DOWNTO 0);
+    SIGNAL      PC_MODIFIED ,TARGET    : STD_LOGIC_VECTOR(31 DOWNTO 0);
     SIGNAL wb_data, Rd_data : STD_LOGIC_VECTOR(15 DOWNTO 0);
     SIGNAL Rd_address : STD_LOGIC_VECTOR (2 DOWNTO 0);
-    SIGNAL WB, out_en,CHANGE_PC,EmptyStackException,InvalidAddressException : STD_LOGIC;
+    SIGNAL WB, out_en,CHANGE_PC,EmptyStackException,InvalidAddressException, WILL_BRANCH : STD_LOGIC;
     ------------------------------------------------------------------------
 BEGIN
     --------------------------- Fetching Stage ---------------------------
@@ -117,7 +117,7 @@ BEGIN
 
     --------------------------- Execution Stage ---------------------------
     ID_IE_BUFFER : buffer_component GENERIC MAP(n => 132) PORT MAP(clk, rst, '1', ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION);
-    EXECUTION : EX_STAGE GENERIC MAP(n => 16) PORT MAP(ID_IE_TO_EXECUTION, IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY(66 DOWNTO 64), IM_IW_TO_WB(50 DOWNTO 48), IE_IM_TO_MEMORY(47 DOWNTO 32), wb_data, clk, rst, IE_IM_TO_MEMORY(74), WB);
+    EXECUTION : EX_STAGE GENERIC MAP(n => 16) PORT MAP(ID_IE_TO_EXECUTION, IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY(66 DOWNTO 64), IM_IW_TO_WB(50 DOWNTO 48), IE_IM_TO_MEMORY(47 DOWNTO 32), wb_data, clk, rst, IE_IM_TO_MEMORY(74), WB,WILL_BRANCH,TARGET);
 
     --------------------------- Memory Stage ---------------------------
     IE_IM_BUFFER : buffer_component GENERIC MAP(n => 77) PORT MAP(clk, rst, '1', IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY);

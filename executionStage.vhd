@@ -21,9 +21,9 @@ ENTITY EX_STAGE IS
         IE_IM_BUFFER : OUT STD_LOGIC_VECTOR (76 DOWNTO 0);
         Rd_M_address, Rd_W_address : IN STD_LOGIC_VECTOR (2 DOWNTO 0);
         Rd_M_data, Rd_W_data : IN STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
+        clk, rst, WB_M, WB_W : IN STD_LOGIC;
         will_branch : OUT STD_LOGIC;
-        target:OUT STD_LOGIC_VECTOR (31 DOWNTO 0);
-        clk, rst, WB_M, WB_W : IN STD_LOGIC
+        target:OUT STD_LOGIC_VECTOR (31 DOWNTO 0)
     );
 
 END EX_STAGE;
