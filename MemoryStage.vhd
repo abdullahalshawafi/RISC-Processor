@@ -60,7 +60,9 @@ ARCHITECTURE MEMORY_STAGE1 OF MEMORY_STAGE IS
         );
 
     END COMPONENT;
+
     ------------------------------------ SIGNALS -------------------------------- 
+
     SIGNAL memRead : STD_LOGIC_VECTOR(n - 1 DOWNTO 0) := (OTHERS => '0');
     SIGNAL PC, PC_OUT : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
     SIGNAL Alu_result : STD_LOGIC_VECTOR(n - 1 DOWNTO 0) := (OTHERS => '0');
@@ -69,7 +71,8 @@ ARCHITECTURE MEMORY_STAGE1 OF MEMORY_STAGE IS
     SIGNAL WB, flush, stack_signal, mem_Read, mem_Write, load, en, Exception : STD_LOGIC := ('0');
     SIGNAL stack_OP : STD_LOGIC_VECTOR(2 DOWNTO 0) := (OTHERS => '0');
     SIGNAL current_SP, modified_SP : STD_LOGIC_VECTOR(31 DOWNTO 0) := STD_LOGIC_VECTOR'(x"000FFFFF");
-    SIGNAL EPC_val : STD_LOGIC_VECTOR (31 DOWNTO 0);
+    SIGNAL EPC_val, PC_exception : STD_LOGIC_VECTOR (31 DOWNTO 0);
+
 BEGIN
     dataMem : DATA_MEMORY GENERIC MAP(16) PORT MAP(clk, alu_result, PC, current_SP, modified_SP, Exception, RS_data, mem_Write, mem_Read, stack_signal, stack_OP, PC_OUT, memRead);
 
@@ -88,6 +91,7 @@ BEGIN
     flush <= IE_IM_BUFFER(73);
     WB <= IE_IM_BUFFER(74);
     load <= IE_IM_BUFFER(75);
+
     ---------------------------------- Stack process ----------------------------------------------------------
 
     en <= '1' WHEN stack_signal = '1' ELSE
@@ -110,6 +114,7 @@ BEGIN
         '0';
 
     ---------------------------------- Exception process ----------------------------------------------------------
+
     EmptyStackException <= '1' WHEN ((current_SP + 1 >= 2 ** 20) AND (stack_signal = '1' AND stack_OP = "001")) OR
         ((current_SP + 2 >= 2 ** 20) AND stack_signal = '1' AND (stack_OP = "010" OR stack_OP = "100"))
         ELSE
@@ -125,15 +130,20 @@ BEGIN
         ELSE
         '0';
 
-    PC <= (PC - 1) WHEN (Exception = '1')
+    PC_exception <= (PC - 1) WHEN (Exception = '1')
         ELSE
         PC;
 
-    EPC : register_component GENERIC MAP(n => 32) PORT MAP(clk, rst, Exception, PC, EPC_val);
+    EPC : register_component GENERIC MAP(n => 32) PORT MAP(clk, rst, Exception, PC_exception, EPC_val);
+
     ---------------------------------- pass the output to the buffer ----------------------------------------------------------
-    IM_IW_BUFFER(53) <= IE_IM_BUFFER(76);
-    IM_IW_BUFFER(52) <= load;
-    IM_IW_BUFFER(51) <= WB;
+
+    IM_IW_BUFFER(53) <= '0' WHEN (Exception = '1') ELSE
+    IE_IM_BUFFER(76);
+    IM_IW_BUFFER(52) <= '0' WHEN (Exception = '1') ELSE
+    load;
+    IM_IW_BUFFER(51) <= '0' WHEN (Exception = '1') ELSE
+    WB;
     IM_IW_BUFFER(50 DOWNTO 48) <= Rd_address;
     IM_IW_BUFFER(47 DOWNTO 32) <= (OTHERS => '0');
     IM_IW_BUFFER(31 DOWNTO 16) <= Alu_result;

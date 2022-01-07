@@ -279,7 +279,7 @@ BEGIN
             mem_write <= '0';
             interrupt_en <= '0';
             stack <= '0';
-            load <= '1';
+            load <= '0';
             reg_write <= '1';
             in_en <= '0';
             out_en <= '0';
@@ -321,6 +321,7 @@ BEGIN
             out_en <= '0';
             alu_op <= "100";
             flag_en <= "000";
+            alu_src<='1';
         ELSIF op_code = "11000" THEN
             pc_write <= '1';
             inst_type <= '0';

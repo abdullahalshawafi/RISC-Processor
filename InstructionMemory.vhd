@@ -26,7 +26,7 @@ BEGIN
             instruction <= addressing_instruction(to_integer(unsigned((pc)))) & X"0000";
             inst_type <= '0';
 
-            IF instruction(31 DOWNTO 27) = "01100" THEN
+            IF instruction(31 DOWNTO 27) = "01100" OR instruction(31 DOWNTO 27) = "10010" OR instruction(31 DOWNTO 27) = "10011" OR instruction(31 DOWNTO 27) = "10100" THEN
                 instruction(15 DOWNTO 0) <= addressing_instruction(to_integer(unsigned((pc))) + 1);
                 inst_type <= '1';
             END IF;

@@ -1,4 +1,13 @@
-F:/RISC-Processor/MUX_2X1.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/MUX_2X1.vhd
+F:/RISC-Processor/FetchingStage.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/FetchingStage.vhd
+Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity FETCH_STAGE
+-- Compiling architecture FETCH_STAGE of FETCH_STAGE
+
+} {} {}} F:/RISC-Processor/MUX_2X1.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/MUX_2X1.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
 -- Loading package TEXTIO
@@ -13,6 +22,26 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package std_logic_1164
 -- Compiling entity MUX4
 -- Compiling architecture MUX4_Arch of MUX4
+
+} {} {}} F:/RISC-Processor/Processor.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/Processor.vhd
+Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity PROCESSOR
+-- Compiling architecture PROCESSOR of PROCESSOR
+
+} {} {}} F:/RISC-Processor/ALU_Integrated.vhd {2 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/ALU_Integrated.vhd
+Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity ALU
+-- Compiling architecture struct of ALU
+** Warning: F:/RISC-Processor/ALU_Integrated.vhd(41): (vcom-1074) Non-locally static OTHERS choice is allowed only if it is the only choice of the only association.
+
 
 } {} {}} F:/RISC-Processor/Ram.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/Ram.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
@@ -31,17 +60,6 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Compiling entity FLAG_REG
 -- Compiling architecture FLAG_REG_Arch of FLAG_REG
 
-} {} {}} F:/RISC-Processor/ALU_Integrated.vhd {2 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/ALU_Integrated.vhd
-Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Compiling entity ALU
--- Compiling architecture struct of ALU
-** Warning: F:/RISC-Processor/ALU_Integrated.vhd(41): (vcom-1074) Non-locally static OTHERS choice is allowed only if it is the only choice of the only association.
-
-
 } {} {}} F:/RISC-Processor/adder.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/adder.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
@@ -51,6 +69,24 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Compiling architecture a_my_adder of my_adder
 -- Compiling entity ALU_ADDER
 -- Compiling architecture ALU_ADDER_arch of ALU_ADDER
+
+} {} {}} F:/RISC-Processor/DecodingStage.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/DecodingStage.vhd
+Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity DECODING_STAGE
+-- Compiling architecture DECODING_STAGE_arch of DECODING_STAGE
+
+} {} {}} F:/RISC-Processor/InstructionMemory.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/InstructionMemory.vhd
+Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity INSTRUCTION_MEMORY
+-- Compiling architecture INSTRUCTION_MEMORY1 of INSTRUCTION_MEMORY
 
 } {} {}} F:/RISC-Processor/SP.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/SP.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
@@ -86,16 +122,13 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Compiling entity register_component
 -- Compiling architecture register_component_arch of register_component
 
-} {} {}} F:/RISC-Processor/MemoryStage.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/MemoryStage.vhd
+} {} {}} F:/RISC-Processor/executionStage.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/executionStage.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
 -- Loading package TEXTIO
 -- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Loading package std_logic_arith
--- Loading package STD_LOGIC_UNSIGNED
--- Compiling entity MEMORY_STAGE
--- Compiling architecture MEMORY_STAGE1 of MEMORY_STAGE
+-- Compiling entity EX_STAGE
+-- Compiling architecture struct of EX_STAGE
 
 } {} {}} F:/RISC-Processor/branchMUX.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/branchMUX.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
@@ -114,6 +147,14 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Compiling entity WB_STAGE
 -- Compiling architecture WB_STAGE_ARCH of WB_STAGE
 
+} {} {}} F:/RISC-Processor/ControlUnit.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/ControlUnit.vhd
+Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity CONTROL_UNIT
+-- Compiling architecture CONTROL_UNIT of CONTROL_UNIT
+
 } {} {}} F:/RISC-Processor/HazardDetectionUnit.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/HazardDetectionUnit.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
@@ -129,6 +170,15 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package std_logic_1164
 -- Compiling entity buffer_component
 -- Compiling architecture buffer_component_arch of buffer_component
+
+} {} {}} F:/RISC-Processor/PC.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/PC.vhd
+Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity PC
+-- Compiling architecture PC of PC
 
 } {} {}} F:/RISC-Processor/DataMemory.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/DataMemory.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
