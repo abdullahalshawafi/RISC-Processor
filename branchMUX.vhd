@@ -14,7 +14,7 @@ END BRANCH_MUX ;
 
 --____________
 
-ARCHITECTURE BRANCH_MUX_Arch OF MUX4 
+ARCHITECTURE BRANCH_MUX_Arch OF BRANCH_MUX 
 IS
 BEGIN
 
@@ -22,7 +22,7 @@ my_out <= z WHEN sel ="000"
 else
 	n WHEN sel ="001"  
 else
-	c WHEN sel ="010"
+	c WHEN sel ="010";
  
 
 END BRANCH_MUX_Arch;
