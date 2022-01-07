@@ -6,7 +6,7 @@ ENTITY INSTRUCTION_MEMORY IS
     PORT (
         rst, clk : IN STD_LOGIC;
         pc : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-        read_instruction : IN STD_LOGIC;
+        inst_type, read_instruction : IN STD_LOGIC;
         instruction : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
     );
 END ENTITY;
@@ -22,7 +22,11 @@ BEGIN
         IF rst = '1' THEN
             instruction <= addressing_instruction(1) & addressing_instruction(0);
         ELSIF read_instruction = '1' THEN
-            instruction <= addressing_instruction(to_integer(unsigned((pc)))) & X"0000";
+            IF inst_type = '1' THEN
+                instruction <= addressing_instruction(to_integer(unsigned((pc)))) & addressing_instruction(to_integer(unsigned((pc))) + 1);
+            ELSE
+                instruction <= addressing_instruction(to_integer(unsigned((pc)))) & X"0000";
+            END IF;
         END IF;
     END PROCESS;
 END INSTRUCTION_MEMORY1;

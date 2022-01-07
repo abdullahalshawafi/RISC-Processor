@@ -29,7 +29,7 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
 
     COMPONENT FETCH_STAGE IS
         PORT (
-            rst, clk, pc_write, instType : IN STD_LOGIC;
+            rst, clk, pc_write, inst_type : IN STD_LOGIC;
             in_port : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
             IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(80 DOWNTO 0)
         );
@@ -48,7 +48,7 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
             IF_ID_BUFFER : IN STD_LOGIC_VECTOR(80 DOWNTO 0);
             Rs_address_FOR_HDU, Rt_address_FOR_HDU, Rd_address_FOR_HDU : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
             Mem_read_HDU : IN STD_LOGIC;
-            pc_en : OUT STD_LOGIC;
+            pc_en, inst_type : OUT STD_LOGIC;
             ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(131 DOWNTO 0)
         );
     END COMPONENT;
@@ -96,6 +96,7 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
     END COMPONENT;
     --------------------------- SIGNALS -----------------------------------
     SIGNAL pc_write : STD_LOGIC;
+    SIGNAL instType : STD_LOGIC := '0';
     SIGNAL IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING : STD_LOGIC_VECTOR(80 DOWNTO 0);
     SIGNAL ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION : STD_LOGIC_VECTOR(131 DOWNTO 0);
     SIGNAL IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY : STD_LOGIC_VECTOR(76 DOWNTO 0);
@@ -107,13 +108,13 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
     ------------------------------------------------------------------------
 BEGIN
     --------------------------- Fetching Stage ---------------------------
-    FETCHING : FETCH_STAGE PORT MAP(rst, clk, pc_write, '0', IN_PORT, IF_ID_BUFFER_FROM_FETCHING);
+    FETCHING : FETCH_STAGE PORT MAP(rst, clk, pc_write, instType, IN_PORT, IF_ID_BUFFER_FROM_FETCHING);
 
     --------------------------- Decoding Stage ---------------------------
     IF_ID_BUFFER : buffer_component GENERIC MAP(n => 81) PORT MAP(clk, rst, '1', IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING);
 
     -- check data of buffers for HDU    
-    DECODING : DECODING_STAGE GENERIC MAP(n => 16) PORT MAP(rst, clk, Rd_address, wb_data, WB, IF_ID_BUFFER_TO_DECODING, IF_ID_BUFFER_TO_DECODING(58 DOWNTO 56), IF_ID_BUFFER_TO_DECODING(55 DOWNTO 53), ID_IE_TO_EXECUTION(68 DOWNTO 66), ID_IE_TO_EXECUTION(124), pc_write, ID_IE_FROM_DECODING);
+    DECODING : DECODING_STAGE GENERIC MAP(n => 16) PORT MAP(rst, clk, Rd_address, wb_data, WB, IF_ID_BUFFER_TO_DECODING, IF_ID_BUFFER_TO_DECODING(58 DOWNTO 56), IF_ID_BUFFER_TO_DECODING(55 DOWNTO 53), ID_IE_TO_EXECUTION(68 DOWNTO 66), ID_IE_TO_EXECUTION(124), pc_write, instType, ID_IE_FROM_DECODING);
 
     --------------------------- Execution Stage ---------------------------
     ID_IE_BUFFER : buffer_component GENERIC MAP(n => 132) PORT MAP(clk, rst, '1', ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION);

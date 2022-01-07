@@ -38,6 +38,7 @@ add wave -position end  sim:/processor/WRITE_BACK/Rd_address
 add wave -position end  sim:/processor/WRITE_BACK/load_signal
 add wave -position end  sim:/processor/DECODING/CU/pc_write
 add wave -position end  sim:/processor/pc_write
+add wave -position end  sim:/processor/instType
 add wave -position end  sim:/processor/IN_PORT
 add wave -position end  sim:/processor/OUT_PORT
 

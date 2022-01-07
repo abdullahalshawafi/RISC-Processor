@@ -12,7 +12,7 @@ ENTITY DECODING_STAGE IS
         IF_ID_BUFFER : IN STD_LOGIC_VECTOR(80 DOWNTO 0);
         Rs_address_FOR_HDU, Rt_address_FOR_HDU, Rd_address_FOR_HDU : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
         Mem_read_HDU : IN STD_LOGIC;
-        pc_en : OUT STD_LOGIC;
+        pc_en, inst_type : OUT STD_LOGIC;
         ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(131 DOWNTO 0)
     );
 
@@ -73,7 +73,7 @@ ARCHITECTURE DECODING_STAGE_arch OF DECODING_STAGE IS
 
     ---------------------- CONTROL UNIT SIGNALS ---------------------------------------------------------------------------------------------
     SIGNAL set_flush, pc_write, flush, set_carry, branch, alu_src, Rs_en, Rt_en, mem_read, mem_write, interrupt_en, stack, load, reg_write, in_en, out_en : STD_LOGIC;
-    SIGNAL inst_type : STD_LOGIC;
+    SIGNAL instType : STD_LOGIC;
     SIGNAL alu_op, flag_en, stack_op : STD_LOGIC_VECTOR(2 DOWNTO 0);
 
     ------------------------The final signals--> Flushed or not ----------------------------------------
@@ -93,13 +93,13 @@ BEGIN
     Rs_address <= IF_ID_BUFFER(58 DOWNTO 56);
     Rt_address <= IF_ID_BUFFER(55 DOWNTO 53);
     Rd_address <= IF_ID_BUFFER(52 DOWNTO 50);
-    inst_type <= IF_ID_BUFFER(64);
+    instType <= IF_ID_BUFFER(64);
     op_code <= IF_ID_BUFFER(63 DOWNTO 59);
     ------- 49:34 immediate value 
     ------- 2 extra bits
     -------------------------------------------------------------------------------------------------------------------------------
 
-    CU : CONTROL_UNIT PORT MAP('0', op_code, pc_write, inst_type, flush, set_carry, branch, alu_src, Rs_en, Rt_en, mem_read, mem_write, interrupt_en, stack, load, reg_write, in_en, out_en, alu_op, flag_en, stack_op);
+    CU : CONTROL_UNIT PORT MAP('0', op_code, pc_write, instType, flush, set_carry, branch, alu_src, Rs_en, Rt_en, mem_read, mem_write, interrupt_en, stack, load, reg_write, in_en, out_en, alu_op, flag_en, stack_op);
     ----------------------------------------------------------------------------------------------------------------------------------
 
     Rx : register_file PORT MAP(clk, rst, WB_signal, Rs_address, Rt_address, WB_address, WB_data, Rs_data, Rt_data);
@@ -109,7 +109,7 @@ BEGIN
 
     FLUSHED_SIGNALS <= (OTHERS => '0');
 
-    CONTROL_SIGNALS <= pc_write & inst_type & flush & set_carry
+    CONTROL_SIGNALS <= pc_write & instType & flush & set_carry
         & branch & alu_src & Rs_en & Rt_en &
         mem_read & mem_write & interrupt_en &
         stack & load & reg_write & in_en & out_en
@@ -150,5 +150,6 @@ BEGIN
     ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0); --pc+1
     -----------------------------------------------------------------
     pc_en <= pc_write_final;
+    inst_type <= inst_type_final;
     -------------------------------------------------------------------
 END DECODING_STAGE_arch;
