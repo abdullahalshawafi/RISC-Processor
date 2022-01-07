@@ -108,11 +108,11 @@ BEGIN
     alu_op <= ID_IE_BUFFER(103 DOWNTO 101) WHEN exception = '0'
     else "000";
     Z_en <= ID_IE_BUFFER(99)  WHEN exception = '0'
-    else '1';
+    else '0';
     N_en <= ID_IE_BUFFER(98) WHEN exception = '0'
-    else '1';
+    else '0';
     C_en <= ID_IE_BUFFER(97) WHEN exception = '0'
-    else '1';
+    else '0';
 
     --------------------------------- logic :
     FU_Call : FU PORT MAP(Rs_address, Rt_address, Rd_M_address, Rd_W_address, WB_M, WB_W, Rs_en, Rt_en);

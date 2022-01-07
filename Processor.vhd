@@ -66,7 +66,8 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
             Rd_M_data, Rd_W_data : IN STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
             clk, rst, WB_M, WB_W : IN STD_LOGIC;
             will_branch : OUT STD_LOGIC;
-            target : OUT STD_LOGIC_VECTOR (31 DOWNTO 0)
+            target : OUT STD_LOGIC_VECTOR (31 DOWNTO 0);
+            exception : IN STD_LOGIC
         );
 
     END COMPONENT;
@@ -122,7 +123,7 @@ BEGIN
 
     --------------------------- Execution Stage ---------------------------
     ID_IE_BUFFER : buffer_component GENERIC MAP(n => 132) PORT MAP(clk, rst, '1', ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION);
-    EXECUTION : EX_STAGE GENERIC MAP(n => 16) PORT MAP(ID_IE_TO_EXECUTION, IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY(66 DOWNTO 64), IM_IW_TO_WB(50 DOWNTO 48), IE_IM_TO_MEMORY(47 DOWNTO 32), wb_data, clk, rst, IE_IM_TO_MEMORY(74), WB, WILL_BRANCH, TARGET);
+    EXECUTION : EX_STAGE GENERIC MAP(n => 16) PORT MAP(ID_IE_TO_EXECUTION, IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY(66 DOWNTO 64), IM_IW_TO_WB(50 DOWNTO 48), IE_IM_TO_MEMORY(47 DOWNTO 32), wb_data, clk, rst, IE_IM_TO_MEMORY(74), WB, WILL_BRANCH, TARGET, Exception);
 
     --------------------------- Memory Stage ---------------------------
     IE_IM_BUFFER : buffer_component GENERIC MAP(n => 77) PORT MAP(clk, rst, '1', IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY);
