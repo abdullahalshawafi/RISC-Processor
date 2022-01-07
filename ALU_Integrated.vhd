@@ -47,10 +47,10 @@ BEGIN
       --OP5 : ALU_ADDER PORT MAP(Rs, one_comp_Rt, '1', C5, Z5, N5, F5);
       F5 <= STD_LOGIC_VECTOR(signed(Rs) - signed(Rt));
 
-      C5 <= '1' WHEN ((signed(Rs) - signed(Rt)) > signed(Rs)) AND
+      C5 <= '0' WHEN ((signed(Rs) - signed(Rt)) > signed(Rs)) AND
             ((signed(Rs) - signed(Rt)) > signed(Rt))
             ELSE
-            '0';
+            '1';
       Z5 <= '1' WHEN F5 = zeroVector
             ELSE
             '0';

@@ -2,7 +2,7 @@ LIBRARY IEEE;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 
-ENTITY processor IS
+ENTITY PROCESSOR IS
     GENERIC (n : INTEGER := 32);
     PORT (
         rst, clk : IN STD_LOGIC;
@@ -10,9 +10,9 @@ ENTITY processor IS
         OUT_PORT : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
     );
 
-END processor;
+END PROCESSOR;
 
-ARCHITECTURE processor_arch OF processor IS
+ARCHITECTURE PROCESSOR OF PROCESSOR IS
 
     --------------------------- Buffer component ---------------------------
     COMPONENT buffer_component IS
@@ -27,9 +27,9 @@ ARCHITECTURE processor_arch OF processor IS
 
     --------------------------- Fetching component ---------------------------
 
-    COMPONENT fetch_stage IS
+    COMPONENT FETCH_STAGE IS
         PORT (
-            rst, clk, pc_write, instType : IN STD_LOGIC;
+            rst, clk, pc_write : IN STD_LOGIC;
             in_port : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
             IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(80 DOWNTO 0)
         );
@@ -48,8 +48,8 @@ ARCHITECTURE processor_arch OF processor IS
             IF_ID_BUFFER : IN STD_LOGIC_VECTOR(80 DOWNTO 0);
             Rs_address_FOR_HDU, Rt_address_FOR_HDU, Rd_address_FOR_HDU : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
             Mem_read_HDU : IN STD_LOGIC;
-            pc_en : OUT STD_LOGIC;
-            ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(130 DOWNTO 0)
+            pc_en, inst_type : OUT STD_LOGIC;
+            ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(131 DOWNTO 0)
         );
     END COMPONENT;
 
@@ -64,7 +64,7 @@ ARCHITECTURE processor_arch OF processor IS
             Rd_M_data, Rd_W_data : IN STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
             clk, rst, WB_M, WB_W : IN STD_LOGIC;
             will_branch : OUT STD_LOGIC;
-            target:OUT STD_LOGIC_VECTOR (31 DOWNTO 0)
+            target : OUT STD_LOGIC_VECTOR (31 DOWNTO 0)
         );
 
     END COMPONENT;
@@ -74,10 +74,10 @@ ARCHITECTURE processor_arch OF processor IS
         GENERIC (n : INTEGER := 16);
         PORT (
             IE_IM_BUFFER : IN STD_LOGIC_VECTOR (76 DOWNTO 0);
-            clk,rst : IN STD_LOGIC;
+            clk, rst : IN STD_LOGIC;
             IM_IW_BUFFER : OUT STD_LOGIC_VECTOR (53 DOWNTO 0);
             PC_MODIFIED : OUT STD_LOGIC_VECTOR (31 DOWNTO 0);
-            CHANGE_PC,EmptyStackException,InvalidAddressException : OUT STD_LOGIC
+            CHANGE_PC, EmptyStackException, InvalidAddressException : OUT STD_LOGIC
         );
 
     END COMPONENT;
@@ -95,33 +95,34 @@ ARCHITECTURE processor_arch OF processor IS
 
     END COMPONENT;
     --------------------------- SIGNALS -----------------------------------
-    SIGNAL pc_write : STD_LOGIC;
+    SIGNAL pc_write : STD_LOGIC := '1';
+    SIGNAL instType : STD_LOGIC := '0';
     SIGNAL IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING : STD_LOGIC_VECTOR(80 DOWNTO 0);
     SIGNAL ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION : STD_LOGIC_VECTOR(131 DOWNTO 0);
     SIGNAL IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY : STD_LOGIC_VECTOR(76 DOWNTO 0);
     SIGNAL IM_IW_FROM_MEMORY, IM_IW_TO_WB : STD_LOGIC_VECTOR(53 DOWNTO 0);
-    SIGNAL      PC_MODIFIED ,TARGET    : STD_LOGIC_VECTOR(31 DOWNTO 0);
+    SIGNAL PC_MODIFIED, TARGET : STD_LOGIC_VECTOR(31 DOWNTO 0);
     SIGNAL wb_data, Rd_data : STD_LOGIC_VECTOR(15 DOWNTO 0);
     SIGNAL Rd_address : STD_LOGIC_VECTOR (2 DOWNTO 0);
-    SIGNAL WB, out_en,CHANGE_PC,EmptyStackException,InvalidAddressException, WILL_BRANCH : STD_LOGIC;
+    SIGNAL WB, out_en, CHANGE_PC, EmptyStackException, InvalidAddressException, WILL_BRANCH : STD_LOGIC;
     ------------------------------------------------------------------------
 BEGIN
     --------------------------- Fetching Stage ---------------------------
-    FETCHING : fetch_stage PORT MAP(rst, clk, pc_write, '0', IN_PORT, IF_ID_BUFFER_FROM_FETCHING);
+    FETCHING : FETCH_STAGE PORT MAP(rst, clk, pc_write, IN_PORT, IF_ID_BUFFER_FROM_FETCHING);
 
     --------------------------- Decoding Stage ---------------------------
     IF_ID_BUFFER : buffer_component GENERIC MAP(n => 81) PORT MAP(clk, rst, '1', IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING);
 
     -- check data of buffers for HDU    
-    DECODING : DECODING_STAGE GENERIC MAP(n => 16) PORT MAP(rst, clk, Rd_address, wb_data, WB, IF_ID_BUFFER_TO_DECODING, IF_ID_BUFFER_TO_DECODING(58 DOWNTO 56), IF_ID_BUFFER_TO_DECODING(55 DOWNTO 53), ID_IE_TO_EXECUTION(68 DOWNTO 66), ID_IE_TO_EXECUTION(124), pc_write, ID_IE_FROM_DECODING);
+    DECODING : DECODING_STAGE GENERIC MAP(n => 16) PORT MAP(rst, clk, Rd_address, wb_data, WB, IF_ID_BUFFER_TO_DECODING, IF_ID_BUFFER_TO_DECODING(58 DOWNTO 56), IF_ID_BUFFER_TO_DECODING(55 DOWNTO 53), ID_IE_TO_EXECUTION(68 DOWNTO 66), ID_IE_TO_EXECUTION(124), pc_write, instType, ID_IE_FROM_DECODING);
 
     --------------------------- Execution Stage ---------------------------
     ID_IE_BUFFER : buffer_component GENERIC MAP(n => 132) PORT MAP(clk, rst, '1', ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION);
-    EXECUTION : EX_STAGE GENERIC MAP(n => 16) PORT MAP(ID_IE_TO_EXECUTION, IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY(66 DOWNTO 64), IM_IW_TO_WB(50 DOWNTO 48), IE_IM_TO_MEMORY(47 DOWNTO 32), wb_data, clk, rst, IE_IM_TO_MEMORY(74), WB,WILL_BRANCH,TARGET);
+    EXECUTION : EX_STAGE GENERIC MAP(n => 16) PORT MAP(ID_IE_TO_EXECUTION, IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY(66 DOWNTO 64), IM_IW_TO_WB(50 DOWNTO 48), IE_IM_TO_MEMORY(47 DOWNTO 32), wb_data, clk, rst, IE_IM_TO_MEMORY(74), WB, WILL_BRANCH, TARGET);
 
     --------------------------- Memory Stage ---------------------------
     IE_IM_BUFFER : buffer_component GENERIC MAP(n => 77) PORT MAP(clk, rst, '1', IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY);
-    MEMORY : MEMORY_STAGE GENERIC MAP(n => 16) PORT MAP(IE_IM_TO_MEMORY, clk, rst, IM_IW_FROM_MEMORY,PC_MODIFIED,CHANGE_PC,EmptyStackException,InvalidAddressException);
+    MEMORY : MEMORY_STAGE GENERIC MAP(n => 16) PORT MAP(IE_IM_TO_MEMORY, clk, rst, IM_IW_FROM_MEMORY, PC_MODIFIED, CHANGE_PC, EmptyStackException, InvalidAddressException);
 
     --------------------------- Writing Stage ---------------------------
     IM_IW_BUFFER : buffer_component GENERIC MAP(n => 54) PORT MAP(clk, rst, '1', IM_IW_FROM_MEMORY, IM_IW_TO_WB);
@@ -129,4 +130,4 @@ BEGIN
 
     --------------------------- OUTPUT PORT ---------------------------
     OUT_PORT_BUFFER : buffer_component GENERIC MAP(n => 16) PORT MAP(clk, rst, out_en, wb_data, OUT_PORT);
-END processor_arch;
+END PROCESSOR;
