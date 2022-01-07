@@ -12,6 +12,7 @@ ENTITY DECODING_STAGE IS
         IF_ID_BUFFER : IN STD_LOGIC_VECTOR(80 DOWNTO 0);
         Rs_address_FOR_HDU, Rt_address_FOR_HDU, Rd_address_FOR_HDU : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
         Mem_read_HDU : IN STD_LOGIC;
+        exception : IN STD_LOGIC;
         pc_en : OUT STD_LOGIC := '1';
         inst_type : OUT STD_LOGIC := '0';
         ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(131 DOWNTO 0)
@@ -88,9 +89,9 @@ ARCHITECTURE DECODING_STAGE_arch OF DECODING_STAGE IS
     SIGNAL op_code : STD_LOGIC_VECTOR(4 DOWNTO 0);
     SIGNAL CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS : STD_LOGIC_VECTOR(24 DOWNTO 0);
 
-    ----------------------------- HDU SIGNALS ------------------------------------------------------------------------------------------------
+    ----------------------------- STALLING SIGNALS ------------------------------------------------------------------------------------------------
 
-    SIGNAL stall_pipe : STD_LOGIC;
+    SIGNAL stall_pipe, exception_mem, final_flush : STD_LOGIC;
     ------------------------------------------------------------------------------------------------------------------------------------------
 BEGIN
 
@@ -119,7 +120,10 @@ BEGIN
         mem_read & mem_write & interrupt_en &
         stack & load & reg_write & in_en & out_en
         & alu_op & flag_en & stack_op;
-    FLUSH_MUX : MUX2 GENERIC MAP(n => 25) PORT MAP(stall_pipe, CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS);
+
+    final_flush <= stall_pipe OR exception_mem; --exception or hazard detected
+
+    FLUSH_MUX : MUX2 GENERIC MAP(n => 25) PORT MAP(final_flush, CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS);
 
     --------------------------- Final control signals -----------------------------------------------------------
 
