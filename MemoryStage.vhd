@@ -1,7 +1,7 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
-use IEEE.std_logic_unsigned.all;
+USE IEEE.std_logic_unsigned.ALL;
 -- ###### NOTES :
 -- ?? 12 signal bs kam bit?  CSs + PC + Rs & Rt data + instruction 32 bit
 -- IE_IM_BUFFER[0:31] PC+1
@@ -20,8 +20,10 @@ ENTITY MEMORY_STAGE IS
     GENERIC (n : INTEGER := 16);
     PORT (
         IE_IM_BUFFER : IN STD_LOGIC_VECTOR (76 DOWNTO 0);
-        clk,rst : IN STD_LOGIC;
-        IM_IW_BUFFER : OUT STD_LOGIC_VECTOR (53 DOWNTO 0)
+        clk, rst : IN STD_LOGIC;
+        IM_IW_BUFFER : OUT STD_LOGIC_VECTOR (53 DOWNTO 0);
+        PC_MODIFIED : OUT STD_LOGIC_VECTOR (31 DOWNTO 0);
+        CHANGE_PC, EmptyStackException, InvalidAddressException : OUT STD_LOGIC := ('0')
     );
 END ENTITY;
 
@@ -31,38 +33,49 @@ ARCHITECTURE MEMORY_STAGE1 OF MEMORY_STAGE IS
         GENERIC (n : INTEGER := 16);
         PORT (
             clk : IN STD_LOGIC;
-            my_address : IN STD_LOGIC_VECTOR(n-1 DOWNTO 0);
-            PC,current_SP,modified_SP : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+            my_address : IN STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
+            PC, current_SP, modified_SP : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+            Exception : IN STD_LOGIC;
             data : IN STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
-            write_mem, mem_Read,stack_signal : IN STD_LOGIC;
+            write_mem, mem_Read, stack_signal : IN STD_LOGIC;
             stack_OP : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
             PC_OUT : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
             write_back : OUT STD_LOGIC_VECTOR(n - 1 DOWNTO 0)
         );
     END COMPONENT;
     COMPONENT SP IS
-    PORT (
-        rst, clk, en : IN STD_LOGIC;
-        modified_SP : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-        current_SP : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
-    );
+        PORT (
+            rst, clk, en : IN STD_LOGIC;
+            modified_SP : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+            current_SP : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
+        );
     END COMPONENT;
 
-    SIGNAL memRead : STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
-    SIGNAL PC,PC_OUT,PC_New : STD_LOGIC_VECTOR(31 DOWNTO 0);
-    SIGNAL Alu_result : STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
-    SIGNAL Rs_data : STD_LOGIC_VECTOR(n - 1 DOWNTO 0);
-    SIGNAL Rd_address : STD_LOGIC_VECTOR(2 DOWNTO 0);
-    SIGNAL WB, flush, stack_signal, mem_Read, mem_Write, load,en,EmptyStackException : STD_LOGIC;
-    SIGNAL stack_OP : STD_LOGIC_VECTOR(2 DOWNTO 0);
-    SIGNAL current_SP,modified_SP : STD_LOGIC_VECTOR(31 DOWNTO 0) := STD_LOGIC_VECTOR'(x"000FFFFF") ;
-    
+    COMPONENT EPC IS
+        PORT (
+            PC : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+            counter : IN STD_LOGIC_VECTOR(60 DOWNTO 0) --- 60?????????? 
+        );
+    END COMPONENT;
+    ------------------------------------ SIGNALS -------------------------------- 
+    SIGNAL memRead : STD_LOGIC_VECTOR(n - 1 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL PC, PC_OUT : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL Alu_result : STD_LOGIC_VECTOR(n - 1 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL Rs_data : STD_LOGIC_VECTOR(n - 1 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL Rd_address : STD_LOGIC_VECTOR(2 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL WB, flush, stack_signal, mem_Read, mem_Write, load, en, Exception : STD_LOGIC := ('0');
+    SIGNAL stack_OP : STD_LOGIC_VECTOR(2 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL current_SP, modified_SP : STD_LOGIC_VECTOR(31 DOWNTO 0) := STD_LOGIC_VECTOR'(x"000FFFFF");
+
+    -------------- EPC signals--------------
+    SIGNAL counter : INTEGER; -- will be saved in the register and use its output as an address in EPC
+    SIGNAL EPC_counter : STD_LOGIC_VECTOR(60 DOWNTO 0); ------- 60????????
 BEGIN
-    dataMem : DATA_MEMORY GENERIC MAP(16) PORT MAP(clk, alu_result,PC,current_SP,modified_SP, RS_data, mem_Write, mem_Read,stack_signal,stack_OP,PC_OUT, memRead);
-    
-    Stack : SP PORT MAP(rst,clk,en, modified_SP,current_SP);
-    
-----------------------------------take the inputs----------------------------------------------------------
+    dataMem : DATA_MEMORY GENERIC MAP(16) PORT MAP(clk, alu_result, PC, current_SP, modified_SP, Exception, RS_data, mem_Write, mem_Read, stack_signal, stack_OP, PC_OUT, memRead);
+
+    Stack : SP PORT MAP(rst, clk, en, modified_SP, current_SP);
+
+    ----------------------------------take the inputs----------------------------------------------------------
 
     PC <= IE_IM_BUFFER(31 DOWNTO 0);
     Alu_result <= IE_IM_BUFFER(47 DOWNTO 32);
@@ -70,28 +83,63 @@ BEGIN
     Rd_address <= IE_IM_BUFFER(66 DOWNTO 64);
     mem_Write <= IE_IM_BUFFER(67);
     mem_Read <= IE_IM_BUFFER(68);
-    stack_OP <= IE_IM_BUFFER(71 downto 69);
+    stack_OP <= IE_IM_BUFFER(71 DOWNTO 69);
     stack_signal <= IE_IM_BUFFER(72);
     flush <= IE_IM_BUFFER(73);
     WB <= IE_IM_BUFFER(74);
     load <= IE_IM_BUFFER(75);
+    ---------------------------------- Stack process ----------------------------------------------------------
 
-    
----------------------------------- Stack process ----------------------------------------------------------
+    en <= '1' WHEN stack_signal = '1' ELSE
+        '0';
 
-    en <= '1' when stack_signal = '1' else '0';
-    
-    
-    modified_SP <= current_SP + 1 when stack_signal = '1' and stack_OP = "001"   --POP
-            else  current_SP + 2 when stack_signal = '1' and (stack_OP = "010" or stack_OP = "100")   --RET or RTI
-            else  current_SP - 1 when stack_signal = '1' and stack_OP = "000"   --PUSH
-            else  current_SP - 2 when stack_signal = '1' and (stack_OP = "011"or stack_OP = "101");   --CALL or int
+    modified_SP <= current_SP + 1 WHEN stack_signal = '1' AND stack_OP = "001" AND (current_SP + 1 < 2 ** 20) --POP
+        ELSE
+        current_SP + 2 WHEN stack_signal = '1'AND (current_SP + 2 < 2 ** 20) AND (stack_OP = "010" OR stack_OP = "100") --RET or RTI
+        ELSE
+        current_SP - 1 WHEN stack_signal = '1' AND stack_OP = "000" --PUSH
+        ELSE
+        current_SP - 2 WHEN stack_signal = '1' AND (stack_OP = "011"OR stack_OP = "101"); --CALL or int
 
-    PC_New <= PC_OUT when stack_signal = '1' and (stack_OP = "010" or stack_OP = "100")
-            else PC;   --RET or RTI
+    PC_MODIFIED <= PC_OUT WHEN stack_signal = '1' AND (stack_OP = "010" OR stack_OP = "100") AND (current_SP + 2 < 2 ** 20) --RET or RTI
+        ELSE
+        PC;
 
+    CHANGE_PC <= '1' WHEN stack_signal = '1' AND (stack_OP = "010" OR stack_OP = "100") AND (current_SP + 2 < 2 ** 20) --RET or RTI
+        ELSE
+        '0';
 
----------------------------------- pass the output to the buffer ----------------------------------------------------------
+    ---------------------------------- Exception process ----------------------------------------------------------
+    EmptyStackException <= '1' WHEN ((current_SP + 1 >= 2 ** 20) AND (stack_signal = '1' AND stack_OP = "001")) OR
+        ((current_SP + 2 >= 2 ** 20) AND stack_signal = '1' AND (stack_OP = "010" OR stack_OP = "100"))
+        ELSE
+        '0';
+
+    InvalidAddressException <= '1' WHEN ((Alu_result >= ((2 ** 16) - (2 ** 8))) AND (stack_signal = '0') AND (mem_Write = '1' OR mem_Read = '1'))
+        ELSE
+        '0';
+
+    Exception <= '1' WHEN ((current_SP + 1 >= 2 ** 20) AND (stack_signal = '1' AND stack_OP = "001")) OR
+        ((current_SP + 2 >= 2 ** 20) AND stack_signal = '1' AND (stack_OP = "010" OR stack_OP = "100")) OR
+        ((Alu_result >= ((2 ** 16) - (2 ** 8))) AND (stack_signal = '0') AND (mem_Write = '1' OR mem_Read = '1'))
+        ELSE
+        '0';
+
+    ------------------------------------------- EPC ---------------------------------------------------------------------------
+    PROCESS (clk, rst)
+    BEGIN
+        IF (rst = '1') THEN
+            counter <= 0;
+        ELSIF (rising_edge(clk)) THEN
+            counter <= counter + 1;
+        END IF;
+    END PROCESS;
+
+    EPC_counter <= STD_LOGIC_VECTOR(to_unsigned(counter, 61));
+
+    EPCX : EPC PORT MAP(PC, EPC_counter); -- SEND HERE THE CORRECT PC VALUE
+
+    ---------------------------------- pass the output to the buffer ----------------------------------------------------------
     IM_IW_BUFFER(53) <= IE_IM_BUFFER(76);
     IM_IW_BUFFER(52) <= load;
     IM_IW_BUFFER(51) <= WB;
