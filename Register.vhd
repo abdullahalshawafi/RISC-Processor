@@ -7,7 +7,7 @@ GENERIC (n : INTEGER := 16);
         reg_in : IN STD_LOGIC_VECTOR (n-1 DOWNTO 0);
         reg_out : OUT STD_LOGIC_VECTOR (n-1 DOWNTO 0)
     );
-
+	
 END register_component;
 
 ARCHITECTURE register_component_arch OF register_component IS

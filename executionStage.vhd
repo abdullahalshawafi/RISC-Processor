@@ -88,8 +88,9 @@ ARCHITECTURE struct OF EX_STAGE IS
     SIGNAL Z, Ne, C, Z0, N0, C0, Cfinal : STD_LOGIC := '0';
     SIGNAL alu_src2, alu_result_temp, alu_result_temp2, alu_result_final, Rs_data, Rt_data, Rs_final, Rt_final, zeroVector, in_port, imm_value, sign_extend : STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
     SIGNAL alu_op, Rd_address, Rs_address, Rt_address : STD_LOGIC_VECTOR (2 DOWNTO 0);
-    SIGNAL alusrc, setc, inEn, reg_write, branch_signal, jump_signal, Z_en, N_en, C_en : STD_LOGIC;
+    SIGNAL alusrc, setc, inEn, reg_write, branch_signal, jump_signal, Z_en, N_en, C_en, call_signal : STD_LOGIC;
     SIGNAL Rs_en, Rt_en : STD_LOGIC_VECTOR (1 DOWNTO 0);
+    SIGNAL res_flag_en : STD_LOGIC_VECTOR (3 DOWNTO 0);
 BEGIN
 
     ------------------------------ signal <= input buffer
@@ -104,6 +105,10 @@ BEGIN
     Rt_address <= ID_IE_BUFFER(71 DOWNTO 69);
     imm_value <= ID_IE_BUFFER(95 DOWNTO 80);
     branch_signal <= ID_IE_BUFFER(131);
+    <<<<<< < HEAD
+    == == == =
+    res_flag_en <= ID_IE_BUFFER(129 DOWNTO 126);
+    >>>>>> > 96ba62160cbc1751267dc0e85c14be436b8f5823
     -- exception handling
     alu_op <= ID_IE_BUFFER(103 DOWNTO 101) WHEN exception = '0'
         ELSE
@@ -136,11 +141,16 @@ BEGIN
     alu_result_final <= imm_value WHEN alu_op = "111"
         ELSE
         alu_result_temp2;
-    -- branch 
+    -- JUMP OR NOT ACCCORDING TO FLAGS
     branch : BRANCH_MUX PORT MAP(ID_IE_BUFFER(77 DOWNTO 75), Z, Ne, C, jump_signal);
-    will_branch <= branch_signal AND jump_signal;
+    -- call 1011 signal = 1
+    call_signal <= '1' WHEN res_flag_en = "1011"
+        ELSE
+        '0';
+    will_branch <= branch_signal AND (jump_signal OR call_signal);
     sign_extend <= (OTHERS => Rs_data(15));
     target <= sign_extend & Rs_data;
+    -- STORE HANDLING
 
     -- STORE HANDLING
 
