@@ -53,8 +53,9 @@ ARCHITECTURE MEMORY_STAGE1 OF MEMORY_STAGE IS
 
     COMPONENT EPC IS
         PORT (
-            PC : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-            counter : IN STD_LOGIC_VECTOR(60 DOWNTO 0) --- 60?????????? 
+            clk, rst, exception : IN STD_LOGIC;
+            PC : IN STD_LOGIC_VECTOR (31 DOWNTO 0);
+            EPC : OUT STD_LOGIC_VECTOR (31 DOWNTO 0)
         );
     END COMPONENT;
     ------------------------------------ SIGNALS -------------------------------- 
@@ -66,10 +67,9 @@ ARCHITECTURE MEMORY_STAGE1 OF MEMORY_STAGE IS
     SIGNAL WB, flush, stack_signal, mem_Read, mem_Write, load, en, Exception : STD_LOGIC := ('0');
     SIGNAL stack_OP : STD_LOGIC_VECTOR(2 DOWNTO 0) := (OTHERS => '0');
     SIGNAL current_SP, modified_SP : STD_LOGIC_VECTOR(31 DOWNTO 0) := STD_LOGIC_VECTOR'(x"000FFFFF");
+    SIGNAL EPC_val :  STD_LOGIC_VECTOR (31 DOWNTO 0);
 
-    -------------- EPC signals--------------
-    SIGNAL counter : INTEGER; -- will be saved in the register and use its output as an address in EPC
-    SIGNAL EPC_counter : STD_LOGIC_VECTOR(60 DOWNTO 0); ------- 60????????
+
 BEGIN
     dataMem : DATA_MEMORY GENERIC MAP(16) PORT MAP(clk, alu_result, PC, current_SP, modified_SP, Exception, RS_data, mem_Write, mem_Read, stack_signal, stack_OP, PC_OUT, memRead);
 
@@ -126,18 +126,8 @@ BEGIN
         '0';
 
     ------------------------------------------- EPC ---------------------------------------------------------------------------
-    PROCESS (clk, rst)
-    BEGIN
-        IF (rst = '1') THEN
-            counter <= 0;
-        ELSIF (rising_edge(clk)) THEN
-            counter <= counter + 1;
-        END IF;
-    END PROCESS;
 
-    EPC_counter <= STD_LOGIC_VECTOR(to_unsigned(counter, 61));
-
-    EPCX : EPC PORT MAP(PC, EPC_counter); -- SEND HERE THE CORRECT PC VALUE
+    -- EPCX : EPC PORT MAP(clk,rst,exception??,PC,EPC_val ); -- SEND HERE THE CORRECT PC VALUE
 
     ---------------------------------- pass the output to the buffer ----------------------------------------------------------
     IM_IW_BUFFER(53) <= IE_IM_BUFFER(76);
