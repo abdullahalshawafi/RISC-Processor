@@ -459,6 +459,9 @@ BEGIN
             alu_op <= "011";
             flag_en <= "000";
             stack_op <= "100";
+        ELSE
+            flag_en <= "000";
+
         END IF;
     END PROCESS;
 END CONTROL_UNIT;

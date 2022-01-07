@@ -70,8 +70,8 @@ ARCHITECTURE DECODING_STAGE_arch OF DECODING_STAGE IS
     ---------------------------------------------------------------------------------------------------------------------------------------
 
     SIGNAL Rs_address, Rt_address, Rd_address : STD_LOGIC_VECTOR(2 DOWNTO 0);
-    SIGNAL Wd, Rs_data, Rt_data : STD_LOGIC_VECTOR(15 DOWNTO 0);
-
+    SIGNAL Wd, Rs_data, Rt_data,immediate_value : STD_LOGIC_VECTOR(15 DOWNTO 0);
+    
     ---------------------- CONTROL UNIT SIGNALS ---------------------------------------------------------------------------------------------
     SIGNAL set_flush, pc_write, flush, set_carry, branch, alu_src, Rs_en, Rt_en, mem_read, mem_write, interrupt_en, stack, load, reg_write, in_en, out_en : STD_LOGIC;
     SIGNAL instType : STD_LOGIC;
@@ -139,12 +139,12 @@ BEGIN
     stack_op_final <= FINAL_SIGNALS(2 DOWNTO 0);
 
     -------------------------------------------------------------------------------------------------------------------------------------
-
+    immediate_value<= IF_ID_BUFFER(47 DOWNTO 32); --- 
     ID_IE_BUFFER(130 DOWNTO 124) <= flush_final & stack_final & stack_op_final & mem_read_final & mem_write_final;
     ID_IE_BUFFER(123) <= out_en_final;
     ID_IE_BUFFER(122 DOWNTO 107) <= IF_ID_BUFFER(80 DOWNTO 65); -- INPUT PORT 
     ID_IE_BUFFER(106 DOWNTO 96) <= in_en_final & load_final & reg_write_final & alu_op_final & alu_src_final & flag_en_final & set_carry_final;
-    ID_IE_BUFFER(95 DOWNTO 64) <= IF_ID_BUFFER(49 DOWNTO 34) & op_code & Rs_address & Rt_address & Rd_address & "00";
+    ID_IE_BUFFER(95 DOWNTO 64) <= IF_ID_BUFFER(47 DOWNTO 32) & op_code & Rs_address & Rt_address & Rd_address & "00";
     ID_IE_BUFFER(63 DOWNTO 48) <= Rt_data;
     ID_IE_BUFFER(47 DOWNTO 32) <= Rs_data;
     ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0); --pc+1
