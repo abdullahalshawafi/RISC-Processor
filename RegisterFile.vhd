@@ -18,10 +18,11 @@ END register_file;
 ARCHITECTURE register_file_arch OF register_file IS
 
     COMPONENT register_component IS
+    GENERIC (n : INTEGER := 16);
         PORT (
             clk, rst, en : IN STD_LOGIC;
-            reg_in : IN STD_LOGIC_VECTOR (15 DOWNTO 0);
-            reg_out : OUT STD_LOGIC_VECTOR (15 DOWNTO 0)
+            reg_in : IN STD_LOGIC_VECTOR (n-1 DOWNTO 0);
+            reg_out : OUT STD_LOGIC_VECTOR (n-1 DOWNTO 0)
         );
 
     END COMPONENT;
