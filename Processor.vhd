@@ -49,7 +49,7 @@ ARCHITECTURE processor_arch OF processor IS
             Rs_address_FOR_HDU, Rt_address_FOR_HDU, Rd_address_FOR_HDU : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
             Mem_read_HDU : IN STD_LOGIC;
             pc_en : OUT STD_LOGIC;
-            ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(130 DOWNTO 0)
+            ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(131 DOWNTO 0)
         );
     END COMPONENT;
 

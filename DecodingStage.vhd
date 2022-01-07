@@ -13,7 +13,7 @@ ENTITY DECODING_STAGE IS
         Rs_address_FOR_HDU, Rt_address_FOR_HDU, Rd_address_FOR_HDU : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
         Mem_read_HDU : IN STD_LOGIC;
         pc_en : OUT STD_LOGIC;
-        ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(130 DOWNTO 0)
+        ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(131 DOWNTO 0)
     );
 
 END DECODING_STAGE;
@@ -119,6 +119,7 @@ BEGIN
 
     --------------------------- Final control signals -----------------------------------------------------------
     pc_write_final <= FINAL_SIGNALS(24);
+    inst_type_final <= FINAL_SIGNALS(23);
     flush_final <= FINAL_SIGNALS(22);
     set_carry_final <= FINAL_SIGNALS(21);
     branch_final <= FINAL_SIGNALS(20);
@@ -133,14 +134,13 @@ BEGIN
     reg_write_final <= FINAL_SIGNALS(11);
     in_en_final <= FINAL_SIGNALS(10);
     out_en_final <= FINAL_SIGNALS(9);
-    inst_type_final <= FINAL_SIGNALS(8);
-    alu_op_final <= FINAL_SIGNALS(7 DOWNTO 5);
-    flag_en_final <= FINAL_SIGNALS(4 DOWNTO 2);
+    alu_op_final <= FINAL_SIGNALS(8 DOWNTO 6);
+    flag_en_final <= FINAL_SIGNALS(5 DOWNTO 3);
     stack_op_final <= FINAL_SIGNALS(2 DOWNTO 0);
 
     -------------------------------------------------------------------------------------------------------------------------------------
 
-    ID_IE_BUFFER(130 DOWNTO 124) <= flush_final & stack_final & stack_op_final & mem_write_final & mem_read_final;
+    ID_IE_BUFFER(131 DOWNTO 124) <= branch_final & flush_final & stack_final & stack_op_final & mem_write_final & mem_read_final;
     ID_IE_BUFFER(123) <= out_en_final;
     ID_IE_BUFFER(122 DOWNTO 107) <= IF_ID_BUFFER(80 DOWNTO 65); -- INPUT PORT 
     ID_IE_BUFFER(106 DOWNTO 96) <= in_en_final & load_final & reg_write_final & alu_op_final & alu_src_final & flag_en_final & set_carry_final;
