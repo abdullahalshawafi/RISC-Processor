@@ -104,9 +104,10 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
     SIGNAL PC_MODIFIED, TARGET : STD_LOGIC_VECTOR(31 DOWNTO 0);
     SIGNAL wb_data, Rd_data : STD_LOGIC_VECTOR(15 DOWNTO 0);
     SIGNAL Rd_address : STD_LOGIC_VECTOR (2 DOWNTO 0);
-    SIGNAL WB, out_en, CHANGE_PC, EmptyStackException, InvalidAddressException, WILL_BRANCH : STD_LOGIC;
+    SIGNAL WB, out_en, CHANGE_PC, EmptyStackException, InvalidAddressException, Exception,WILL_BRANCH : STD_LOGIC;
     ------------------------------------------------------------------------
 BEGIN
+    Exception <= '1' when (EmptyStackException = '1' or InvalidAddressException = '1') else '0'; 
     --------------------------- Fetching Stage ---------------------------
     FETCHING : FETCH_STAGE PORT MAP(rst, clk, pc_write, IN_PORT, IF_ID_BUFFER_FROM_FETCHING);
 
