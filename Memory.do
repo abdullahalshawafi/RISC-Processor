@@ -16,10 +16,6 @@ add wave -position end  sim:/processor/DECODING/Rx/loop1(7)/rx/reg_out
 add wave -position end  sim:/processor/EXECUTION/setting_flag/Z_out
 add wave -position end  sim:/processor/EXECUTION/setting_flag/N_out
 add wave -position end  sim:/processor/EXECUTION/setting_flag/C_out
-#add wave -position end  sim:/processor/EXECUTION/Cfinal
-#add wave -position end  sim:/processor/EXECUTION/ID_IE_BUFFER(97)
-#add wave -position end  sim:/processor/EXECUTION/ID_IE_BUFFER(98)
-#add wave -position end  sim:/processor/EXECUTION/ID_IE_BUFFER(99)
 add wave -position end  sim:/processor/IN_PORT
 add wave -position end  sim:/processor/OUT_PORT
 
@@ -31,16 +27,18 @@ force -freeze sim:/processor/IN_PORT X"0000" 0
 run
 
 force -freeze sim:/processor/rst 0 0
-run
-run
-run
-run
 force -freeze sim:/processor/IN_PORT X"0005" 0
 run
-force -freeze sim:/processor/IN_PORT X"0010" 0
+force -freeze sim:/processor/IN_PORT X"0019" 0
+run
+force -freeze sim:/processor/IN_PORT X"FFFF" 0
 run
 run
 run
+run
+run
+run
+force -freeze sim:/processor/IN_PORT X"FFFF" 0
 run
 run
 run

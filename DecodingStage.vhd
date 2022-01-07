@@ -12,7 +12,8 @@ ENTITY DECODING_STAGE IS
         IF_ID_BUFFER : IN STD_LOGIC_VECTOR(80 DOWNTO 0);
         Rs_address_FOR_HDU, Rt_address_FOR_HDU, Rd_address_FOR_HDU : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
         Mem_read_HDU : IN STD_LOGIC;
-        pc_en, inst_type : OUT STD_LOGIC;
+        pc_en : OUT STD_LOGIC := '1';
+        inst_type : OUT STD_LOGIC := '0';
         ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(131 DOWNTO 0)
     );
 
@@ -93,7 +94,6 @@ BEGIN
     Rs_address <= IF_ID_BUFFER(58 DOWNTO 56);
     Rt_address <= IF_ID_BUFFER(55 DOWNTO 53);
     Rd_address <= IF_ID_BUFFER(52 DOWNTO 50);
-    instType <= IF_ID_BUFFER(64);
     op_code <= IF_ID_BUFFER(63 DOWNTO 59);
     ------- 49:34 immediate value 
     ------- 2 extra bits
@@ -149,7 +149,7 @@ BEGIN
     ID_IE_BUFFER(47 DOWNTO 32) <= Rs_data;
     ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0); --pc+1
     -----------------------------------------------------------------
-    pc_en <= pc_write_final;
-    inst_type <= inst_type_final;
+    pc_en <= pc_write;
+    inst_type <= instType;
     -------------------------------------------------------------------
 END DECODING_STAGE_arch;

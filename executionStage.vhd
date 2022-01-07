@@ -84,7 +84,7 @@ ARCHITECTURE struct OF EX_STAGE IS
     END COMPONENT;
 
     -- #### SIGNALS
-    SIGNAL Z, Ne, C, Z0, N0, C0, Cfinal : STD_LOGIC;
+    SIGNAL Z, Ne, C, Z0, N0, C0, Cfinal : STD_LOGIC := '0';
     SIGNAL alu_src2, alu_result_temp, alu_result_temp2, alu_result_final, Rs_data, Rt_data, Rs_final, Rt_final, zeroVector, in_port, imm_value, sign_extend : STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
     SIGNAL alu_op, Rd_address, Rs_address, Rt_address : STD_LOGIC_VECTOR (2 DOWNTO 0);
     SIGNAL alusrc, setc, inEn, reg_write, branch_signal, jump_signal : STD_LOGIC;
@@ -116,7 +116,7 @@ BEGIN
 
     Alu_unit : ALU PORT MAP(Rs_final, Rt_final, alu_op, alu_result_temp, C0, N0, Z0);
 
-    setting_flag : FLAG_REG PORT MAP(clk, rst, ID_IE_BUFFER(97), ID_IE_BUFFER(98), ID_IE_BUFFER(99), Z0, N0, Cfinal, Z, Ne, C);
+    setting_flag : FLAG_REG PORT MAP(clk, rst, ID_IE_BUFFER(99), ID_IE_BUFFER(98), ID_IE_BUFFER(97), Z0, N0, Cfinal, Z, Ne, C);
 
     -- ldm 
     alu_result_final <= imm_value WHEN alu_op = "111"

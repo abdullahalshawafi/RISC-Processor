@@ -29,7 +29,7 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
 
     COMPONENT FETCH_STAGE IS
         PORT (
-            rst, clk, pc_write, inst_type : IN STD_LOGIC;
+            rst, clk, pc_write : IN STD_LOGIC;
             in_port : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
             IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(80 DOWNTO 0)
         );
@@ -95,7 +95,7 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
 
     END COMPONENT;
     --------------------------- SIGNALS -----------------------------------
-    SIGNAL pc_write : STD_LOGIC;
+    SIGNAL pc_write : STD_LOGIC := '1';
     SIGNAL instType : STD_LOGIC := '0';
     SIGNAL IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING : STD_LOGIC_VECTOR(80 DOWNTO 0);
     SIGNAL ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION : STD_LOGIC_VECTOR(131 DOWNTO 0);
@@ -108,7 +108,7 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
     ------------------------------------------------------------------------
 BEGIN
     --------------------------- Fetching Stage ---------------------------
-    FETCHING : FETCH_STAGE PORT MAP(rst, clk, pc_write, instType, IN_PORT, IF_ID_BUFFER_FROM_FETCHING);
+    FETCHING : FETCH_STAGE PORT MAP(rst, clk, pc_write, IN_PORT, IF_ID_BUFFER_FROM_FETCHING);
 
     --------------------------- Decoding Stage ---------------------------
     IF_ID_BUFFER : buffer_component GENERIC MAP(n => 81) PORT MAP(clk, rst, '1', IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING);
