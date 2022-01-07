@@ -22,6 +22,7 @@ BEGIN
             flush <= '1';
         END IF;
         IF op_code = "00001" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '1';
             Rs_en <= '0';
@@ -45,6 +46,7 @@ BEGIN
             alu_op <= "000";
             flag_en <= "000";
         ELSIF op_code = "00011" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '1';
@@ -61,6 +63,7 @@ BEGIN
             alu_op <= "000";
             flag_en <= "001";
         ELSIF op_code = "00100" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -78,6 +81,7 @@ BEGIN
             alu_op <= "001";
             flag_en <= "110";
         ELSIF op_code = "00101" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -95,6 +99,7 @@ BEGIN
             alu_op <= "010";
             flag_en <= "110";
         ELSIF op_code = "00110" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -112,6 +117,7 @@ BEGIN
             alu_op <= "011";
             flag_en <= "000";
         ELSIF op_code = "00111" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -129,6 +135,7 @@ BEGIN
             out_en <= '0';
             flag_en <= "000";
         ELSIF op_code = "01000" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -147,6 +154,7 @@ BEGIN
             alu_op <= "011";
             flag_en <= "000";
         ELSIF op_code = "01001" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -165,6 +173,7 @@ BEGIN
             alu_op <= "100";
             flag_en <= "111";
         ELSIF op_code = "01010" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -183,6 +192,7 @@ BEGIN
             alu_op <= "101";
             flag_en <= "111";
         ELSIF op_code = "01011" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -201,6 +211,7 @@ BEGIN
             alu_op <= "110";
             flag_en <= "110";
         ELSIF op_code = "01100" THEN
+            pc_write <= '1';
             inst_type <= '1';
             flush <= '0';
             set_carry <= '0';
@@ -219,6 +230,7 @@ BEGIN
             alu_op <= "100";
             flag_en <= "111";
         ELSIF op_code = "10000" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -236,6 +248,7 @@ BEGIN
             flag_en <= "000";
             stack_op <= "000";
         ELSIF op_code = "10001" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -254,6 +267,7 @@ BEGIN
             flag_en <= "000";
             stack_op <= "001";
         ELSIF op_code = "10010" THEN
+            pc_write <= '1';
             inst_type <= '1';
             flush <= '0';
             set_carry <= '0';
@@ -272,6 +286,7 @@ BEGIN
             alu_op <= "111";
             flag_en <= "000";
         ELSIF op_code = "10011" THEN
+            pc_write <= '1';
             inst_type <= '1';
             flush <= '0';
             set_carry <= '0';
@@ -289,6 +304,7 @@ BEGIN
             alu_op <= "100";
             flag_en <= "000";
         ELSIF op_code = "10100" THEN
+            pc_write <= '1';
             inst_type <= '1';
             flush <= '0';
             set_carry <= '0';
@@ -306,6 +322,7 @@ BEGIN
             alu_op <= "100";
             flag_en <= "000";
         ELSIF op_code = "11000" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -321,6 +338,7 @@ BEGIN
             out_en <= '0';
             flag_en <= "100";
         ELSIF op_code = "11001" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -336,6 +354,7 @@ BEGIN
             out_en <= '0';
             flag_en <= "010";
         ELSIF op_code = "11010" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -351,6 +370,7 @@ BEGIN
             out_en <= '0';
             flag_en <= "001";
         ELSIF op_code = "11011" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -366,6 +386,7 @@ BEGIN
             out_en <= '0';
             flag_en <= "000";
         ELSIF op_code = "11100" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -383,6 +404,7 @@ BEGIN
             flag_en <= "000";
             stack_op <= "011";
         ELSIF op_code = "11101" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -401,6 +423,7 @@ BEGIN
             flag_en <= "000";
             stack_op <= "010";
         ELSIF op_code = "11110" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -418,6 +441,7 @@ BEGIN
             flag_en <= "000";
             stack_op <= "101";
         ELSIF op_code = "11111" THEN
+            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
@@ -435,6 +459,9 @@ BEGIN
             alu_op <= "011";
             flag_en <= "000";
             stack_op <= "100";
+        ELSE
+            flag_en <= "000";
+
         END IF;
     END PROCESS;
 END CONTROL_UNIT;

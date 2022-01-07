@@ -40,9 +40,24 @@ registers = {
 }
 
 
+def hexToBinary(hex_num):
+    hex_as_int = int(hex_num, 16)
+    binary_num = bin(hex_as_int)
+    binary_num = binary_num[2:].zfill(16)
+
+    return binary_num
+
+
 def preprocess(lines):
     processed_lines = []
     for line in lines:
+        # Find the beginning of a comment in the line
+        commentIndex = line.find('#')
+
+        # If there is a comment in the line, remove it
+        if commentIndex != -1:
+            line = line[:commentIndex]
+
         # Strip the line from white space before and after it
         line = line.strip()
 
@@ -66,15 +81,32 @@ def preprocess(lines):
 
 
 def assemble(lines):
-    assembled_lines = []
+    assembled_lines = {}
+    is_org = False
+    address = None
+    x = 0
+
     for line in lines:
+        temp_lines = []
         # Split the line into an array of operands
         operands = line.split(' ')
+        if operands[0] == ".ORG":
+            address = operands[1].lower()
+            is_org = True
+            continue
+
+        if is_org and x < 5:
+            assembled_lines[address] = hexToBinary(operands[0])
+            address = hex(int(address, 16) + 1)[2:]
+            assembled_lines[address] = hexToBinary("0000")
+            is_org = False
+            x += 1
+            continue
 
         # operands[0] --> OP Code
         if len(operands) == 1:
             # Append to the assembled lines the OP Code + 11 Bits
-            assembled_lines.append(op_codes[operands[0]] + "00000000000\n")
+            temp_lines.append(op_codes[operands[0]] + "00000000000")
 
         # operands[1] may be either Rdst or Interrupt Index
         elif len(operands) == 2:
@@ -83,31 +115,67 @@ def assemble(lines):
                 index = '{0:02b}'.format(int(operands[1]))
 
                 # Append to the assembled lines the OP Code + Index + 9 Bits
-                assembled_lines.append(
-                    op_codes[operands[0]] + index + "000000000\n")
+                temp_lines.append(
+                    op_codes[operands[0]] + index + "000000000")
             else:
                 # Append to the assembled lines the OP Code + Rsrc Address + 2 Bits + Rdst Address + 2 Bits
-                assembled_lines.append(
-                    op_codes[operands[0]] + registers[operands[1]] + "000" + registers[operands[1]] + "00\n")
+                temp_lines.append(
+                    op_codes[operands[0]] + registers[operands[1]] + "000" + registers[operands[1]] + "00")
 
         elif len(operands) == 3:
             if (operands[0] == "MOV"):
-                assembled_lines.append(
-                    op_codes[operands[0]] + registers[operands[1]] + "000" + registers[operands[2]] + "00\n")
+                temp_lines.append(
+                    op_codes[operands[0]] + registers[operands[1]] + "000" + registers[operands[2]] + "00")
             else:
-                assembled_lines.append(
-                    op_codes[operands[0]] + registers[operands[1]] + "00000000\n")
-                assembled_lines.append(operands[2] + '\n')
+                temp_lines.append(
+                    op_codes[operands[0]] + registers[operands[1]] + "00000000")
+                temp_lines.append(hexToBinary(operands[2]))
 
         elif len(operands) == 4:
             if (operands[0] == "ADD" or operands[0] == "SUB" or operands[0] == "AND"):
-                assembled_lines.append(
-                    op_codes[operands[0]] + registers[operands[2]] + registers[operands[3]] + registers[operands[1]] + "00\n")
+                temp_lines.append(
+                    op_codes[operands[0]] + registers[operands[2]] + registers[operands[3]] + registers[operands[1]] + "00")
+            elif operands[0] == "IADD":
+                temp_lines.append(
+                    op_codes[operands[0]] + registers[operands[1]] + "000" + registers[operands[2]] + "00")
+                temp_lines.append(hexToBinary(operands[3]))
             else:
-                assembled_lines.append(
-                    op_codes[operands[0]] + registers[operands[1]] + "000" + registers[operands[2]] + "00\n")
-                assembled_lines.append(operands[3] + '\n')
+                temp_lines.append(
+                    op_codes[operands[0]] + registers[operands[1]] + "000" + registers[operands[3]] + "00")
+                temp_lines.append(hexToBinary(operands[2]))
+
+        for line in temp_lines:
+            assembled_lines[address] = line
+            address = hex(int(address, 16) + 1)[2:]
+
     return assembled_lines
+
+
+def readInputFile():
+    input_file = open(sys.argv[1], 'r')
+    lines = input_file.readlines()
+    input_file.close()
+
+    return lines
+
+
+def writeOutputFile(lines):
+    output_file = sys.argv[2] if len(sys.argv) == 3 else "instruction.mem"
+    output_file += ".mem" if output_file.find(".mem") == -1 else ""
+    output_file = open(output_file, 'w')
+    output_file.write(
+        '// instance=/fetch_stage/y/addressing_instruction\n')
+    output_file.write(
+        '// format=mti addressradix=h dataradix=b version=1.0 wordsperline=1\n')
+    length = len(list(lines.keys())[-1])
+    for address in lines:
+        output_file.write(f'{address.zfill(length)}: {lines[address]}\n')
+    output_file.close()
+
+
+def print_lines(lines):
+    for address in lines:
+        print(address, lines[address])
 
 
 if __name__ == '__main__':
@@ -116,20 +184,11 @@ if __name__ == '__main__':
         print("python assembler.py <inputfile> <outputfile>[OPTIONAL]")
         sys.exit(1)
     else:
-        input_file = open(sys.argv[1], 'r')
-        lines = input_file.readlines()
-        input_file.close()
+        lines = readInputFile()
 
         lines = preprocess(lines)
         lines = assemble(lines)
 
-        output_file = sys.argv[2] if len(sys.argv) == 3 else "instruction.mem"
-        output_file += ".mem" if output_file.find(".mem") == -1 else ""
-        output_file = open(output_file, 'w')
-        output_file.write(
-            '// instance=/fetch_stage/y/addressing_instruction\n')
-        output_file.write(
-            '// format=mti addressradix=h dataradix=b version=1.0 wordsperline=1\n')
-        for i in range(len(lines)):
-            output_file.write(f'{hex(i)[2:]}: {lines[i]}')
-        output_file.close()
+        # print_lines(lines)
+
+        writeOutputFile(lines)
