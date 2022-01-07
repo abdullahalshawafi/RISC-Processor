@@ -149,6 +149,6 @@ BEGIN
     ID_IE_BUFFER(47 DOWNTO 32) <= Rs_data;
     ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0); --pc+1
     -----------------------------------------------------------------
-    pc_en <= pc_write;
+    pc_en <= pc_write_final;
     -------------------------------------------------------------------
 END DECODING_STAGE_arch;
