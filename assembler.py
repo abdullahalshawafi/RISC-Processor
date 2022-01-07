@@ -91,12 +91,14 @@ def assemble(lines):
         # Split the line into an array of operands
         operands = line.split(' ')
         if operands[0] == ".ORG":
-            address = operands[1]
+            address = operands[1].lower()
             is_org = True
             continue
 
         if is_org and x < 5:
             assembled_lines[address] = hexToBinary(operands[0])
+            address = hex(int(address, 16) + 1)[2:]
+            assembled_lines[address] = hexToBinary("0000")
             is_org = False
             x += 1
             continue
@@ -143,8 +145,8 @@ def assemble(lines):
                 temp_lines.append(hexToBinary(operands[2]))
 
         for line in temp_lines:
-            address = hex(int(address, 16) + 1)[2:]
             assembled_lines[address] = line
+            address = hex(int(address, 16) + 1)[2:]
 
     return assembled_lines
 
