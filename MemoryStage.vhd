@@ -137,10 +137,10 @@ BEGIN
     EPC : register_component GENERIC MAP(n => 32) PORT MAP(clk, rst, Exception, PC, EPC_val);
 
     ---------------------------------- pass the output to the buffer ----------------------------------------------------------
-
-    IM_IW_BUFFER(53) <= IE_IM_BUFFER(76);
-    IM_IW_BUFFER(52) <= load;
-    IM_IW_BUFFER(51) <= WB;
+    
+    IM_IW_BUFFER(53) <= '0' when (Exception = '1')  else IE_IM_BUFFER(76);
+    IM_IW_BUFFER(52) <= '0' when (Exception = '1')  else load;
+    IM_IW_BUFFER(51) <= '0' when (Exception = '1')  else WB;
     IM_IW_BUFFER(50 DOWNTO 48) <= Rd_address;
     IM_IW_BUFFER(47 DOWNTO 32) <= (OTHERS => '0');
     IM_IW_BUFFER(31 DOWNTO 16) <= Alu_result;
