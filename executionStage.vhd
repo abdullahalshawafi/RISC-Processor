@@ -22,9 +22,9 @@ ENTITY EX_STAGE IS
         Rd_M_address, Rd_W_address : IN STD_LOGIC_VECTOR (2 DOWNTO 0);
         Rd_M_data, Rd_W_data : IN STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
         clk, rst, WB_M, WB_W : IN STD_LOGIC;
-        will_branch : OUT STD_LOGIC;
         target : OUT STD_LOGIC_VECTOR (31 DOWNTO 0);
-        exception : IN STD_LOGIC
+        exception : IN STD_LOGIC;
+        Z_flag, N_flag, C_flag : OUT STD_LOGIC
     );
 
 END EX_STAGE;
@@ -66,6 +66,21 @@ ARCHITECTURE struct OF EX_STAGE IS
             Z_out, N_out, C_out : OUT STD_LOGIC);
     END COMPONENT;
 
+    COMPONENT FLAG_MUX IS
+        PORT (
+            sel : IN STD_LOGIC_VECTOR (3 DOWNTO 0);
+            Z1, N1, C1, Z2, N2, C2 : IN STD_LOGIC;
+            Z, N, C : OUT STD_LOGIC);
+    END COMPONENT;
+
+    COMPONENT R_FLAG_REG IS
+        PORT (
+            clk, rst : IN STD_LOGIC;
+            Z, N, C : IN STD_LOGIC;
+            en : IN STD_LOGIC_VECTOR (3 DOWNTO 0);
+            Z_out, N_out, C_out : OUT STD_LOGIC);
+    END COMPONENT;
+
     COMPONENT FU IS
         PORT (
             Rs, Rt, Rd_M, Rd_W : IN STD_LOGIC_VECTOR (2 DOWNTO 0);
@@ -85,7 +100,7 @@ ARCHITECTURE struct OF EX_STAGE IS
     END COMPONENT;
 
     -- #### SIGNALS
-    SIGNAL Z, Ne, C, Z0, N0, C0, Cfinal : STD_LOGIC := '0';
+    SIGNAL Z, Ne, C, Z0, N0, C0, Cfinal, res_Z, res_N, res_C, latest_Z, latest_N, latest_C : STD_LOGIC := '0';
     SIGNAL alu_src2, alu_result_temp, alu_result_temp2, alu_result_final, Rs_data, Rt_data, Rs_final, Rt_final, zeroVector, in_port, imm_value, sign_extend : STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
     SIGNAL alu_op, Rd_address, Rs_address, Rt_address : STD_LOGIC_VECTOR (2 DOWNTO 0);
     SIGNAL alusrc, setc, inEn, reg_write, branch_signal, jump_signal, Z_en, N_en, C_en, call_signal : STD_LOGIC;
@@ -133,31 +148,33 @@ BEGIN
 
     Alu_unit : ALU PORT MAP(Rs_final, Rt_final, alu_op, alu_result_temp, C0, N0, Z0);
 
-    setting_flag : FLAG_REG PORT MAP(clk, rst, Z_en, N_en, C_en, Z0, N0, Cfinal, Z, Ne, C);
-
-    -- ldm 
+    -----------------------------  ldm -----------------------------
     alu_result_final <= imm_value WHEN alu_op = "111"
         ELSE
         alu_result_temp2;
-    -- JUMP OR NOT ACCCORDING TO FLAGS
-    branch : BRANCH_MUX PORT MAP(ID_IE_BUFFER(77 DOWNTO 75), Z, Ne, C, jump_signal);
-    -- call 1011 signal = 1
-    call_signal <= '1' WHEN res_flag_en = "1011"
-        ELSE
-        '0';
-    will_branch <= branch_signal AND (jump_signal OR call_signal);
-    sign_extend <= (OTHERS => Rs_data(15));
-    target <= sign_extend & Rs_data;
-    -- STORE HANDLING
+    ------------------------------ target of branching -----------------------------
 
-    -- STORE HANDLING
+    sign_extend <= (OTHERS => Rs_final(15));
+    target <= sign_extend & Rs_final;
+
+    ------------------------------- INT  save flags -----------------------------
+    --reserving_flags:  R_FLAG_REG PORT MAP(clk, rst,latest_Z,latest_N,latest_C,res_flag_en,res_Z,res_N,res_C );
+
+    reserving_flags : R_FLAG_REG PORT MAP(clk, rst, Z, Ne, C, res_flag_en, res_Z, res_N, res_C);
+
+    ------------------------------- if RIT restore Flags-----------------------------
+
+    restoring_flags : FLAG_MUX PORT MAP(res_flag_en, res_Z, res_N, res_C, Z0, N0, Cfinal, latest_Z, latest_N, latest_C);
+
+    ------------------------------Setting flags in flag register Z Ne C -----------------------------
+
+    setting_flag : FLAG_REG PORT MAP(clk, rst, Z_en, N_en, C_en, latest_Z, latest_N, latest_C, Z, Ne, C);
 
     --------------------------------- output buffer <= signals
     -- PC+1
     IE_IM_BUFFER(31 DOWNTO 0) <= ID_IE_BUFFER(31 DOWNTO 0);
     IE_IM_BUFFER(47 DOWNTO 32) <= alu_result_final;
-
-    --Rs data
+    -- STORE HANDLING
     IE_IM_BUFFER(63 DOWNTO 48) <= alu_src2 WHEN (ID_IE_BUFFER(124) = '1' AND ID_IE_BUFFER(129) = '0')
 ELSE
     Rs_final;
@@ -172,5 +189,8 @@ ELSE
 
     -- Out Enable
     IE_IM_BUFFER(76) <= ID_IE_BUFFER(123);
-
+    -- out flags to decoding stage:
+    Z_flag <= Z;
+    N_flag <= Ne;
+    C_flag <= C;
 END struct;
