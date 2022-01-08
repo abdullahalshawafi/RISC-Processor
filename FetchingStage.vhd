@@ -26,8 +26,8 @@ ARCHITECTURE FETCH_STAGE OF FETCH_STAGE IS
     COMPONENT INSTRUCTION_MEMORY IS
         PORT (
             rst, clk : IN STD_LOGIC;
-            pc : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-            read_instruction, ex1, ex2 : IN STD_LOGIC;
+            pc, target : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+            read_instruction, ex1, ex2, will_branch : IN STD_LOGIC;
             inst_type : OUT STD_LOGIC;
             instruction : INOUT STD_LOGIC_VECTOR(31 DOWNTO 0)
         );
@@ -43,10 +43,12 @@ BEGIN
 
     pc_signal <= rst OR ex1 OR ex2 OR CHANGE_PC OR will_branch;
 
-    x : PC PORT MAP(pc_signal, clk, instr_en, instType, instr, pc_out);
-    y : INSTRUCTION_MEMORY PORT MAP(rst, clk, pc_instruction, instr_en, ex1, ex2, instType, instr);
+    x : PC PORT MAP(pc_signal, clk, instr_en, instType, pc_instruction, pc_out);
+    y : INSTRUCTION_MEMORY PORT MAP(rst, clk, pc_instruction, target, instr_en, ex1, ex2, will_branch, instType, instr);
 
-    pc_instruction <= PC_MODIFIED WHEN CHANGE_PC = '1'
+    pc_instruction <= instr WHEN rst = '1'
+        ELSE
+        PC_MODIFIED WHEN CHANGE_PC = '1'
         ELSE
         target WHEN will_branch = '1'
         ELSE

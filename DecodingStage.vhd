@@ -149,6 +149,7 @@ BEGIN
     -------------------------------------  BUFFER DATA------------------------------------------------------------------------------------------------
 
     immediate_value <= IF_ID_BUFFER(47 DOWNTO 32);
+    ID_IE_BUFFER(131) <= branch_final;
     ID_IE_BUFFER(130 DOWNTO 124) <= flush_final & stack_final & stack_op_final & mem_read_final & mem_write_final;
     ID_IE_BUFFER(123) <= out_en_final;
     ID_IE_BUFFER(122 DOWNTO 107) <= IF_ID_BUFFER(80 DOWNTO 65); -- INPUT PORT 
