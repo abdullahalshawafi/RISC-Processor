@@ -164,8 +164,8 @@ BEGIN
     target <= sign_extend & Rs_final;
     -- INT  save flags:
     --reserving_flags:  R_FLAG_REG PORT MAP(clk, rst,latest_Z,latest_N,latest_C,res_flag_en,res_Z,res_N,res_C );
-    reserving_flags : R_FLAG_REG PORT MAP(clk, rst, Z, Ne, C, res_flag_en, res_Z, res_N, res_C);
-    -- RIT restore Flags
+    reserving_flags : R_FLAG_REG PORT MAP(clk, rst, Z, Ne, Cfinal, res_flag_en, res_Z, res_N, res_C);
+    -- RTI restore Flags
     restoring_flags : FLAG_MUX PORT MAP(res_flag_en, res_Z, res_N, res_C, Z0, N0, Cfinal, latest_Z, latest_N, latest_C);
     -- Setting flags in flag register Z Ne C
     setting_flag : FLAG_REG PORT MAP(clk, rst, Z_en, N_en, C_en, latest_Z, latest_N, latest_C, Z, Ne, C);

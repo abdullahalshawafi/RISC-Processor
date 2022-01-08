@@ -16,7 +16,8 @@ ENTITY DECODING_STAGE IS
         branch_taken : IN STD_LOGIC;
         pc_en : OUT STD_LOGIC := '1';
         inst_type : OUT STD_LOGIC := '0';
-        ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(131 DOWNTO 0)
+        ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(131 DOWNTO 0);
+        final_flush : OUT STD_LOGIC
     );
 
 END DECODING_STAGE;
@@ -91,7 +92,7 @@ ARCHITECTURE DECODING_STAGE_arch OF DECODING_STAGE IS
 
     ----------------------------- STALLING SIGNALS ------------------------------------------------------------------------------------------------
 
-    SIGNAL stall_pipe, final_flush : STD_LOGIC;
+    SIGNAL stall_pipe : STD_LOGIC;
     ------------------------------------------------------------------------------------------------------------------------------------------
 BEGIN
 
@@ -120,8 +121,11 @@ BEGIN
         mem_read & mem_write & interrupt_en &
         stack & load & reg_write & in_en & out_en
         & alu_op & flag_en & stack_op;
-    -- final_flush <= stall_pipe OR exception OR branch_taken ; 
+
     set_flush <= stall_pipe OR exception OR branch_taken; --exception or hazard detected or branch taken
+    final_flush <= '1' WHEN (set_flush = '1')
+        ELSE
+        '0';
 
     FLUSH_MUX : MUX2 GENERIC MAP(n => 24) PORT MAP(set_flush, CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS);
 

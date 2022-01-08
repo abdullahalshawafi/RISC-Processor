@@ -51,10 +51,11 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
             Rs_address_FOR_HDU, Rt_address_FOR_HDU, Rd_address_FOR_HDU : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
             Mem_read_HDU : IN STD_LOGIC;
             exception : IN STD_LOGIC;
-            branch_taken: IN STD_LOGIC;
+            branch_taken : IN STD_LOGIC;
             pc_en : OUT STD_LOGIC := '1';
             inst_type : OUT STD_LOGIC := '0';
-            ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(131 DOWNTO 0)
+            ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(131 DOWNTO 0);
+            final_flush : OUT STD_LOGIC
         );
     END COMPONENT;
 
@@ -111,8 +112,11 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
     SIGNAL PC_MODIFIED, TARGET : STD_LOGIC_VECTOR(31 DOWNTO 0);
     SIGNAL wb_data, Rd_data : STD_LOGIC_VECTOR(15 DOWNTO 0);
     SIGNAL Rd_address : STD_LOGIC_VECTOR (2 DOWNTO 0);
-    SIGNAL WB, out_en, CHANGE_PC, EmptyStack, InvalidAddress, Exception, WILL_BRANCH : STD_LOGIC;
+    SIGNAL WB, out_en, CHANGE_PC, EmptyStack, InvalidAddress, Exception, WILL_BRANCH, flush_CU : STD_LOGIC;
     SIGNAL Z_flag, N_flag, C_flag : STD_LOGIC;
+
+    -------------------------- reset signals for buffers------------------
+    SIGNAL reset_IF_ID, reset_ID_IE, reset_IE_IM : STD_LOGIC;
     ------------------------------------------------------------------------
 BEGIN
     Exception <= '1' WHEN (EmptyStack = '1' OR InvalidAddress = '1') ELSE
@@ -121,15 +125,26 @@ BEGIN
     FETCHING : FETCH_STAGE PORT MAP(rst, clk, pc_write, IN_PORT, PC_MODIFIED, TARGET, CHANGE_PC, EmptyStack, InvalidAddress, WILL_BRANCH, IF_ID_BUFFER_FROM_FETCHING);
 
     --------------------------- Decoding Stage ---------------------------
+    reset_IF_ID <= '1' WHEN (flush_CU = '1')
+        ELSE
+        rst;
+
     IF_ID_BUFFER : buffer_component GENERIC MAP(n => 81) PORT MAP(clk, rst, '1', IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING);
 
-    DECODING : DECODING_STAGE GENERIC MAP(n => 16) PORT MAP(rst, clk, Rd_address, wb_data, WB, IF_ID_BUFFER_TO_DECODING, IF_ID_BUFFER_TO_DECODING(58 DOWNTO 56), IF_ID_BUFFER_TO_DECODING(55 DOWNTO 53), ID_IE_TO_EXECUTION(68 DOWNTO 66), ID_IE_TO_EXECUTION(124), Exception,WILL_BRANCH, pc_write, instType, ID_IE_FROM_DECODING);
+    DECODING : DECODING_STAGE GENERIC MAP(n => 16) PORT MAP(rst, clk, Rd_address, wb_data, WB, IF_ID_BUFFER_TO_DECODING, IF_ID_BUFFER_TO_DECODING(58 DOWNTO 56), IF_ID_BUFFER_TO_DECODING(55 DOWNTO 53), ID_IE_TO_EXECUTION(68 DOWNTO 66), ID_IE_TO_EXECUTION(124), Exception, WILL_BRANCH, pc_write, instType, ID_IE_FROM_DECODING, flush_CU);
 
     --------------------------- Execution Stage ---------------------------
+    reset_ID_IE <= '1' WHEN (flush_CU = '1')
+        ELSE
+        rst;
+
     ID_IE_BUFFER : buffer_component GENERIC MAP(n => 132) PORT MAP(clk, rst, '1', ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION);
     EXECUTION : EX_STAGE GENERIC MAP(n => 16) PORT MAP(ID_IE_TO_EXECUTION, IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY(66 DOWNTO 64), IM_IW_TO_WB(50 DOWNTO 48), IE_IM_TO_MEMORY(47 DOWNTO 32), wb_data, clk, rst, IE_IM_TO_MEMORY(74), WB, WILL_BRANCH, TARGET, Exception);
 
     --------------------------- Memory Stage ---------------------------
+    reset_IE_IM <= '1' WHEN (flush_CU = '1' AND WILL_BRANCH = '0')
+        ELSE
+        rst;
     IE_IM_BUFFER : buffer_component GENERIC MAP(n => 77) PORT MAP(clk, rst, '1', IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY);
     MEMORY : MEMORY_STAGE GENERIC MAP(n => 16) PORT MAP(IE_IM_TO_MEMORY, clk, rst, IM_IW_FROM_MEMORY, PC_MODIFIED, CHANGE_PC, EmptyStack, InvalidAddress);
 
