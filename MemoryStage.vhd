@@ -94,12 +94,12 @@ BEGIN
 
     ---------------------------------- Stack process ----------------------------------------------------------
 
-    en <= '1' WHEN stack_signal = '1' ELSE
+    en <= '1' WHEN stack_signal = '1' AND Exception = '0' ELSE
         '0';
 
-    modified_SP <= current_SP + 1 WHEN stack_signal = '1' AND stack_OP = "001" AND (current_SP + 1 < 2 ** 20) --POP
+    modified_SP <= current_SP + 1 WHEN stack_signal = '1' AND stack_OP = "001" --POP
         ELSE
-        current_SP + 2 WHEN stack_signal = '1'AND (current_SP + 2 < 2 ** 20) AND (stack_OP = "010" OR stack_OP = "100") --RET or RTI
+        current_SP + 2 WHEN stack_signal = '1' AND (stack_OP = "010" OR stack_OP = "100") --RET or RTI
         ELSE
         current_SP - 1 WHEN stack_signal = '1' AND stack_OP = "000" --PUSH
         ELSE
@@ -115,22 +115,22 @@ BEGIN
 
     ---------------------------------- Exception process ----------------------------------------------------------
 
-    EmptyStackException <= '1' WHEN ((current_SP + 1 >= 2 ** 20) AND (stack_signal = '1' AND stack_OP = "001")) OR
-        ((current_SP + 2 >= 2 ** 20) AND stack_signal = '1' AND (stack_OP = "010" OR stack_OP = "100"))
+    EmptyStackException <= '1' WHEN ((modified_SP + 1 > 2 ** 20) AND (stack_signal = '1' AND stack_OP = "001")) OR
+        ((modified_SP + 2 > 2 ** 20) AND stack_signal = '1' AND (stack_OP = "010" OR stack_OP = "100"))
         ELSE
         '0';
 
-    InvalidAddressException <= '1' WHEN ((Alu_result >= ((2 ** 16) - (2 ** 8))) AND (stack_signal = '0') AND (mem_Write = '1' OR mem_Read = '1'))
+    InvalidAddressException <= '1' WHEN ((Alu_result > ((2 ** 16) - (2 ** 8))) AND (stack_signal = '0') AND (mem_Write = '1' OR mem_Read = '1'))
         ELSE
         '0';
 
-    Exception <= '1' WHEN ((current_SP + 1 >= 2 ** 20) AND (stack_signal = '1' AND stack_OP = "001")) OR
-        ((current_SP + 2 >= 2 ** 20) AND stack_signal = '1' AND (stack_OP = "010" OR stack_OP = "100")) OR
-        ((Alu_result >= ((2 ** 16) - (2 ** 8))) AND (stack_signal = '0') AND (mem_Write = '1' OR mem_Read = '1'))
+    Exception <= '1' WHEN ((modified_SP + 1 > 2 ** 20) AND (stack_signal = '1' AND stack_OP = "001")) OR
+        ((modified_SP + 2 > 2 ** 20) AND stack_signal = '1' AND (stack_OP = "010" OR stack_OP = "100")) OR
+        ((Alu_result > ((2 ** 16) - (2 ** 8))) AND (stack_signal = '0') AND (mem_Write = '1' OR mem_Read = '1'))
         ELSE
         '0';
 
-    PC_exception <= (PC - 1) WHEN (Exception = '1')
+    PC_exception <= PC WHEN (Exception = '1')
         ELSE
         PC;
 

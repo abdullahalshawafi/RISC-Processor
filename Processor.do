@@ -6,7 +6,7 @@ add wave -position end  sim:/processor/rst
 add wave -position end  sim:/processor/clk
 add wave -position end  sim:/processor/FETCHING/instr
 add wave -position end  sim:/processor/FETCHING/instr_en
-add wave -position end  sim:/processor/FETCHING/pc_out
+add wave -position end  sim:/processor/FETCHING/pc_instruction
 #add wave -position end  sim:/processor/DECODING/pc_en
 #add wave -position end  sim:/processor/DECODING/set_carry
 add wave -position end  sim:/processor/DECODING/reg_write

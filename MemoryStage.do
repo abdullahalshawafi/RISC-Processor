@@ -18,6 +18,7 @@ add wave -position end  sim:/memory_stage/dataMem/dataMem/PC
 add wave -position end  sim:/memory_stage/dataMem/dataMem/mem_Read
 add wave -position end  sim:/memory_stage/memRead
 add wave -position end  sim:/memory_stage/current_SP
+add wave -position end  sim:/memory_stage/Exception
 add wave -position end  sim:/memory_stage/EmptyStackException
 
 

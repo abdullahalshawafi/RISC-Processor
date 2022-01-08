@@ -105,10 +105,8 @@ BEGIN
     Rt_address <= ID_IE_BUFFER(71 DOWNTO 69);
     imm_value <= ID_IE_BUFFER(95 DOWNTO 80);
     branch_signal <= ID_IE_BUFFER(131);
-    <<<<<< < HEAD
-    == == == =
     res_flag_en <= ID_IE_BUFFER(129 DOWNTO 126);
-    >>>>>> > 96ba62160cbc1751267dc0e85c14be436b8f5823
+
     -- exception handling
     alu_op <= ID_IE_BUFFER(103 DOWNTO 101) WHEN exception = '0'
         ELSE
