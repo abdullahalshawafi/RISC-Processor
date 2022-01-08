@@ -82,7 +82,8 @@ ARCHITECTURE DECODING_STAGE_arch OF DECODING_STAGE IS
 
     ------------------------The final signals--> Flushed or not ----------------------------------------
 
-    SIGNAL pc_write_final, flush_final, set_carry_final, branch_final, alu_src_final, Rs_en_final, Rt_en_final, mem_read_final, mem_write_final, interrupt_en_final, stack_final, load_final, reg_write_final, in_en_final, out_en_final : STD_LOGIC;
+    SIGNAL pc_write_final, flush_final, branch_final, alu_src_final, Rs_en_final, Rt_en_final, mem_read_final, mem_write_final, interrupt_en_final, stack_final, load_final, reg_write_final, in_en_final, out_en_final : STD_LOGIC;
+    SIGNAL set_carry_final : STD_LOGIC := '0';
     SIGNAL inst_type_final : STD_LOGIC;
     SIGNAL alu_op_final, flag_en_final, stack_op_final : STD_LOGIC_VECTOR(2 DOWNTO 0);
 

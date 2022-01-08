@@ -47,6 +47,7 @@ add wave -position end sim:/processor/EXECUTION/latest_C
 add wave -position end sim:/processor/EXECUTION/Z0
 add wave -position end sim:/processor/EXECUTION/N0
 add wave -position end sim:/processor/EXECUTION/Cfinal
+add wave -position end sim:/processor/EXECUTION/C0
 add wave -position end sim:/processor/EXECUTION/alu_src2
 add wave -position end  sim:/processor/EXECUTION/branch_signal
 add wave -position end  sim:/processor/EXECUTION/jump_signal

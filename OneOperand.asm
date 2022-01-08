@@ -20,4 +20,4 @@ A0
 .ORG A0
 NOT r0          
 INT 0
-and r0,r1,r2       
+add r0,r1,r2       

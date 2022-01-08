@@ -31,6 +31,14 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Compiling entity MUX4
 -- Compiling architecture MUX4_Arch of MUX4
 
+} {} {}} F:/RISC-Processor/flagReg.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/flagReg.vhd
+Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity FLAG_REG
+-- Compiling architecture FLAG_REG_Arch of FLAG_REG
+
 } {} {}} F:/RISC-Processor/Processor.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/Processor.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
@@ -48,14 +56,6 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package NUMERIC_STD
 -- Compiling entity RAM
 -- Compiling architecture RAM1 of RAM
-
-} {} {}} F:/RISC-Processor/flagReg.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/flagReg.vhd
-Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Compiling entity FLAG_REG
--- Compiling architecture FLAG_REG_Arch of FLAG_REG
 
 } {} {}} F:/RISC-Processor/ALU_Integrated.vhd {1 {vcom -work work -2002 -explicit -stats=none {F:\RISC-Processor\ALU_Integrated.vhd}
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015

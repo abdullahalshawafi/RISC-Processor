@@ -18,7 +18,7 @@ BEGIN
             Z_out <= '0';
             N_out <= '0';
             C_out <= '0';
-        ELSIF (rising_edge(clk)) THEN
+        ELSIF (falling_edge(clk)) THEN
             IF (en_z = '1') THEN
                 Z_out <= Z;
             END IF;
