@@ -89,7 +89,7 @@ def assemble(lines):
     for line in lines:
         temp_lines = []
         # Split the line into an array of operands
-        operands = line.split(' ')
+        operands = " ".join(line.split()).split(' ')
         if operands[0] == ".ORG":
             address = operands[1].lower()
             is_org = True
@@ -141,7 +141,7 @@ def assemble(lines):
                 temp_lines.append(hexToBinary(operands[3]))
             elif operands[0] == "STD":
                 temp_lines.append(
-                    op_codes[operands[0]] + registers[operands[3]]  + registers[operands[1]] + "00000")
+                    op_codes[operands[0]] + registers[operands[3]] + registers[operands[1]] + "00000")
                 temp_lines.append(hexToBinary(operands[2]))
             else:
                 temp_lines.append(

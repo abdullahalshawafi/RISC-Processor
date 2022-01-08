@@ -8,7 +8,7 @@ A0
 .ORG 2  #this is empty stack exception handler address
 100
 
-.ORG 4  #this is invalid addess exception handler address
+.ORG 4  #this is invalid address exception handler address
 150
 
 .ORG 6  #this is int 0

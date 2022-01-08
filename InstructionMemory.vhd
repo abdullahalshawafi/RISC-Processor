@@ -16,7 +16,6 @@ ARCHITECTURE INSTRUCTION_MEMORY1 OF INSTRUCTION_MEMORY IS
 
     TYPE memory IS ARRAY(INTEGER RANGE <>) OF STD_LOGIC_VECTOR(15 DOWNTO 0);
     SIGNAL addressing_instruction : memory(0 TO ((2 ** 20) - 1));
-    SIGNAL exception_address : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
 
 BEGIN
     PROCESS (rst, clk, pc, read_instruction) IS

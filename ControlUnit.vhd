@@ -24,7 +24,7 @@ BEGIN
         IF op_code = "00001" THEN
             pc_write <= '1';
             inst_type <= '0';
-            flush <= '1';
+            flush <= '0';
             Rs_en <= '0';
             Rt_en <= '0';
             mem_read <= '0';
@@ -321,7 +321,7 @@ BEGIN
             out_en <= '0';
             alu_op <= "100";
             flag_en <= "000";
-            alu_src<='1';
+            alu_src <= '1';
         ELSIF op_code = "11000" THEN
             pc_write <= '1';
             inst_type <= '0';

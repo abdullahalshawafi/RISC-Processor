@@ -29,13 +29,19 @@ force -freeze sim:/processor/IN_PORT X"0000" 0
 run
 
 force -freeze sim:/processor/rst 0 0
+force -freeze sim:/processor/IN_PORT X"0019" 0
+run
+force -freeze sim:/processor/IN_PORT X"ffff" 0
+run
+force -freeze sim:/processor/IN_PORT X"f320" 0
 run
 run
 run
 run
-force -freeze sim:/processor/IN_PORT X"0005" 0
+run
 run
 force -freeze sim:/processor/IN_PORT X"0010" 0
+run
 run
 run
 run
