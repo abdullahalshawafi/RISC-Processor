@@ -26,7 +26,7 @@ ARCHITECTURE FETCH_STAGE OF FETCH_STAGE IS
     COMPONENT INSTRUCTION_MEMORY IS
         PORT (
             rst, clk : IN STD_LOGIC;
-            pc : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+            pc : INOUT STD_LOGIC_VECTOR(31 DOWNTO 0);
             read_instruction : IN STD_LOGIC;
             inst_type : OUT STD_LOGIC;
             instruction : INOUT STD_LOGIC_VECTOR(31 DOWNTO 0);

@@ -5,7 +5,7 @@ USE IEEE.numeric_std.ALL;
 ENTITY INSTRUCTION_MEMORY IS
     PORT (
         rst, clk : IN STD_LOGIC;
-        pc : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+        pc : INOUT STD_LOGIC_VECTOR(31 DOWNTO 0);
         read_instruction : IN STD_LOGIC;
         inst_type : OUT STD_LOGIC;
         instruction : INOUT STD_LOGIC_VECTOR(31 DOWNTO 0);
@@ -25,11 +25,11 @@ BEGIN
         IF rst = '1' THEN
             instruction <= addressing_instruction(1) & addressing_instruction(0);
         ELSIF EmptyStackException = '1' THEN
-            exception_address <= addressing_instruction(3) & addressing_instruction(2) ;
-            instruction <= addressing_instruction(to_integer(unsigned(exception_address))) & X"0000";
+            pc <= addressing_instruction(3) & addressing_instruction(2) ;
+            instruction <= addressing_instruction(to_integer(unsigned(pc))) & X"0000";
         ELSIF InvalidAddressException = '1' THEN
-            exception_address <= addressing_instruction(5) & addressing_instruction(4) ;
-            instruction <= addressing_instruction(to_integer(unsigned(exception_address))) & X"0000";
+            pc <= addressing_instruction(5) & addressing_instruction(4) ;
+            instruction <= addressing_instruction(to_integer(unsigned(pc))) & X"0000";
         ELSIF read_instruction = '1' THEN
             instruction <= addressing_instruction(to_integer(unsigned((pc)))) & X"0000";
             inst_type <= '0';
