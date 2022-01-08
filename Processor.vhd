@@ -51,6 +51,7 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
             Rs_address_FOR_HDU, Rt_address_FOR_HDU, Rd_address_FOR_HDU : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
             Mem_read_HDU : IN STD_LOGIC;
             exception : IN STD_LOGIC;
+            branch_taken: IN STD_LOGIC;
             pc_en : OUT STD_LOGIC := '1';
             inst_type : OUT STD_LOGIC := '0';
             ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(131 DOWNTO 0)
@@ -122,8 +123,7 @@ BEGIN
     --------------------------- Decoding Stage ---------------------------
     IF_ID_BUFFER : buffer_component GENERIC MAP(n => 81) PORT MAP(clk, rst, '1', IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING);
 
-    -- check data of buffers for HDU    
-    DECODING : DECODING_STAGE GENERIC MAP(n => 16) PORT MAP(rst, clk, Rd_address, wb_data, WB, IF_ID_BUFFER_TO_DECODING, IF_ID_BUFFER_TO_DECODING(58 DOWNTO 56), IF_ID_BUFFER_TO_DECODING(55 DOWNTO 53), ID_IE_TO_EXECUTION(68 DOWNTO 66), ID_IE_TO_EXECUTION(124), Exception, pc_write, instType, ID_IE_FROM_DECODING);
+    DECODING : DECODING_STAGE GENERIC MAP(n => 16) PORT MAP(rst, clk, Rd_address, wb_data, WB, IF_ID_BUFFER_TO_DECODING, IF_ID_BUFFER_TO_DECODING(58 DOWNTO 56), IF_ID_BUFFER_TO_DECODING(55 DOWNTO 53), ID_IE_TO_EXECUTION(68 DOWNTO 66), ID_IE_TO_EXECUTION(124), Exception,WILL_BRANCH, pc_write, instType, ID_IE_FROM_DECODING);
 
     --------------------------- Execution Stage ---------------------------
     ID_IE_BUFFER : buffer_component GENERIC MAP(n => 132) PORT MAP(clk, rst, '1', ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION);

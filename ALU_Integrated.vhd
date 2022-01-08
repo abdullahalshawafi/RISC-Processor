@@ -38,7 +38,8 @@ ARCHITECTURE struct OF ALU IS
 
 BEGIN
 
-      oneVector <= (0 => '1', OTHERS => '0');
+      oneVector(0) <= '1';
+      oneVector(n-1 downto 1)<= (OTHERS => '0');
       zeroVector <= (OTHERS => '0');
       one_comp_Rt <= NOT Rt;
 

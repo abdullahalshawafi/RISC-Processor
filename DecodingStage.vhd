@@ -13,6 +13,7 @@ ENTITY DECODING_STAGE IS
         Rs_address_FOR_HDU, Rt_address_FOR_HDU, Rd_address_FOR_HDU : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
         Mem_read_HDU : IN STD_LOGIC;
         exception : IN STD_LOGIC;
+        branch_taken : IN STD_LOGIC;
         pc_en : OUT STD_LOGIC := '1';
         inst_type : OUT STD_LOGIC := '0';
         ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(131 DOWNTO 0)
@@ -86,7 +87,7 @@ ARCHITECTURE DECODING_STAGE_arch OF DECODING_STAGE IS
 
     -----------------------------------------------------------------------------------------------------
     SIGNAL op_code : STD_LOGIC_VECTOR(4 DOWNTO 0);
-    SIGNAL CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS : STD_LOGIC_VECTOR(24 DOWNTO 0);
+    SIGNAL CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS : STD_LOGIC_VECTOR(23 DOWNTO 0);
 
     ----------------------------- STALLING SIGNALS ------------------------------------------------------------------------------------------------
 
@@ -102,7 +103,7 @@ BEGIN
     ------- 2 extra bits
     ----------------------------------------- CU -----------------------------------------------------------------------------------------
 
-    CU : CONTROL_UNIT PORT MAP('0', op_code, pc_write, instType, flush, set_carry, branch, alu_src, Rs_en, Rt_en, mem_read, mem_write, interrupt_en, stack, load, reg_write, in_en, out_en, alu_op, flag_en, stack_op);
+    CU : CONTROL_UNIT PORT MAP(set_flush, op_code, pc_write, instType, flush, set_carry, branch, alu_src, Rs_en, Rt_en, mem_read, mem_write, interrupt_en, stack, load, reg_write, in_en, out_en, alu_op, flag_en, stack_op);
 
     ---------------------------------------- REGISTER FILE ------------------------------------------------------------------------------------------
 
@@ -114,21 +115,20 @@ BEGIN
 
     FLUSHED_SIGNALS <= (OTHERS => '0');
 
-    CONTROL_SIGNALS <= pc_write & instType & flush & set_carry
+    CONTROL_SIGNALS <= pc_write & instType & set_carry
         & branch & alu_src & Rs_en & Rt_en &
         mem_read & mem_write & interrupt_en &
         stack & load & reg_write & in_en & out_en
         & alu_op & flag_en & stack_op;
+    -- final_flush <= stall_pipe OR exception OR branch_taken ; 
+    set_flush <= stall_pipe OR exception OR branch_taken; --exception or hazard detected or branch taken
 
-    final_flush <= stall_pipe OR exception; --exception or hazard detected
-
-    FLUSH_MUX : MUX2 GENERIC MAP(n => 25) PORT MAP(final_flush, CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS);
+    FLUSH_MUX : MUX2 GENERIC MAP(n => 24) PORT MAP(set_flush, CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS);
 
     --------------------------- Final control signals -----------------------------------------------------------
 
-    pc_write_final <= FINAL_SIGNALS(24);
-    inst_type_final <= FINAL_SIGNALS(23);
-    flush_final <= FINAL_SIGNALS(22);
+    pc_write_final <= FINAL_SIGNALS(23);
+    inst_type_final <= FINAL_SIGNALS(22);
     set_carry_final <= FINAL_SIGNALS(21);
     branch_final <= FINAL_SIGNALS(20);
     alu_src_final <= FINAL_SIGNALS(19);
@@ -159,7 +159,9 @@ BEGIN
     ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0); --pc+1
 
     -----------------------------------------------------------------
-    pc_en <= pc_write_final;
+    pc_en <= '0' WHEN (stall_pipe = '1') --freeze el pc 
+        ELSE
+        pc_write_final;
     inst_type <= inst_type_final;
 
 END DECODING_STAGE_arch;
