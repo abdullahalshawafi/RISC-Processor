@@ -15,10 +15,7 @@ ENTITY DECODING_STAGE IS
         exception : IN STD_LOGIC;
         pc_en : OUT STD_LOGIC := '1';
         inst_type : OUT STD_LOGIC := '0';
-        ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(131 DOWNTO 0);
-        Z_flag, N_flag, C_flag : IN STD_LOGIC;
-        will_branch : OUT STD_LOGIC
-
+        ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(131 DOWNTO 0)
     );
 
 END DECODING_STAGE;
@@ -71,20 +68,10 @@ ARCHITECTURE DECODING_STAGE_arch OF DECODING_STAGE IS
 
     END COMPONENT;
 
-    COMPONENT BRANCH_MUX IS
-        PORT (
-            sel : IN STD_LOGIC_VECTOR (2 DOWNTO 0);
-            z, n, c : IN STD_LOGIC;
-            my_out : OUT STD_LOGIC
-        );
-
-    END COMPONENT;
-
     ---------------------------------------------------------------------------------------------------------------------------------------
 
     SIGNAL Rs_address, Rt_address, Rd_address : STD_LOGIC_VECTOR(2 DOWNTO 0);
     SIGNAL Wd, Rs_data, Rt_data, immediate_value : STD_LOGIC_VECTOR(15 DOWNTO 0);
-    SIGNAL jump_signal, call_signal, int_signal, ret_signal, rti_signal : STD_LOGIC;
     ---------------------- CONTROL UNIT SIGNALS ---------------------------------------------------------------------------------------------
 
     SIGNAL set_flush, pc_write, flush, set_carry, branch, alu_src, Rs_en, Rt_en, mem_read, mem_write, interrupt_en, stack, load, reg_write, in_en, out_en : STD_LOGIC;
@@ -158,24 +145,6 @@ BEGIN
     alu_op_final <= FINAL_SIGNALS(8 DOWNTO 6);
     flag_en_final <= FINAL_SIGNALS(5 DOWNTO 3);
     stack_op_final <= FINAL_SIGNALS(2 DOWNTO 0);
-    -------------------------------------  BRANCH HANDLING ------------------------------------------------------------------------------------------------
-    branching : BRANCH_MUX PORT MAP(IF_ID_BUFFER(61 DOWNTO 59), Z_flag, N_flag, C_flag, jump_signal);
-    call_signal <= '1' WHEN stack_op_final = "011" AND stack_final = '1'
-        ELSE
-        '0';
-    int_signal <= '1' WHEN stack_op_final = "101" AND stack_final = '1'
-        ELSE
-        '0';
-    ret_signal <= '1' WHEN stack_op_final = "010" AND stack_final = '1'
-        ELSE
-        '0';
-    rti_signal <= '1' WHEN stack_op_final = "100" AND stack_final = '1'
-        ELSE
-        '0';
-    -- if branch signal &( jump_signal or call or int )  == 1
-    -- SO WE WILL FLUSH THE PREVIOUS INSTRUCTION , make reset of fetc decode buffer = 1
-    will_branch <= branch_final AND (jump_signal OR call_signal OR int_signal OR ret_signal OR rti_signal);
-    -- ????????????????? flushhhhhhhhhhh 
 
     -------------------------------------  BUFFER DATA------------------------------------------------------------------------------------------------
 
