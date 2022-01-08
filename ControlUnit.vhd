@@ -97,7 +97,7 @@ BEGIN
             in_en <= '0';
             out_en <= '0';
             alu_op <= "010";
-            flag_en <= "110";
+            flag_en <= "111";
         ELSIF op_code = "00110" THEN
             pc_write <= '1';
             inst_type <= '0';
