@@ -31,7 +31,9 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
         PORT (
             rst, clk, pc_write : IN STD_LOGIC;
             in_port : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
-            IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(80 DOWNTO 0)
+            IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(80 DOWNTO 0);
+            PC_MODIFIED,target : IN STD_LOGIC_VECTOR (31 DOWNTO 0);
+            CHANGE_PC, EmptyStackException, InvalidAddressException,will_branch : IN STD_LOGIC
         );
 
     END COMPONENT;
@@ -113,7 +115,7 @@ BEGIN
     Exception <= '1' WHEN (EmptyStackException = '1' OR InvalidAddressException = '1') ELSE
         '0';
     --------------------------- Fetching Stage ---------------------------
-    FETCHING : FETCH_STAGE PORT MAP(rst, clk, pc_write, IN_PORT, IF_ID_BUFFER_FROM_FETCHING);
+    FETCHING : FETCH_STAGE PORT MAP(rst, clk, pc_write, IN_PORT, IF_ID_BUFFER_FROM_FETCHING,PC_MODIFIED,TARGET,CHANGE_PC, EmptyStackException, InvalidAddressException,WILL_BRANCH);
 
     --------------------------- Decoding Stage ---------------------------
     IF_ID_BUFFER : buffer_component GENERIC MAP(n => 81) PORT MAP(clk, rst, '1', IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING);

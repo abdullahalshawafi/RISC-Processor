@@ -8,7 +8,8 @@ ENTITY INSTRUCTION_MEMORY IS
         pc : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
         read_instruction : IN STD_LOGIC;
         inst_type : OUT STD_LOGIC;
-        instruction : INOUT STD_LOGIC_VECTOR(31 DOWNTO 0)
+        instruction : INOUT STD_LOGIC_VECTOR(31 DOWNTO 0);
+        EmptyStackException, InvalidAddressException : IN STD_LOGIC
     );
 END ENTITY;
 
@@ -16,12 +17,19 @@ ARCHITECTURE INSTRUCTION_MEMORY1 OF INSTRUCTION_MEMORY IS
 
     TYPE memory IS ARRAY(INTEGER RANGE <>) OF STD_LOGIC_VECTOR(15 DOWNTO 0);
     SIGNAL addressing_instruction : memory(0 TO ((2 ** 20) - 1));
-
+    SIGNAL exception_address : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
+    
 BEGIN
     PROCESS (rst, clk, pc, read_instruction) IS
     BEGIN
         IF rst = '1' THEN
             instruction <= addressing_instruction(1) & addressing_instruction(0);
+        ELSIF EmptyStackException = '1' THEN
+            exception_address <= addressing_instruction(3) & addressing_instruction(2) ;
+            instruction <= addressing_instruction(to_integer(unsigned(exception_address))) & X"0000";
+        ELSIF InvalidAddressException = '1' THEN
+            exception_address <= addressing_instruction(5) & addressing_instruction(4) ;
+            instruction <= addressing_instruction(to_integer(unsigned(exception_address))) & X"0000";
         ELSIF read_instruction = '1' THEN
             instruction <= addressing_instruction(to_integer(unsigned((pc)))) & X"0000";
             inst_type <= '0';
