@@ -34,7 +34,7 @@ IN R2     #R2=50
 IN R3     #R3=100
 IN R4     #R4=300
 Push R4   #sp=FFFFFFFE, M[FFFFFFFF]=300
-#INT 2     #SP=FFFFFFFC, M[FFFFFFFD]=half next PC,M[FFFFFFFE]=other half next PC
+INT 2     #SP=FFFFFFFC, M[FFFFFFFD]=half next PC,M[FFFFFFFE]=other half next PC
 JMP R1 
 INC R1	  # this statement shouldn't be executed
  
@@ -51,7 +51,7 @@ SETC        # this statement shouldn't be executed, C-->1
 
 #check destination forwarding
 NOT R5     #R5=FFFF, Z= 0, C--> not change, N=1
-INT 0      #SP=FFFFFFFC, M[FFFFFFFD]=half next PC,M[FFFFFFFE]=other half next PC
+INT 2     #SP=FFFFFFFC, M[FFFFFFFD]=half next PC,M[FFFFFFFE]=other half next PC
 IN  R6     #R6=700, flag no change
 JN  R6     #jump taken, N = 0
 INC R1     # this statement shouldn't be executed

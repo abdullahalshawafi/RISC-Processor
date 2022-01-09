@@ -15,6 +15,7 @@ add wave -position end  sim:/processor/DECODING/Rx/loop1(6)/rx/reg_out
 add wave -position end  sim:/processor/DECODING/Rx/loop1(7)/rx/reg_out
 add wave -position end  sim:/processor/DECODING/FINAL_SIGNALS
 add wave -position end  sim:/processor/DECODING/flag_en_final
+add wave -position end  sim:/processor/DECODING/Rs_address
 add wave -position end  sim:/processor/EXECUTION/Z_en
 add wave -position end  sim:/processor/EXECUTION/N_en
 add wave -position end  sim:/processor/EXECUTION/C_en

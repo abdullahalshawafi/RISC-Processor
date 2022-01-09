@@ -33,6 +33,7 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
             in_port : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
             PC_MODIFIED, target : IN STD_LOGIC_VECTOR (31 DOWNTO 0);
             CHANGE_PC, ex1, ex2, will_branch : IN STD_LOGIC;
+            int_index : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
             IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(80 DOWNTO 0)
         );
 

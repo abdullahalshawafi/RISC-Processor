@@ -1,13 +1,4 @@
-F:/RISC-Processor/FetchingStage.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/FetchingStage.vhd
-Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Compiling entity FETCH_STAGE
--- Compiling architecture FETCH_STAGE of FETCH_STAGE
-
-} {} {}} F:/RISC-Processor/flagMux.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/flagMux.vhd
+F:/RISC-Processor/flagMux.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/flagMux.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
 -- Loading package TEXTIO
@@ -129,14 +120,6 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STD_LOGIC_UNSIGNED
 -- Compiling entity MEMORY_STAGE
 -- Compiling architecture MEMORY_STAGE1 of MEMORY_STAGE
-
-} {} {}} F:/RISC-Processor/executionStage.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/executionStage.vhd
-Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Compiling entity EX_STAGE
--- Compiling architecture struct of EX_STAGE
 
 } {} {}} F:/RISC-Processor/branchMUX.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/branchMUX.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
