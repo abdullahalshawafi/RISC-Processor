@@ -41,7 +41,7 @@ INC R1	  # this statement shouldn't be executed
 #check flag fowarding  
 .ORG 30
 AND R5,R1,R5   #R5=0 , Z = 1
-JZ  R2      #Jump taken, Z = 0
+JZ R2      #Jump taken, Z = 0
 SETC        # this statement shouldn't be executed, C-->1
 
 #check on flag updated on jump
