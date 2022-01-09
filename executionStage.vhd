@@ -17,7 +17,7 @@ ENTITY EX_STAGE IS
     GENERIC (n : INTEGER := 16);
     PORT (
 
-        ID_IE_BUFFER : IN STD_LOGIC_VECTOR (131 DOWNTO 0);
+        ID_IE_BUFFER : IN STD_LOGIC_VECTOR (132 DOWNTO 0);
         IE_IM_BUFFER : OUT STD_LOGIC_VECTOR (76 DOWNTO 0);
         Rd_M_address, Rd_W_address : IN STD_LOGIC_VECTOR (2 DOWNTO 0);
         Rd_M_data, Rd_W_data : IN STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
@@ -92,20 +92,21 @@ ARCHITECTURE struct OF EX_STAGE IS
     END COMPONENT;
 
     COMPONENT BRANCH_MUX IS
-        PORT (
-            sel : IN STD_LOGIC_VECTOR (2 DOWNTO 0);
-            z, n, c : IN STD_LOGIC;
-            my_out : OUT STD_LOGIC
-        );
+    PORT( sel : IN std_logic_vector (2 DOWNTO 0);
+	z,n,c: IN std_logic;
+	my_out : OUT std_logic;
+	Z_reset,N_reset,C_reset  : OUT std_logic
+	);
+
 
     END COMPONENT;
 
     -- #### SIGNALS
-    SIGNAL Z, Ne, C, Z0, N0, C0, Cfinal, res_Z, res_N, res_C, latest_Z, latest_N, latest_C : STD_LOGIC := '0';
+    SIGNAL Z, Ne, C, Z0, N0, C0, Cfinal, res_Z, res_N, res_C, latest_Z, latest_N, latest_C, latest2_Z, latest2_N, latest2_C  : STD_LOGIC := '0';
     SIGNAL alu_src2, alu_result_temp, alu_result_temp2, alu_result_final, Rs_data, Rt_data, Rs_final, Rt_final, zeroVector, in_port, imm_value, sign_extend : STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
     SIGNAL alu_op, Rd_address, Rs_address, Rt_address : STD_LOGIC_VECTOR (2 DOWNTO 0);
     SIGNAL alusrc, setc, inEn, reg_write, branch_signal, jump_signal, Z_en, N_en, C_en, call_signal,
-    int_signal : STD_LOGIC;
+    int_signal,Z_reset,N_reset,C_reset,int_en : STD_LOGIC;
     SIGNAL Rs_en, Rt_en : STD_LOGIC_VECTOR (1 DOWNTO 0);
     SIGNAL res_flag_en : STD_LOGIC_VECTOR (3 DOWNTO 0);
 BEGIN
@@ -124,6 +125,7 @@ BEGIN
     branch_signal <= ID_IE_BUFFER(131);
     res_flag_en <= ID_IE_BUFFER(129 DOWNTO 126);
     int_index <=  ID_IE_BUFFER(74 DOWNTO 73);
+    int_en <= ID_IE_BUFFER(132);
     -- exception handling
     alu_op <= ID_IE_BUFFER(103 DOWNTO 101) WHEN exception = '0'
         ELSE
@@ -157,7 +159,8 @@ BEGIN
         ELSE
         alu_result_temp2;
     -- JUMP OR NOT ACCCORDING TO FLAGS
-    branch : BRANCH_MUX PORT MAP(ID_IE_BUFFER(77 DOWNTO 75), Z, Ne, C, jump_signal);
+    branch : BRANCH_MUX PORT MAP(ID_IE_BUFFER(77 DOWNTO 75), Z, Ne, C, jump_signal
+    ,Z_reset, N_reset, C_reset);
     -- call 1011 signal = 1
     call_signal <= '1' WHEN res_flag_en = "1011"
         ELSE
@@ -173,8 +176,16 @@ BEGIN
     reserving_flags : R_FLAG_REG PORT MAP(clk, rst, Z, Ne, Cfinal, res_flag_en, res_Z, res_N, res_C);
     -- RTI restore Flags
     restoring_flags : FLAG_MUX PORT MAP(res_flag_en, res_Z, res_N, res_C, Z0, N0, Cfinal, latest_Z, latest_N, latest_C);
+    -- resetting flags if a jump is taken
+     latest2_Z <= latest_Z WHEN Z_reset = '0'
+     ELSE '0';
+     latest2_N <= latest_N WHEN N_reset = '0'
+     ELSE '0';
+     latest2_C <= latest_C WHEN C_reset = '0'
+     ELSE '0';
     -- Setting flags in flag register Z Ne C
-    setting_flag : FLAG_REG PORT MAP(clk, rst, Z_en, N_en, C_en, latest_Z, latest_N, latest_C, Z, Ne, C);
+    setting_flag : FLAG_REG PORT MAP(clk, rst, Z_en, N_en, C_en, latest2_Z, latest2_N, latest2_C, Z, Ne, C);
+
     --------------------------------- output buffer <= signals
     -- PC+1
     IE_IM_BUFFER(31 DOWNTO 0) <= ID_IE_BUFFER(31 DOWNTO 0);
