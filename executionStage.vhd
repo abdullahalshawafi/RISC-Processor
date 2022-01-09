@@ -125,7 +125,7 @@ BEGIN
     branch_signal <= ID_IE_BUFFER(131);
     res_flag_en <= ID_IE_BUFFER(129 DOWNTO 126);
     int_index <=  ID_IE_BUFFER(74 DOWNTO 73);
-    int_en <= ID_IE_BUFFER(132);
+    int_en <=  int_signal;
     -- exception handling
     alu_op <= ID_IE_BUFFER(103 DOWNTO 101) WHEN exception = '0'
         ELSE
