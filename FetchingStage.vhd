@@ -7,7 +7,8 @@ ENTITY FETCH_STAGE IS
         rst, clk, pc_write : IN STD_LOGIC;
         in_port : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
         PC_MODIFIED, target : IN STD_LOGIC_VECTOR (31 DOWNTO 0);
-        CHANGE_PC, ex1, ex2, will_branch : IN STD_LOGIC;
+        CHANGE_PC, ex1, ex2, will_branch,int : IN STD_LOGIC;
+        int_index : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
         IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(80 DOWNTO 0)
     );
 
@@ -27,7 +28,8 @@ ARCHITECTURE FETCH_STAGE OF FETCH_STAGE IS
         PORT (
             rst, clk : IN STD_LOGIC;
             pc, target : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-            read_instruction, ex1, ex2, will_branch : IN STD_LOGIC;
+            index : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+            read_instruction, ex1, ex2, will_branch,int : IN STD_LOGIC;
             inst_type : OUT STD_LOGIC;
             instruction : INOUT STD_LOGIC_VECTOR(31 DOWNTO 0)
         );
@@ -44,7 +46,7 @@ BEGIN
     pc_signal <= rst OR ex1 OR ex2 OR CHANGE_PC OR will_branch;
     pc_address_en <= rst OR ex1 OR ex2;
     x : PC PORT MAP(pc_signal, clk, instr_en, instType, pc_instruction, pc_out);
-    y : INSTRUCTION_MEMORY PORT MAP(rst, clk, pc_instruction, target, instr_en, ex1, ex2, will_branch, instType, instr);
+    y : INSTRUCTION_MEMORY PORT MAP(rst, clk, pc_instruction, target,int_index, instr_en, ex1, ex2, will_branch,int, instType, instr);
 
     pc_instruction <= instr WHEN pc_address_en = '1'
         ELSE
