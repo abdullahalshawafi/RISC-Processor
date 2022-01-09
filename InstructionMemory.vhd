@@ -28,7 +28,7 @@ BEGIN
         ELSIF ex2 = '1' THEN
             instruction <= addressing_instruction(5) & addressing_instruction(4);
         ELSIF int = '1' THEN
-            instruction <= addressing_instruction(to_integer(unsigned((index + 7)))) & addressing_instruction(to_integer(unsigned((index + 6))));
+            instruction <= addressing_instruction(to_integer(unsigned((index))+ 7)) & addressing_instruction(to_integer(unsigned((index))+ 6));
         ELSIF will_branch = '1' THEN
             instruction <= addressing_instruction(to_integer(unsigned((target)))) & X"0000";
             inst_type <= '0';
