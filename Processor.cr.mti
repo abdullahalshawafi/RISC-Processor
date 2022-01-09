@@ -1,4 +1,13 @@
-F:/RISC-Processor/flagMux.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/flagMux.vhd
+F:/RISC-Processor/FetchingStage.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/FetchingStage.vhd
+Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity FETCH_STAGE
+-- Compiling architecture FETCH_STAGE of FETCH_STAGE
+
+} {} {}} F:/RISC-Processor/flagMux.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/flagMux.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
 -- Loading package TEXTIO
@@ -76,6 +85,15 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Compiling entity DECODING_STAGE
 -- Compiling architecture DECODING_STAGE_arch of DECODING_STAGE
 
+} {} {}} F:/RISC-Processor/InstructionMemory.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/InstructionMemory.vhd
+Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity INSTRUCTION_MEMORY
+-- Compiling architecture INSTRUCTION_MEMORY1 of INSTRUCTION_MEMORY
+
 } {} {}} F:/RISC-Processor/FU.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/FU.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
@@ -137,14 +155,6 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package std_logic_1164
 -- Compiling entity BRANCH_MUX
 -- Compiling architecture BRANCH_MUX_Arch of BRANCH_MUX
-
-} {} {}} F:/RISC-Processor/executionStage.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/executionStage.vhd
-Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Compiling entity EX_STAGE
--- Compiling architecture struct of EX_STAGE
 
 } {} {}} F:/RISC-Processor/ControlUnit.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/ControlUnit.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
