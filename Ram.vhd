@@ -27,11 +27,11 @@ BEGIN
 			ELSIF mem_Read = '1' AND (stack_OP /= "010" AND stack_OP /= "100") THEN
 				data_out <= ram(to_integer(unsigned(address)));
 			ELSIF write_mem = '1' AND (stack_OP = "011" OR stack_OP = "101") THEN
-				ram(to_integer(unsigned(address))) <= PC(15 DOWNTO 0);
-				ram(to_integer(unsigned(address) + 1)) <= PC(31 DOWNTO 16);
+				ram(to_integer(unsigned(address))-1) <= PC(15 DOWNTO 0);
+				ram(to_integer(unsigned(address)) ) <= PC(31 DOWNTO 16);
 			ELSIF mem_Read = '1' AND (stack_OP = "010" OR stack_OP = "100") THEN
-				PC_Read(15 DOWNTO 0) <= ram(to_integer(unsigned(address)));
-				PC_Read(31 DOWNTO 16) <= ram(to_integer(unsigned(address) + 1));
+				PC_Read(15 DOWNTO 0) <= ram(to_integer(unsigned(address))-1);
+				PC_Read(31 DOWNTO 16) <= ram(to_integer(unsigned(address)));
 			END IF;
 		END IF;
 	END PROCESS;

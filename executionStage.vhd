@@ -106,7 +106,7 @@ ARCHITECTURE struct OF EX_STAGE IS
     SIGNAL alu_src2, alu_result_temp, alu_result_temp2, alu_result_final, Rs_data, Rt_data, Rs_final, Rt_final, zeroVector, in_port, imm_value, sign_extend : STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
     SIGNAL alu_op, Rd_address, Rs_address, Rt_address : STD_LOGIC_VECTOR (2 DOWNTO 0);
     SIGNAL alusrc, setc, inEn, reg_write, branch_signal, jump_signal, Z_en, N_en, C_en, call_signal,
-    int_signal, Z_reset, N_reset, C_reset : STD_LOGIC;
+    int_signal, Z_reset, N_reset, C_reset, branch_int : STD_LOGIC;
     SIGNAL Rs_en, Rt_en : STD_LOGIC_VECTOR (1 DOWNTO 0);
     SIGNAL res_flag_en : STD_LOGIC_VECTOR (3 DOWNTO 0);
 BEGIN
@@ -169,7 +169,8 @@ BEGIN
     int_signal <= '1' WHEN res_flag_en = "1101"
         ELSE
         '0';
-    will_branch <= branch_signal AND (jump_signal OR call_signal OR int_signal);
+    branch_int <= branch_signal AND (jump_signal OR call_signal OR int_signal);
+    will_branch <= branch_int;
     sign_extend <= (OTHERS => Rs_final(15));
     target <= sign_extend & Rs_final;
     -- INT  save flags:
@@ -202,14 +203,17 @@ ELSE
     IE_IM_BUFFER(66 DOWNTO 64) <= Rd_address;
     -- control signals 
     -- load , wb
-    IE_IM_BUFFER(75 DOWNTO 74) <= ID_IE_BUFFER(105) & ID_IE_BUFFER(104) WHEN exception = '0'
-    ELSE "00";
+    IE_IM_BUFFER(75 DOWNTO 74) <= ID_IE_BUFFER(105) & ID_IE_BUFFER(104) WHEN (exception = '0' OR branch_int = '1')
+ELSE
+    "00";
     --flush & stack & stack_op &  mem_read& mem_write
-    IE_IM_BUFFER(73 DOWNTO 67) <= ID_IE_BUFFER(130 DOWNTO 124)  WHEN exception = '0'
-    ELSE "0000000";
+    IE_IM_BUFFER(73 DOWNTO 67) <= ID_IE_BUFFER(130 DOWNTO 124) WHEN (exception = '0' OR branch_int = '1')
+ELSE
+    "0000000";
 
     -- Out Enable
-    IE_IM_BUFFER(76) <= ID_IE_BUFFER(123)  WHEN exception = '0'
-    ELSE '0';
+    IE_IM_BUFFER(76) <= ID_IE_BUFFER(123) WHEN (exception = '0' OR branch_int = '1')
+ELSE
+    '0';
 
 END struct;
