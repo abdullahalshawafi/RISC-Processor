@@ -1,13 +1,4 @@
-F:/RISC-Processor/FetchingStage.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/FetchingStage.vhd
-Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Compiling entity FETCH_STAGE
--- Compiling architecture FETCH_STAGE of FETCH_STAGE
-
-} {} {}} F:/RISC-Processor/flagMux.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/flagMux.vhd
+F:/RISC-Processor/flagMux.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/flagMux.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
 -- Loading package TEXTIO
@@ -31,6 +22,14 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Compiling entity MUX4
 -- Compiling architecture MUX4_Arch of MUX4
 
+} {} {}} F:/RISC-Processor/flagReg.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/flagReg.vhd
+Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity FLAG_REG
+-- Compiling architecture FLAG_REG_Arch of FLAG_REG
+
 } {} {}} F:/RISC-Processor/Processor.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/Processor.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
@@ -48,14 +47,6 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package NUMERIC_STD
 -- Compiling entity RAM
 -- Compiling architecture RAM1 of RAM
-
-} {} {}} F:/RISC-Processor/flagReg.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/flagReg.vhd
-Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Compiling entity FLAG_REG
--- Compiling architecture FLAG_REG_Arch of FLAG_REG
 
 } {} {}} F:/RISC-Processor/ALU_Integrated.vhd {1 {vcom -work work -2002 -explicit -stats=none {F:\RISC-Processor\ALU_Integrated.vhd}
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
@@ -85,6 +76,15 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Compiling entity DECODING_STAGE
 -- Compiling architecture DECODING_STAGE_arch of DECODING_STAGE
 
+} {} {}} F:/RISC-Processor/SP.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/SP.vhd
+Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity SP
+-- Compiling architecture SP of SP
+
 } {} {}} F:/RISC-Processor/InstructionMemory.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/InstructionMemory.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
@@ -102,14 +102,22 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Compiling entity FU
 -- Compiling architecture FU_ARCH of FU
 
-} {} {}} F:/RISC-Processor/SP.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/SP.vhd
+} {} {}} F:/RISC-Processor/RegisterFile.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/RegisterFile.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
 -- Loading package TEXTIO
 -- Loading package std_logic_1164
 -- Loading package NUMERIC_STD
--- Compiling entity SP
--- Compiling architecture SP of SP
+-- Compiling entity register_file
+-- Compiling architecture register_file_arch of register_file
+
+} {} {}} F:/RISC-Processor/Register.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/Register.vhd
+Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity register_component
+-- Compiling architecture register_component_arch of register_component
 
 } {} {}} F:/RISC-Processor/MemoryStage.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/MemoryStage.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
@@ -122,30 +130,13 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Compiling entity MEMORY_STAGE
 -- Compiling architecture MEMORY_STAGE1 of MEMORY_STAGE
 
-} {} {}} F:/RISC-Processor/Register.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/Register.vhd
+} {} {}} F:/RISC-Processor/branchMUX.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/branchMUX.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
 -- Loading package TEXTIO
 -- Loading package std_logic_1164
--- Compiling entity register_component
--- Compiling architecture register_component_arch of register_component
-
-} {} {}} F:/RISC-Processor/RegisterFile.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/RegisterFile.vhd
-Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Compiling entity register_file
--- Compiling architecture register_file_arch of register_file
-
-} {} {}} F:/RISC-Processor/executionStage.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/executionStage.vhd
-Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Compiling entity EX_STAGE
--- Compiling architecture struct of EX_STAGE
+-- Compiling entity BRANCH_MUX
+-- Compiling architecture BRANCH_MUX_Arch of BRANCH_MUX
 
 } {} {}} F:/RISC-Processor/WritebackStage.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/WritebackStage.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
@@ -155,6 +146,14 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package NUMERIC_STD
 -- Compiling entity WB_STAGE
 -- Compiling architecture WB_STAGE_ARCH of WB_STAGE
+
+} {} {}} F:/RISC-Processor/executionStage.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/executionStage.vhd
+Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity EX_STAGE
+-- Compiling architecture struct of EX_STAGE
 
 } {} {}} F:/RISC-Processor/ControlUnit.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/ControlUnit.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
@@ -180,14 +179,13 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Compiling entity buffer_component
 -- Compiling architecture buffer_component_arch of buffer_component
 
-} {} {}} F:/RISC-Processor/PC.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/PC.vhd
+} {} {}} F:/RISC-Processor/reservedFlagsReg.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/reservedFlagsReg.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
 -- Loading package TEXTIO
 -- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Compiling entity PC
--- Compiling architecture PC of PC
+-- Compiling entity R_FLAG_REG
+-- Compiling architecture R_FLAG_REG_Arch of R_FLAG_REG
 
 } {} {}} F:/RISC-Processor/DataMemory.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/DataMemory.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
@@ -198,12 +196,13 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Compiling entity DATA_MEMORY
 -- Compiling architecture DATA_MEMORY1 of DATA_MEMORY
 
-} {} {}} F:/RISC-Processor/reservedFlagsReg.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/reservedFlagsReg.vhd
+} {} {}} F:/RISC-Processor/PC.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/PC.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
 -- Loading package TEXTIO
 -- Loading package std_logic_1164
--- Compiling entity R_FLAG_REG
--- Compiling architecture R_FLAG_REG_Arch of R_FLAG_REG
+-- Loading package NUMERIC_STD
+-- Compiling entity PC
+-- Compiling architecture PC of PC
 
 } {} {}}

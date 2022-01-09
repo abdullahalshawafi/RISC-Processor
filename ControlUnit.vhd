@@ -462,6 +462,23 @@ BEGIN
             stack_op <= "100";
         ELSE
             flag_en <= "000";
+            pc_write <= '1';
+            inst_type <= '0';
+            flush <= '0';
+            set_carry <= '0';
+            branch <= '0';
+            alu_src <= '0';
+            Rs_en <= '0';
+            Rt_en <= '0';
+            mem_read <= '0';
+            mem_write <= '0';
+            interrupt_en <= '0';
+            stack <= '0';
+            load <= '0';
+            reg_write <= '0';
+            in_en <= '0';
+            out_en <= '0';
+            alu_op <= "000";
 
         END IF;
     END PROCESS;

@@ -56,6 +56,8 @@ BEGIN
         ELSE
         pc_out;
     temp <= STD_LOGIC_VECTOR(to_unsigned(to_integer(unsigned(pc_instruction)) + 1, 32));
-    IF_ID_BUFFER <= in_port & instType & instr & temp;
+    IF_ID_BUFFER <= (OTHERS => '0') WHEN (pc_signal = '1' or pc_address_en='1')
+        ELSE
+        in_port & instType & instr & temp;
 
 END FETCH_STAGE;
