@@ -31,13 +31,13 @@ BEGIN
 		ELSE
 		'0';
 	-- reset flags if branch is taken
-	Z_reset <= '1' WHEN z = '1'
+	Z_reset <= '1' WHEN z = '1' AND sel = "000"
 		ELSE
 		'0';
-	N_reset <= '1' WHEN n = '1'
+	N_reset <= '1' WHEN n = '1' AND sel = "001"
 		ELSE
 		'0';
-	C_reset <= '1' WHEN c = '1'
+	C_reset <= '1' WHEN c = '1' AND sel = "010"
 		ELSE
 		'0';
 
