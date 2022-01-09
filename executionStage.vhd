@@ -198,16 +198,18 @@ BEGIN
     IE_IM_BUFFER(63 DOWNTO 48) <= alu_src2 WHEN (ID_IE_BUFFER(124) = '1' AND ID_IE_BUFFER(129) = '0')
 ELSE
     Rs_final;
-
     -- Rd address
     IE_IM_BUFFER(66 DOWNTO 64) <= Rd_address;
-    -- control units 
+    -- control signals 
     -- load , wb
-    IE_IM_BUFFER(75 DOWNTO 74) <= ID_IE_BUFFER(105) & ID_IE_BUFFER(104);
-    --flush & stack & stack_op & mem_write & mem_read
-    IE_IM_BUFFER(73 DOWNTO 67) <= ID_IE_BUFFER(130 DOWNTO 124);
+    IE_IM_BUFFER(75 DOWNTO 74) <= ID_IE_BUFFER(105) & ID_IE_BUFFER(104) WHEN exception = '0'
+    ELSE "00";
+    --flush & stack & stack_op &  mem_read& mem_write
+    IE_IM_BUFFER(73 DOWNTO 67) <= ID_IE_BUFFER(130 DOWNTO 124)  WHEN exception = '0'
+    ELSE "0000000";
 
     -- Out Enable
-    IE_IM_BUFFER(76) <= ID_IE_BUFFER(123);
+    IE_IM_BUFFER(76) <= ID_IE_BUFFER(123)  WHEN exception = '0'
+    ELSE '0';
 
 END struct;
