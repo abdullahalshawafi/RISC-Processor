@@ -4,15 +4,8 @@ mem load -i instruction.mem /processor/FETCHING/y/addressing_instruction
 
 add wave -position end  sim:/processor/rst
 add wave -position end  sim:/processor/clk
-add wave -position end  sim:/processor/FETCHING/PC_MODIFIED
-add wave -position end  sim:/processor/FETCHING/CHANGE_PC
 add wave -position end  sim:/processor/FETCHING/pc_instruction
-add wave -position end  sim:/processor/FETCHING/int
-add wave -position end  sim:/processor/FETCHING/x/rst 
-add wave -position end  sim:/processor/FETCHING/x/input_pc 
-add wave -position end  sim:/processor/will_branch
-add wave -position end  sim:/processor/FETCHING/x/current_pc
-add wave -position end  sim:/processor/FETCHING/y/pc
+add wave -position end  sim:/processor/Mem_flush
 add wave -position end  sim:/processor/DECODING/Rx/loop1(0)/rx/reg_out
 add wave -position end  sim:/processor/DECODING/Rx/loop1(1)/rx/reg_out
 add wave -position end  sim:/processor/DECODING/Rx/loop1(2)/rx/reg_out
@@ -21,12 +14,22 @@ add wave -position end  sim:/processor/DECODING/Rx/loop1(4)/rx/reg_out
 add wave -position end  sim:/processor/DECODING/Rx/loop1(5)/rx/reg_out
 add wave -position end  sim:/processor/DECODING/Rx/loop1(6)/rx/reg_out
 add wave -position end  sim:/processor/DECODING/Rx/loop1(7)/rx/reg_out
-add wave -position end  sim:/processor/EXECUTION/Z_en
-add wave -position end  sim:/processor/EXECUTION/N_en
-add wave -position end  sim:/processor/EXECUTION/C_en
+add wave -position end  sim:/processor/EXECUTION/res_Z
+add wave -position end  sim:/processor/EXECUTION/res_N
+add wave -position end  sim:/processor/EXECUTION/res_C
+add wave -position end  sim:/processor/EXECUTION/res_flag_en
 add wave -position end  sim:/processor/EXECUTION/setting_flag/Z_out
 add wave -position end  sim:/processor/EXECUTION/setting_flag/N_out
 add wave -position end  sim:/processor/EXECUTION/setting_flag/C_out
+add wave -position end  sim:/processor/EXECUTION/latest_Z
+add wave -position end  sim:/processor/EXECUTION/latest_N
+add wave -position end  sim:/processor/EXECUTION/latest_C
+add wave -position end  sim:/processor/EXECUTION/latest2_Z
+add wave -position end  sim:/processor/EXECUTION/latest2_N
+add wave -position end  sim:/processor/EXECUTION/latest2_C
+add wave -position end  sim:/processor/EXECUTION/Z_reset
+add wave -position end  sim:/processor/EXECUTION/N_reset
+add wave -position end  sim:/processor/EXECUTION/C_reset
 add wave -position end  sim:/processor/EXECUTION/jump_signal
 add wave -position end  sim:/processor/MEMORY/current_SP
 add wave -position end  sim:/processor/MEMORY/EPC_val
@@ -48,6 +51,11 @@ run
 force -freeze sim:/processor/IN_PORT X"0100" 0
 run
 force -freeze sim:/processor/IN_PORT X"0300" 0
+run
+run
+run
+run
+run
 run
 run
 run

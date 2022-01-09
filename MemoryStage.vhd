@@ -116,7 +116,7 @@ BEGIN
     ---------------------------------- Exception process ----------------------------------------------------------
 
     EmptyStackException <= '1' WHEN ((modified_SP + 1 > 2 ** 20) AND (stack_signal = '1' AND stack_OP = "001"))
-        -- OR((modified_SP + 2 > 2 ** 20) AND stack_signal = '1' AND (stack_OP = "010" OR stack_OP = "100"))
+        OR((modified_SP + 2 > 2 ** 20) AND stack_signal = '1' AND (stack_OP = "010" OR stack_OP = "100"))
         ELSE
         '0';
 
@@ -125,7 +125,7 @@ BEGIN
         '0';
 
     Exception <= '1' WHEN ((modified_SP + 1 > 2 ** 20) AND (stack_signal = '1' AND stack_OP = "001")) OR
-        -- ((modified_SP + 2 > 2 ** 20) AND stack_signal = '1' AND (stack_OP = "010" OR stack_OP = "100")) OR
+        ((modified_SP + 2 > 2 ** 20) AND stack_signal = '1' AND (stack_OP = "010" OR stack_OP = "100")) OR
         ((Alu_result > ((2 ** 16) - (2 ** 8))) AND (stack_signal = '0') AND (mem_Write = '1' OR mem_Read = '1'))
         ELSE
         '0';

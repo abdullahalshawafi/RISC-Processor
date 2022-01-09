@@ -156,22 +156,30 @@ BEGIN
     -------------------------------------  BUFFER DATA------------------------------------------------------------------------------------------------
 
     immediate_value <= IF_ID_BUFFER(47 DOWNTO 32);
-    ID_IE_BUFFER(132) <=interrupt_en_final;
-    ID_IE_BUFFER(131) <= branch_final;
-    ID_IE_BUFFER(130 DOWNTO 124) <= flush_final & stack_final & stack_op_final & mem_read_final & mem_write_final;
-    ID_IE_BUFFER(123) <= out_en_final;
-    ID_IE_BUFFER(122 DOWNTO 107) <= IF_ID_BUFFER(80 DOWNTO 65); -- INPUT PORT 
-    ID_IE_BUFFER(106 DOWNTO 96) <= in_en_final & load_final & reg_write_final & alu_op_final & alu_src_final & flag_en_final & set_carry_final;
-    ID_IE_BUFFER(95 DOWNTO 64) <= IF_ID_BUFFER(47 DOWNTO 32) & op_code & Rs_address & Rt_address & Rd_address & "00";
-    ID_IE_BUFFER(63 DOWNTO 48) <= Rt_data;
-    ID_IE_BUFFER(47 DOWNTO 32) <= Rs_data;
-    ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0); --pc+1
+
+    ID_IE_BUFFER <= (OTHERS => '0') WHEN (set_flush = '1')
+        ELSE
+        interrupt_en_final & branch_final & flush_final & stack_final & stack_op_final & mem_read_final & mem_write_final &
+        out_en_final & IF_ID_BUFFER(80 DOWNTO 65) & in_en_final & load_final & reg_write_final & alu_op_final & alu_src_final & flag_en_final & set_carry_final &
+        IF_ID_BUFFER(47 DOWNTO 32) & op_code & Rs_address & Rt_address & Rd_address & "00" &
+        Rt_data & Rs_data & IF_ID_BUFFER(31 DOWNTO 0);
+
+    -- ID_IE_BUFFER(132) <=interrupt_en_final;
+    -- ID_IE_BUFFER(131) <= branch_final;
+    -- ID_IE_BUFFER(130 DOWNTO 124) <= flush_final & stack_final & stack_op_final & mem_read_final & mem_write_final;
+    -- ID_IE_BUFFER(123) <= out_en_final;
+    -- ID_IE_BUFFER(122 DOWNTO 107) <= IF_ID_BUFFER(80 DOWNTO 65); -- INPUT PORT 
+    -- ID_IE_BUFFER(106 DOWNTO 96) <= in_en_final & load_final & reg_write_final & alu_op_final & alu_src_final & flag_en_final & set_carry_final;
+    -- ID_IE_BUFFER(95 DOWNTO 64) <= IF_ID_BUFFER(47 DOWNTO 32) & op_code & Rs_address & Rt_address & Rd_address & "00";
+    -- ID_IE_BUFFER(63 DOWNTO 48) <= Rt_data;
+    -- ID_IE_BUFFER(47 DOWNTO 32) <= Rs_data;
+    -- ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0); --pc+1
 
     -----------------------------------------------------------------
     -- pc_en <= '0' WHEN (stall_pipe = '1') --freeze el pc 
     --     ELSE
     --     pc_write_final;
-    pc_en <= pc_write_final;    
+    pc_en <= pc_write_final;
     inst_type <= inst_type_final;
 
 END DECODING_STAGE_arch;

@@ -111,6 +111,17 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Compiling entity SP
 -- Compiling architecture SP of SP
 
+} {} {}} F:/RISC-Processor/MemoryStage.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/MemoryStage.vhd
+Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity MEMORY_STAGE
+-- Compiling architecture MEMORY_STAGE1 of MEMORY_STAGE
+
 } {} {}} F:/RISC-Processor/Register.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/Register.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package STANDARD
@@ -127,14 +138,6 @@ Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
 -- Loading package NUMERIC_STD
 -- Compiling entity register_file
 -- Compiling architecture register_file_arch of register_file
-
-} {} {}} F:/RISC-Processor/branchMUX.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/branchMUX.vhd
-Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Compiling entity BRANCH_MUX
--- Compiling architecture BRANCH_MUX_Arch of BRANCH_MUX
 
 } {} {}} F:/RISC-Processor/executionStage.vhd {1 {vcom -work work -2002 -explicit -stats=none F:/RISC-Processor/executionStage.vhd
 Model Technology ModelSim ALTERA vcom 10.4d Compiler 2015.12 Dec 30 2015
