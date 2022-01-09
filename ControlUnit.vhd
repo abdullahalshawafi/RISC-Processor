@@ -458,7 +458,7 @@ BEGIN
             in_en <= '0';
             out_en <= '0';
             alu_op <= "011";
-            flag_en <= "000";
+            flag_en <= "111";
             stack_op <= "100";
         ELSE
             flag_en <= "000";
