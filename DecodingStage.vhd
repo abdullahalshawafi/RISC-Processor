@@ -74,6 +74,7 @@ ARCHITECTURE DECODING_STAGE_arch OF DECODING_STAGE IS
 
     SIGNAL Rs_address, Rt_address, Rd_address : STD_LOGIC_VECTOR(2 DOWNTO 0);
     SIGNAL Wd, Rs_data, Rt_data, immediate_value : STD_LOGIC_VECTOR(15 DOWNTO 0);
+
     ---------------------- CONTROL UNIT SIGNALS ---------------------------------------------------------------------------------------------
 
     SIGNAL set_flush, pc_write, flush, set_carry, branch, alu_src, Rs_en, Rt_en, mem_read, mem_write, interrupt_en, stack, load, reg_write, in_en, out_en : STD_LOGIC;
@@ -92,8 +93,8 @@ ARCHITECTURE DECODING_STAGE_arch OF DECODING_STAGE IS
     SIGNAL CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS : STD_LOGIC_VECTOR(23 DOWNTO 0);
 
     ----------------------------- STALLING SIGNALS ------------------------------------------------------------------------------------------------
-
     SIGNAL stall_pipe : STD_LOGIC;
+
     ------------------------------------------------------------------------------------------------------------------------------------------
 BEGIN
 
@@ -123,7 +124,8 @@ BEGIN
         stack & load & reg_write & in_en & out_en
         & alu_op & flag_en & stack_op;
 
-    set_flush <= stall_pipe OR exception OR branch_taken; --exception or hazard detected or branch taken
+    -- set_flush <= stall_pipe OR exception OR branch_taken; --exception or hazard detected or branch taken
+    set_flush <= exception OR branch_taken;
     final_flush <= '1' WHEN (set_flush = '1')
         ELSE
         '0';
@@ -165,9 +167,10 @@ BEGIN
     ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0); --pc+1
 
     -----------------------------------------------------------------
-    pc_en <= '0' WHEN (stall_pipe = '1') --freeze el pc 
-        ELSE
-        pc_write_final;
+    -- pc_en <= '0' WHEN (stall_pipe = '1') --freeze el pc 
+    --     ELSE
+    --     pc_write_final;
+    pc_en <= pc_write_final;    
     inst_type <= inst_type_final;
 
 END DECODING_STAGE_arch;

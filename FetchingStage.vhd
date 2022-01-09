@@ -33,7 +33,7 @@ ARCHITECTURE FETCH_STAGE OF FETCH_STAGE IS
         );
     END COMPONENT;
 
-    SIGNAL instr_en, instType, pc_signal : STD_LOGIC;
+    SIGNAL instr_en, instType, pc_signal, pc_address_en : STD_LOGIC;
     SIGNAL instr : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
     SIGNAL pc_out, pc_instruction : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
 BEGIN
@@ -42,11 +42,11 @@ BEGIN
         '0';
 
     pc_signal <= rst OR ex1 OR ex2 OR CHANGE_PC OR will_branch;
-
+    pc_address_en <= rst OR ex1 OR ex2;
     x : PC PORT MAP(pc_signal, clk, instr_en, instType, pc_instruction, pc_out);
     y : INSTRUCTION_MEMORY PORT MAP(rst, clk, pc_instruction, target, instr_en, ex1, ex2, will_branch, instType, instr);
 
-    pc_instruction <= instr WHEN rst = '1'
+    pc_instruction <= instr WHEN pc_address_en = '1'
         ELSE
         PC_MODIFIED WHEN CHANGE_PC = '1'
         ELSE

@@ -34,20 +34,20 @@ IN R2     #R2=50
 IN R3     #R3=100
 IN R4     #R4=300
 Push R4   #sp=FFFFFFFE, M[FFFFFFFF]=300
-INT 2     #SP=FFFFFFFC, M[FFFFFFFD]=half next PC,M[FFFFFFFE]=other half next PC
-#JMP R1 
+#INT 2     #SP=FFFFFFFC, M[FFFFFFFD]=half next PC,M[FFFFFFFE]=other half next PC
+JMP R1 
 INC R1	  # this statement shouldn't be executed
  
 #check flag fowarding  
 .ORG 30
 AND R5,R1,R5   #R5=0 , Z = 1
-#JZ  R2      #Jump taken, Z = 0
+JZ  R2      #Jump taken, Z = 0
 SETC        # this statement shouldn't be executed, C-->1
 
 #check on flag updated on jump
 .ORG 50
-JZ R1      #shouldn't be taken
-JC R3      #Jump Not taken
+#JZ R1      #shouldn't be taken
+#JC R3      #Jump Not taken
 
 #check destination forwarding
 NOT R5     #R5=FFFF, Z= 0, C--> not change, N=1
