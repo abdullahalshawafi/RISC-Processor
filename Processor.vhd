@@ -115,7 +115,7 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
     SIGNAL PC_MODIFIED, TARGET : STD_LOGIC_VECTOR(31 DOWNTO 0);
     SIGNAL wb_data, Rd_data : STD_LOGIC_VECTOR(15 DOWNTO 0);
     SIGNAL Rd_address : STD_LOGIC_VECTOR (2 DOWNTO 0);
-    SIGNAL WB, out_en, CHANGE_PC, EmptyStack, InvalidAddress, Mem_flush, WILL_BRANCH, flush_CU, int_en : STD_LOGIC;
+    SIGNAL WB, out_en, CHANGE_PC, EmptyStack, InvalidAddress, Mem_flush, WILL_BRANCH, flush_CU, int_en_signal : STD_LOGIC;
     SIGNAL Z_flag, N_flag, C_flag : STD_LOGIC;
     SIGNAL int_index : STD_LOGIC_VECTOR(1 DOWNTO 0);
 
@@ -127,7 +127,7 @@ BEGIN
         '0';
 
     --------------------------- Fetching Stage ---------------------------
-    FETCHING : FETCH_STAGE PORT MAP(rst, clk, pc_write, IN_PORT, PC_MODIFIED, TARGET, CHANGE_PC, EmptyStack, InvalidAddress, WILL_BRANCH, int_en, int_index, IF_ID_BUFFER_FROM_FETCHING);
+    FETCHING : FETCH_STAGE PORT MAP(rst, clk, pc_write, IN_PORT, PC_MODIFIED, TARGET, CHANGE_PC, EmptyStack, InvalidAddress, WILL_BRANCH, int_en_signal, int_index, IF_ID_BUFFER_FROM_FETCHING);
 
     --------------------------- Decoding Stage ---------------------------
     reset_IF_ID <= '1' WHEN (flush_CU = '1')
@@ -143,8 +143,8 @@ BEGIN
         ELSE
         rst;
 
-    ID_IE_BUFFER : buffer_component GENERIC MAP(n => 133) PORT MAP(clk, reset_ID_IE, '1', ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION);
-    EXECUTION : EX_STAGE GENERIC MAP(n => 16) PORT MAP(ID_IE_TO_EXECUTION, IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY(66 DOWNTO 64), IM_IW_TO_WB(50 DOWNTO 48), IE_IM_TO_MEMORY(47 DOWNTO 32), wb_data, clk, rst, IE_IM_TO_MEMORY(74), WB, WILL_BRANCH, TARGET, Mem_flush, int_index, int_en);
+    ID_IE_BUFFER : buffer_component GENERIC MAP(n => 133) PORT MAP(clk, rst, '1', ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION);
+    EXECUTION : EX_STAGE GENERIC MAP(n => 16) PORT MAP(ID_IE_TO_EXECUTION, IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY(66 DOWNTO 64), IM_IW_TO_WB(50 DOWNTO 48), IE_IM_TO_MEMORY(47 DOWNTO 32), wb_data, clk, rst, IE_IM_TO_MEMORY(74), WB, WILL_BRANCH, TARGET, Mem_flush, int_index, int_en_signal);
 
     --------------------------- Memory Stage ---------------------------
     reset_IE_IM <= '1' WHEN (flush_CU = '1' AND WILL_BRANCH = '0')

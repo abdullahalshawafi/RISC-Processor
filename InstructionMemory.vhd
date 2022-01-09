@@ -7,7 +7,7 @@ ENTITY INSTRUCTION_MEMORY IS
         rst, clk : IN STD_LOGIC;
         pc, target : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
         index : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
-        read_instruction, ex1, ex2, will_branch,int : IN STD_LOGIC;
+        read_instruction, ex1, ex2, will_branch, int : IN STD_LOGIC;
         inst_type : OUT STD_LOGIC;
         instruction : INOUT STD_LOGIC_VECTOR(31 DOWNTO 0)
     );
@@ -19,7 +19,7 @@ ARCHITECTURE INSTRUCTION_MEMORY1 OF INSTRUCTION_MEMORY IS
     SIGNAL addressing_instruction : memory(0 TO ((2 ** 20) - 1));
 
 BEGIN
-    PROCESS (rst, clk, pc, target, read_instruction, ex1, ex2, will_branch, instruction) IS
+    PROCESS (rst, clk, pc, target, read_instruction, ex1, ex2, will_branch, instruction, int) IS
     BEGIN
         IF rst = '1' THEN
             instruction <= addressing_instruction(1) & addressing_instruction(0);
@@ -28,7 +28,7 @@ BEGIN
         ELSIF ex2 = '1' THEN
             instruction <= addressing_instruction(5) & addressing_instruction(4);
         ELSIF int = '1' THEN
-            instruction <= addressing_instruction(to_integer(unsigned((index))+ 7)) & addressing_instruction(to_integer(unsigned((index))+ 6));
+            instruction <= addressing_instruction(to_integer(unsigned((index))) + 7) & addressing_instruction(to_integer(unsigned((index))) + 6);
         ELSIF will_branch = '1' THEN
             instruction <= addressing_instruction(to_integer(unsigned((target)))) & X"0000";
             inst_type <= '0';
