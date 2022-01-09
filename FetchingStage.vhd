@@ -44,7 +44,7 @@ BEGIN
         '0';
 
     pc_signal <= rst OR ex1 OR ex2 OR CHANGE_PC OR will_branch;
-    pc_address_en <= rst OR ex1 OR ex2;
+    pc_address_en <= rst OR ex1 OR ex2 or int;
     x : PC PORT MAP(pc_signal, clk, instr_en, instType, pc_instruction, pc_out);
     y : INSTRUCTION_MEMORY PORT MAP(rst, clk, pc_instruction, target,int_index, instr_en, ex1, ex2, will_branch,int, instType, instr);
 
