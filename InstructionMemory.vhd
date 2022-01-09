@@ -5,9 +5,9 @@ USE IEEE.numeric_std.ALL;
 ENTITY INSTRUCTION_MEMORY IS
     PORT (
         rst, clk : IN STD_LOGIC;
-        pc, target : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+        pc, target,PC_MODIFIED : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
         index : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
-        read_instruction, ex1, ex2, will_branch, int : IN STD_LOGIC;
+        read_instruction, ex1, ex2, will_branch,int,CHANGE_PC : IN STD_LOGIC;
         inst_type : OUT STD_LOGIC;
         instruction : INOUT STD_LOGIC_VECTOR(31 DOWNTO 0)
     );
@@ -35,6 +35,14 @@ BEGIN
 
             IF instruction(31 DOWNTO 27) = "01100" OR instruction(31 DOWNTO 27) = "10010" OR instruction(31 DOWNTO 27) = "10011" OR instruction(31 DOWNTO 27) = "10100" THEN
                 instruction(15 DOWNTO 0) <= addressing_instruction(to_integer(unsigned((target))) + 1);
+                inst_type <= '1';
+            END IF;
+        ELSIF CHANGE_PC = '1' THEN
+            instruction <= addressing_instruction(to_integer(unsigned((PC_MODIFIED)))) & X"0000";
+            inst_type <= '0';
+
+            IF instruction(31 DOWNTO 27) = "01100" OR instruction(31 DOWNTO 27) = "10010" OR instruction(31 DOWNTO 27) = "10011" OR instruction(31 DOWNTO 27) = "10100" THEN
+                instruction(15 DOWNTO 0) <= addressing_instruction(to_integer(unsigned((PC_MODIFIED))) + 1);
                 inst_type <= '1';
             END IF;
         ELSIF read_instruction = '1' THEN
