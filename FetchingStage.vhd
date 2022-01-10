@@ -9,7 +9,8 @@ ENTITY FETCH_STAGE IS
         PC_MODIFIED, target : IN STD_LOGIC_VECTOR (31 DOWNTO 0);
         CHANGE_PC, ex1, ex2, will_branch, int : IN STD_LOGIC;
         int_index : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
-        IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(80 DOWNTO 0)
+        IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(80 DOWNTO 0);
+        freeze_pc : IN STD_LOGIC
     );
 
 END FETCH_STAGE;
@@ -43,21 +44,25 @@ BEGIN
         ELSE
         '0';
 
-    pc_signal <= rst OR ex1 OR ex2 OR CHANGE_PC OR will_branch;
-    pc_address_en <= rst OR ex1 OR ex2 OR int;
+    pc_signal <= (rst OR ex1 OR ex2 OR CHANGE_PC OR will_branch OR freeze_pc) AND (instr_en);
+    pc_address_en <= (rst OR ex1 OR ex2 OR int) AND (instr_en);
     x : PC PORT MAP(pc_signal, clk, instr_en, instType, pc_instruction, pc_out);
     y : INSTRUCTION_MEMORY PORT MAP(rst, clk, pc_instruction, target, PC_MODIFIED, int_index, instr_en, ex1, ex2, will_branch, int, CHANGE_PC, instType, instr);
 
-    pc_instruction <= instr WHEN pc_address_en = '1'
+    pc_instruction <= pc_out WHEN instr_en = '0'
+        ELSE
+        instr WHEN pc_address_en = '1'
         ELSE
         PC_MODIFIED WHEN CHANGE_PC = '1'
         ELSE
         target WHEN will_branch = '1'
         ELSE
         pc_out;
+    -- temp <= pc_instruction WHEN (freeze_pc = '1')
+    --     ELSE
+    --     STD_LOGIC_VECTOR(to_unsigned(to_integer(unsigned(pc_instruction)) + 1, 32));
     temp <= STD_LOGIC_VECTOR(to_unsigned(to_integer(unsigned(pc_instruction)) + 1, 32));
-    IF_ID_BUFFER <= (OTHERS => '0') WHEN (pc_signal = '1' or pc_address_en='1')
-        ELSE
-        in_port & instType & instr & temp;
-
+    IF_ID_BUFFER(80 DOWNTO 0) <= (OTHERS => '0') WHEN (pc_signal = '1' OR pc_address_en = '1')
+ELSE
+    in_port & instType & instr & temp WHEN (instr_en = '1');
 END FETCH_STAGE;

@@ -17,7 +17,7 @@ ENTITY EX_STAGE IS
     GENERIC (n : INTEGER := 16);
     PORT (
 
-        ID_IE_BUFFER : IN STD_LOGIC_VECTOR (132 DOWNTO 0);
+        ID_IE_BUFFER : IN STD_LOGIC_VECTOR (133 DOWNTO 0);
         IE_IM_BUFFER : OUT STD_LOGIC_VECTOR (76 DOWNTO 0);
         Rd_M_address, Rd_W_address : IN STD_LOGIC_VECTOR (2 DOWNTO 0);
         Rd_M_data, Rd_W_data : IN STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
@@ -26,7 +26,8 @@ ENTITY EX_STAGE IS
         target : OUT STD_LOGIC_VECTOR (31 DOWNTO 0);
         exception : IN STD_LOGIC;
         int_index : OUT STD_LOGIC_VECTOR (1 DOWNTO 0);
-        int_en : OUT STD_LOGIC
+        int_en : OUT STD_LOGIC;
+        LUC : IN STD_LOGIC
     );
 
 END EX_STAGE;
@@ -109,10 +110,12 @@ ARCHITECTURE struct OF EX_STAGE IS
     int_signal, Z_reset, N_reset, C_reset, branch_int : STD_LOGIC;
     SIGNAL Rs_en, Rt_en : STD_LOGIC_VECTOR (1 DOWNTO 0);
     SIGNAL res_flag_en : STD_LOGIC_VECTOR (3 DOWNTO 0);
+    SIGNAL zeroVector32 : STD_LOGIC_VECTOR (31 DOWNTO 0);
 BEGIN
 
     ------------------------------ signal <= input buffer
     zeroVector <= (OTHERS => '0');
+    zeroVector32 <= (OTHERS => '0');
     in_port <= ID_IE_BUFFER(122 DOWNTO 107);
     inEn <= ID_IE_BUFFER(106);
     Cfinal <= ID_IE_BUFFER(96) OR C0;
@@ -170,9 +173,14 @@ BEGIN
         ELSE
         '0';
     branch_int <= branch_signal AND (jump_signal OR call_signal OR int_signal);
-    will_branch <= branch_int;
+    will_branch <= branch_int WHEN ID_IE_BUFFER(133) = '0'
+        ELSE
+        '1';
     sign_extend <= (OTHERS => Rs_final(15));
     target <= sign_extend & Rs_final;
+    -- WHEN LUC = '0'
+    -- ELSE
+    -- zeroVector32;
     -- INT  save flags:
     --reserving_flags:  R_FLAG_REG PORT MAP(clk, rst,latest_Z,latest_N,latest_C,res_flag_en,res_Z,res_N,res_C );
     reserving_flags : R_FLAG_REG PORT MAP(clk, rst, Z, Ne, Cfinal, res_flag_en, res_Z, res_N, res_C);

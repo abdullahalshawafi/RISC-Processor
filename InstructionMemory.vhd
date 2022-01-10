@@ -5,9 +5,9 @@ USE IEEE.numeric_std.ALL;
 ENTITY INSTRUCTION_MEMORY IS
     PORT (
         rst, clk : IN STD_LOGIC;
-        pc, target,PC_MODIFIED : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+        pc, target, PC_MODIFIED : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
         index : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
-        read_instruction, ex1, ex2, will_branch,int,CHANGE_PC : IN STD_LOGIC;
+        read_instruction, ex1, ex2, will_branch, int, CHANGE_PC : IN STD_LOGIC;
         inst_type : OUT STD_LOGIC;
         instruction : INOUT STD_LOGIC_VECTOR(31 DOWNTO 0)
     );

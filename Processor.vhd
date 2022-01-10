@@ -34,7 +34,8 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
             PC_MODIFIED, target : IN STD_LOGIC_VECTOR (31 DOWNTO 0);
             CHANGE_PC, ex1, ex2, will_branch, int : IN STD_LOGIC;
             int_index : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
-            IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(80 DOWNTO 0)
+            IF_ID_BUFFER : OUT STD_LOGIC_VECTOR(80 DOWNTO 0);
+            freeze_pc : IN STD_LOGIC
         );
 
     END COMPONENT;
@@ -55,8 +56,8 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
             branch_taken : IN STD_LOGIC;
             pc_en : OUT STD_LOGIC := '1';
             inst_type : OUT STD_LOGIC := '0';
-            ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(132 DOWNTO 0);
-            final_flush : OUT STD_LOGIC
+            ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(133 DOWNTO 0);
+            final_flush, freeze_pc : OUT STD_LOGIC
         );
     END COMPONENT;
 
@@ -66,7 +67,7 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
         GENERIC (n : INTEGER := 16);
         PORT (
 
-            ID_IE_BUFFER : IN STD_LOGIC_VECTOR (132 DOWNTO 0);
+            ID_IE_BUFFER : IN STD_LOGIC_VECTOR (133 DOWNTO 0);
             IE_IM_BUFFER : OUT STD_LOGIC_VECTOR (76 DOWNTO 0);
             Rd_M_address, Rd_W_address : IN STD_LOGIC_VECTOR (2 DOWNTO 0);
             Rd_M_data, Rd_W_data : IN STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
@@ -75,7 +76,8 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
             target : OUT STD_LOGIC_VECTOR (31 DOWNTO 0);
             exception : IN STD_LOGIC;
             int_index : OUT STD_LOGIC_VECTOR (1 DOWNTO 0);
-            int_en : OUT STD_LOGIC
+            int_en : OUT STD_LOGIC;
+            LUC : IN STD_LOGIC
         );
 
     END COMPONENT;
@@ -109,13 +111,13 @@ ARCHITECTURE PROCESSOR OF PROCESSOR IS
     SIGNAL pc_write : STD_LOGIC := '1';
     SIGNAL instType : STD_LOGIC := '0';
     SIGNAL IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING : STD_LOGIC_VECTOR(80 DOWNTO 0);
-    SIGNAL ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION : STD_LOGIC_VECTOR(132 DOWNTO 0);
+    SIGNAL ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION : STD_LOGIC_VECTOR(133 DOWNTO 0);
     SIGNAL IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY : STD_LOGIC_VECTOR(76 DOWNTO 0);
     SIGNAL IM_IW_FROM_MEMORY, IM_IW_TO_WB : STD_LOGIC_VECTOR(53 DOWNTO 0);
     SIGNAL PC_MODIFIED, TARGET : STD_LOGIC_VECTOR(31 DOWNTO 0);
     SIGNAL wb_data, Rd_data : STD_LOGIC_VECTOR(15 DOWNTO 0);
     SIGNAL Rd_address : STD_LOGIC_VECTOR (2 DOWNTO 0);
-    SIGNAL WB, out_en, CHANGE_PC, EmptyStack, InvalidAddress, Mem_flush, WILL_BRANCH, flush_CU, int_en_signal : STD_LOGIC;
+    SIGNAL WB, out_en, CHANGE_PC, EmptyStack, InvalidAddress, Mem_flush, WILL_BRANCH, flush_CU, int_en_signal, stall_pc, fetch_buffer_en : STD_LOGIC;
     SIGNAL Z_flag, N_flag, C_flag : STD_LOGIC;
     SIGNAL int_index : STD_LOGIC_VECTOR(1 DOWNTO 0);
 
@@ -127,29 +129,28 @@ BEGIN
         '0';
 
     --------------------------- Fetching Stage ---------------------------
-    FETCHING : FETCH_STAGE PORT MAP(rst, clk, pc_write, IN_PORT, PC_MODIFIED, TARGET, CHANGE_PC, EmptyStack, InvalidAddress, WILL_BRANCH, int_en_signal, int_index, IF_ID_BUFFER_FROM_FETCHING);
+    FETCHING : FETCH_STAGE PORT MAP(rst, clk, pc_write, IN_PORT, PC_MODIFIED, TARGET, CHANGE_PC, EmptyStack, InvalidAddress, WILL_BRANCH, int_en_signal, int_index, IF_ID_BUFFER_FROM_FETCHING, stall_pc);
 
     --------------------------- Decoding Stage ---------------------------
-    reset_IF_ID <= '1' WHEN (flush_CU = '1')
+   
+    fetch_buffer_en <= '0' WHEN stall_pc = '1'
         ELSE
-        rst;
+        '1';
 
-    IF_ID_BUFFER : buffer_component GENERIC MAP(n => 81) PORT MAP(clk, rst, '1', IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING);
+    IF_ID_BUFFER : buffer_component GENERIC MAP(n => 81) PORT MAP(clk, rst, fetch_buffer_en, IF_ID_BUFFER_FROM_FETCHING, IF_ID_BUFFER_TO_DECODING);
 
-    DECODING : DECODING_STAGE GENERIC MAP(n => 16) PORT MAP(rst, clk, Rd_address, wb_data, WB, IF_ID_BUFFER_TO_DECODING, IF_ID_BUFFER_TO_DECODING(58 DOWNTO 56), IF_ID_BUFFER_TO_DECODING(55 DOWNTO 53), ID_IE_TO_EXECUTION(68 DOWNTO 66), ID_IE_TO_EXECUTION(124), Mem_flush, WILL_BRANCH, pc_write, instType, ID_IE_FROM_DECODING, flush_CU);
+    DECODING : DECODING_STAGE GENERIC MAP(n => 16) PORT MAP(rst, clk, Rd_address, wb_data, WB, IF_ID_BUFFER_TO_DECODING, IF_ID_BUFFER_TO_DECODING(58 DOWNTO 56), IF_ID_BUFFER_TO_DECODING(55 DOWNTO 53), ID_IE_TO_EXECUTION(68 DOWNTO 66), ID_IE_TO_EXECUTION(124), Mem_flush, WILL_BRANCH, pc_write, instType, ID_IE_FROM_DECODING, flush_CU, stall_pc);
 
     --------------------------- Execution Stage ---------------------------
-    reset_ID_IE <= '1' WHEN (flush_CU = '1')
-        ELSE
-        rst;
+  
 
-    ID_IE_BUFFER : buffer_component GENERIC MAP(n => 133) PORT MAP(clk, rst, '1', ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION);
-    EXECUTION : EX_STAGE GENERIC MAP(n => 16) PORT MAP(ID_IE_TO_EXECUTION, IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY(66 DOWNTO 64), IM_IW_TO_WB(50 DOWNTO 48), IE_IM_TO_MEMORY(47 DOWNTO 32), wb_data, clk, rst, IE_IM_TO_MEMORY(74), WB, WILL_BRANCH, TARGET, Mem_flush, int_index, int_en_signal);
+    ID_IE_BUFFER : buffer_component GENERIC MAP(n => 134) PORT MAP(clk, rst, '1', ID_IE_FROM_DECODING, ID_IE_TO_EXECUTION);
+    EXECUTION : EX_STAGE GENERIC MAP(
+        n => 16) PORT MAP(ID_IE_TO_EXECUTION, IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY(66 DOWNTO 64), IM_IW_TO_WB(50 DOWNTO 48), IE_IM_TO_MEMORY(47 DOWNTO 32), wb_data, clk, rst, IE_IM_TO_MEMORY(74), WB, WILL_BRANCH, TARGET, Mem_flush, int_index, int_en_signal,
+        stall_pc);
 
     --------------------------- Memory Stage ---------------------------
-    reset_IE_IM <= '1' WHEN (flush_CU = '1' AND WILL_BRANCH = '0')
-        ELSE
-        rst;
+   
     IE_IM_BUFFER : buffer_component GENERIC MAP(n => 77) PORT MAP(clk, rst, '1', IE_IM_FROM_EXECUTION, IE_IM_TO_MEMORY);
     MEMORY : MEMORY_STAGE GENERIC MAP(n => 16) PORT MAP(IE_IM_TO_MEMORY, clk, rst, IM_IW_FROM_MEMORY, PC_MODIFIED, CHANGE_PC, EmptyStack, InvalidAddress);
 

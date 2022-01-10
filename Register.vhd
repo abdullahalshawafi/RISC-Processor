@@ -1,17 +1,17 @@
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.ALL;
 ENTITY register_component IS
-GENERIC (n : INTEGER := 16);
+    GENERIC (n : INTEGER := 16);
     PORT (
         clk, rst, en : IN STD_LOGIC;
-        reg_in : IN STD_LOGIC_VECTOR (n-1 DOWNTO 0);
-        reg_out : OUT STD_LOGIC_VECTOR (n-1 DOWNTO 0)
+        reg_in : IN STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
+        reg_out : OUT STD_LOGIC_VECTOR (n - 1 DOWNTO 0)
     );
-	
+
 END register_component;
 
 ARCHITECTURE register_component_arch OF register_component IS
-    SIGNAL reg_out_signal : STD_LOGIC_VECTOR (n-1 DOWNTO 0);
+    SIGNAL reg_out_signal : STD_LOGIC_VECTOR (n - 1 DOWNTO 0);
 BEGIN
     PROCESS (clk, rst, en)
     BEGIN

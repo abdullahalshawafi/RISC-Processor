@@ -16,8 +16,8 @@ ENTITY DECODING_STAGE IS
         branch_taken : IN STD_LOGIC;
         pc_en : OUT STD_LOGIC := '1';
         inst_type : OUT STD_LOGIC := '0';
-        ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(132 DOWNTO 0);
-        final_flush : OUT STD_LOGIC
+        ID_IE_BUFFER : OUT STD_LOGIC_VECTOR(133 DOWNTO 0);
+        final_flush, freeze_pc : OUT STD_LOGIC
     );
 
 END DECODING_STAGE;
@@ -90,7 +90,7 @@ ARCHITECTURE DECODING_STAGE_arch OF DECODING_STAGE IS
 
     -----------------------------------------------------------------------------------------------------
     SIGNAL op_code : STD_LOGIC_VECTOR(4 DOWNTO 0);
-    SIGNAL CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS : STD_LOGIC_VECTOR(23 DOWNTO 0);
+    SIGNAL CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS : STD_LOGIC_VECTOR(22 DOWNTO 0);
 
     ----------------------------- STALLING SIGNALS ------------------------------------------------------------------------------------------------
     SIGNAL stall_pipe : STD_LOGIC;
@@ -118,23 +118,23 @@ BEGIN
 
     FLUSHED_SIGNALS <= (OTHERS => '0');
 
-    CONTROL_SIGNALS <= pc_write & instType & set_carry
+    CONTROL_SIGNALS <= instType & set_carry
         & branch & alu_src & Rs_en & Rt_en &
         mem_read & mem_write & interrupt_en &
         stack & load & reg_write & in_en & out_en
         & alu_op & flag_en & stack_op;
 
-    -- set_flush <= stall_pipe OR exception OR branch_taken; --exception or hazard detected or branch taken
-    set_flush <= exception OR branch_taken;
+    set_flush <= stall_pipe OR exception OR branch_taken; --exception or hazard detected or branch taken
+
     final_flush <= '1' WHEN (set_flush = '1')
         ELSE
         '0';
 
-    FLUSH_MUX : MUX2 GENERIC MAP(n => 24) PORT MAP(set_flush, CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS);
+    FLUSH_MUX : MUX2 GENERIC MAP(n => 23) PORT MAP(set_flush, CONTROL_SIGNALS, FLUSHED_SIGNALS, FINAL_SIGNALS);
 
     --------------------------- Final control signals -----------------------------------------------------------
 
-    pc_write_final <= FINAL_SIGNALS(23);
+    pc_write_final <= pc_write;
     inst_type_final <= FINAL_SIGNALS(22);
     set_carry_final <= FINAL_SIGNALS(21);
     branch_final <= FINAL_SIGNALS(20);
@@ -157,29 +157,22 @@ BEGIN
 
     immediate_value <= IF_ID_BUFFER(47 DOWNTO 32);
 
-    ID_IE_BUFFER <= (OTHERS => '0') WHEN (set_flush = '1')
-        ELSE
-        interrupt_en_final & branch_final & flush_final & stack_final & stack_op_final & mem_read_final & mem_write_final &
-        out_en_final & IF_ID_BUFFER(80 DOWNTO 65) & in_en_final & load_final & reg_write_final & alu_op_final & alu_src_final & flag_en_final & set_carry_final &
-        IF_ID_BUFFER(47 DOWNTO 32) & op_code & Rs_address & Rt_address & Rd_address & "00" &
-        Rt_data & Rs_data & IF_ID_BUFFER(31 DOWNTO 0);
+    ID_IE_BUFFER(132 DOWNTO 0) <= (OTHERS => '0') WHEN (set_flush = '1')
+ELSE
+    interrupt_en_final & branch_final & flush_final & stack_final & stack_op_final & mem_read_final & mem_write_final &
+    out_en_final & IF_ID_BUFFER(80 DOWNTO 65) & in_en_final & load_final & reg_write_final & alu_op_final & alu_src_final & flag_en_final & set_carry_final &
+    IF_ID_BUFFER(47 DOWNTO 32) & op_code & Rs_address & Rt_address & Rd_address & "00" &
+    Rt_data & Rs_data & IF_ID_BUFFER(31 DOWNTO 0);
 
-    -- ID_IE_BUFFER(132) <=interrupt_en_final;
-    -- ID_IE_BUFFER(131) <= branch_final;
-    -- ID_IE_BUFFER(130 DOWNTO 124) <= flush_final & stack_final & stack_op_final & mem_read_final & mem_write_final;
-    -- ID_IE_BUFFER(123) <= out_en_final;
-    -- ID_IE_BUFFER(122 DOWNTO 107) <= IF_ID_BUFFER(80 DOWNTO 65); -- INPUT PORT 
-    -- ID_IE_BUFFER(106 DOWNTO 96) <= in_en_final & load_final & reg_write_final & alu_op_final & alu_src_final & flag_en_final & set_carry_final;
-    -- ID_IE_BUFFER(95 DOWNTO 64) <= IF_ID_BUFFER(47 DOWNTO 32) & op_code & Rs_address & Rt_address & Rd_address & "00";
-    -- ID_IE_BUFFER(63 DOWNTO 48) <= Rt_data;
-    -- ID_IE_BUFFER(47 DOWNTO 32) <= Rs_data;
-    -- ID_IE_BUFFER(31 DOWNTO 0) <= IF_ID_BUFFER(31 DOWNTO 0); --pc+1
+    ID_IE_BUFFER(133) <= stall_pipe;
 
     -----------------------------------------------------------------
-    -- pc_en <= '0' WHEN (stall_pipe = '1') --freeze el pc 
-    --     ELSE
-    --     pc_write_final;
-    pc_en <= pc_write_final;
+    pc_en <= '0' WHEN (stall_pipe = '1') --freeze el pc 
+        ELSE
+        pc_write_final;
+    -- pc_en <= pc_write_final;
     inst_type <= inst_type_final;
+
+    freeze_pc <= stall_pipe;
 
 END DECODING_STAGE_arch;

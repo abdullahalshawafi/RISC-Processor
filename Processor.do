@@ -34,6 +34,7 @@ add wave -position end  sim:/processor/DECODING/Rt_data
 #add wave -position end  sim:/processor/DECODING/Rx/Rt_data 
 #add wave -position end  sim:/processor/DECODING/Rx/reg_out 
 add wave -position end  sim:/processor/DECODING/Rx/en
+add wave -position end sim:/processor/EXECUTION/ID_IE_BUFFER(133)
 add wave -position end sim:/processor/EXECUTION/res_flag_en
 add wave -position end sim:/processor/EXECUTION/res_Z
 add wave -position end sim:/processor/EXECUTION/res_N

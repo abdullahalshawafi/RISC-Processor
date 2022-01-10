@@ -29,6 +29,7 @@ BEGIN
             Rt_en <= '0';
             mem_read <= '0';
             mem_write <= '0';
+            stack <= '0';
             interrupt_en <= '0';
             reg_write <= '0';
             alu_op <= "000";
@@ -68,7 +69,7 @@ BEGIN
             flush <= '0';
             set_carry <= '0';
             branch <= '0';
-            Rs_en <= '0';
+            Rs_en <= '1';
             Rt_en <= '0';
             mem_read <= '0';
             mem_write <= '0';
@@ -86,7 +87,7 @@ BEGIN
             flush <= '0';
             set_carry <= '0';
             branch <= '0';
-            Rs_en <= '0';
+            Rs_en <= '1';
             Rt_en <= '0';
             mem_read <= '0';
             mem_write <= '0';
@@ -104,7 +105,7 @@ BEGIN
             flush <= '0';
             set_carry <= '0';
             branch <= '0';
-            Rs_en <= '0';
+            Rs_en <= '1';
             Rt_en <= '0';
             mem_read <= '0';
             mem_write <= '0';
@@ -141,7 +142,7 @@ BEGIN
             set_carry <= '0';
             branch <= '0';
             alu_src <= '0';
-            Rs_en <= '0';
+            Rs_en <= '1';
             Rt_en <= '0';
             mem_read <= '0';
             mem_write <= '0';
@@ -160,8 +161,8 @@ BEGIN
             set_carry <= '0';
             branch <= '0';
             alu_src <= '0';
-            Rs_en <= '0';
-            Rt_en <= '0';
+            Rs_en <= '1';
+            Rt_en <= '1';
             mem_read <= '0';
             mem_write <= '0';
             interrupt_en <= '0';
@@ -179,8 +180,8 @@ BEGIN
             set_carry <= '0';
             branch <= '0';
             alu_src <= '0';
-            Rs_en <= '0';
-            Rt_en <= '0';
+            Rs_en <= '1';
+            Rt_en <= '1';
             mem_read <= '0';
             mem_write <= '0';
             interrupt_en <= '0';
@@ -198,8 +199,8 @@ BEGIN
             set_carry <= '0';
             branch <= '0';
             alu_src <= '0';
-            Rs_en <= '0';
-            Rt_en <= '0';
+            Rs_en <= '1';
+            Rt_en <= '1';
             mem_read <= '0';
             mem_write <= '0';
             interrupt_en <= '0';
@@ -217,7 +218,7 @@ BEGIN
             set_carry <= '0';
             branch <= '0';
             alu_src <= '1';
-            Rs_en <= '0';
+            Rs_en <= '1';
             Rt_en <= '0';
             mem_read <= '0';
             mem_write <= '0';
@@ -235,7 +236,7 @@ BEGIN
             flush <= '0';
             set_carry <= '0';
             branch <= '0';
-            Rs_en <= '0';
+            Rs_en <= '1';
             Rt_en <= '0';
             mem_read <= '0';
             mem_write <= '1';
@@ -253,7 +254,7 @@ BEGIN
             flush <= '0';
             set_carry <= '0';
             branch <= '0';
-            Rs_en <= '0';
+            Rs_en <= '1';
             Rt_en <= '0';
             mem_read <= '1';
             mem_write <= '0';
@@ -273,7 +274,7 @@ BEGIN
             set_carry <= '0';
             branch <= '0';
             alu_src <= '1';
-            Rs_en <= '0';
+            Rs_en <= '1';
             Rt_en <= '0';
             mem_read <= '1';
             mem_write <= '0';
@@ -291,7 +292,7 @@ BEGIN
             flush <= '0';
             set_carry <= '0';
             branch <= '0';
-            Rs_en <= '0';
+            Rs_en <= '1';
             Rt_en <= '0';
             mem_read <= '1';
             mem_write <= '0';
@@ -309,8 +310,8 @@ BEGIN
             flush <= '0';
             set_carry <= '0';
             branch <= '0';
-            Rs_en <= '0';
-            Rt_en <= '0';
+            Rs_en <= '1';
+            Rt_en <= '1';
             mem_read <= '0';
             mem_write <= '1';
             interrupt_en <= '0';
@@ -328,7 +329,7 @@ BEGIN
             flush <= '0';
             set_carry <= '0';
             branch <= '1';
-            Rs_en <= '0';
+            Rs_en <= '1';
             Rt_en <= '0';
             mem_read <= '0';
             mem_write <= '0';
@@ -344,7 +345,7 @@ BEGIN
             flush <= '0';
             set_carry <= '0';
             branch <= '1';
-            Rs_en <= '0';
+            Rs_en <= '1';
             Rt_en <= '0';
             mem_read <= '0';
             mem_write <= '0';
@@ -360,7 +361,7 @@ BEGIN
             flush <= '0';
             set_carry <= '0';
             branch <= '1';
-            Rs_en <= '0';
+            Rs_en <= '1';
             Rt_en <= '0';
             mem_read <= '0';
             mem_write <= '0';
@@ -376,7 +377,7 @@ BEGIN
             flush <= '0';
             set_carry <= '0';
             branch <= '1';
-            Rs_en <= '0';
+            Rs_en <= '1';
             Rt_en <= '0';
             mem_read <= '0';
             mem_write <= '0';
@@ -392,7 +393,7 @@ BEGIN
             flush <= '0';
             set_carry <= '0';
             branch <= '1';
-            Rs_en <= '0';
+            Rs_en <= '1';
             Rt_en <= '0';
             mem_read <= '0';
             mem_write <= '1';
@@ -417,7 +418,7 @@ BEGIN
             interrupt_en <= '0';
             stack <= '1';
             load <= '1';
-            reg_write <= '1';
+            reg_write <= '0';
             in_en <= '0';
             out_en <= '0';
             alu_op <= "011";
@@ -454,7 +455,7 @@ BEGIN
             interrupt_en <= '0';
             stack <= '1';
             load <= '1';
-            reg_write <= '1';
+            reg_write <= '0';
             in_en <= '0';
             out_en <= '0';
             alu_op <= "011";
@@ -462,7 +463,6 @@ BEGIN
             stack_op <= "100";
         ELSE
             flag_en <= "000";
-            pc_write <= '1';
             inst_type <= '0';
             flush <= '0';
             set_carry <= '0';
